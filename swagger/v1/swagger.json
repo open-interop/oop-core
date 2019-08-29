@@ -1,0 +1,137 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/users": {
+      "post": {
+        "summary": "Creates a user",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyHeader": [
+
+            ]
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "password_confirmation": {
+                  "type": "string"
+                },
+                "time_zone": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "email",
+                "password",
+                "password_confirmation"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "user created"
+          },
+          "422": {
+            "description": "invalid request"
+          },
+          "401": {
+            "description": "unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "summary": "Retrieves a user",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyHeader": [
+
+            ]
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "name found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "password_confirmation": {
+                  "type": "string"
+                },
+                "time_zone": {
+                  "type": "datetime"
+                }
+              },
+              "required": "id email time_zone"
+            }
+          },
+          "404": {
+            "description": "user not found"
+          },
+          "401": {
+            "description": "unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyHeader": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": {
+    "APIKeyHeader": [
+
+    ]
+  }
+}

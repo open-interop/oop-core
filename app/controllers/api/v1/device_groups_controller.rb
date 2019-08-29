@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+module Api
+  module V1
+    class DeviceGroupsController < ::ApplicationController
+      before_action :find_device_group, only: %i[show update destroy]
+
+      # GET /device_groups
+      def index
+        @device_groups = current_account.device_groups.all
+
+        render json: @device_groups
+      end
+
+      # GET /device_groups/:id
+      def show
+        render json: @device_group
+      end
+
+      # POST /device_groups
+      def create
+        @device_group = current_account.device_groups.build(device_group_params)
+
+        if @device_group.save
+          render json: @device_group, status: :created, location: @device_group
+        else
+          render json: @device_group.errors, status: :unprocessable_entity
+        end
+      end
+
+      # PATCH/PUT /device_groups/:id
+      def update
+        if @device_group.update(device_group_params)
+          render json: @device_group
+        else
+          render json: @device_group.errors, status: :unprocessable_entity
+        end
+      end
+
+      # DELETE /device_groups/:id
+      def destroy
+        @device_group.destroy
+      end
+
+      private
+
+      def find_device_group
+        @device_group = current_account.device_groups.find(params[:id])
+      end
+
+      def device_group_params
+        params.fetch(:device_group).permit(:name, :description)
+      end
+    end
+  end
+end
