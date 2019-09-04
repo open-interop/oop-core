@@ -21,6 +21,10 @@ class DeviceTempr < ApplicationRecord
   #
   serialize :options, Hash
 
+  def as_json(options = nil)
+    ActiveModelSerializers::SerializableResource.new(self)
+  end
+
   def template
     @template ||= begin
       options.tap do |h|

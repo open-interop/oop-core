@@ -15,7 +15,7 @@ module Services
         render json:
           {
             ttl: 10_000,
-            data: @device.device_temprs.as_json
+            data: @device.device_temprs
           }
       end
 
