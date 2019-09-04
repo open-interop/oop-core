@@ -5,19 +5,19 @@ module Api
     class SitesController < ApplicationController
       before_action :find_site
 
-      # GET /sites
+      # GET /api/v1/sites
       def index
         @sites = current_account.sites.all
 
         render json: @sites
       end
 
-      # GET /sites/:id
+      # GET /api/v1/sites/:id
       def show
         render json: @site
       end
 
-      # POST /sites
+      # POST /api/v1/sites
       def create
         @site = current_account.sites.build(site_params)
 
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /sites/:id
+      # PATCH/PUT /api/v1/sites/:id
       def update
         if @site.update(site_params)
           render json: @site
@@ -37,7 +37,7 @@ module Api
         end
       end
 
-      # DELETE /sites/:id
+      # DELETE /api/v1/sites/:id
       def destroy
         @site.destroy
       end
@@ -45,7 +45,7 @@ module Api
       private
 
       def find_site
-        return if params[:id]
+        return if params[:id].blank?
         @site = current_account.sites.find(params[:id])
       end
 

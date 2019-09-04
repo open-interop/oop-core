@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
-  resources :device_temprs
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   namespace :services do
     namespace :v1 do
@@ -23,11 +21,16 @@ Rails.application.routes.draw do
           post 'assign_tempr', to: 'devices#assign_tempr'
         end
 
+        get 'transmissions', to: 'transmissions#index'
+        get 'transmissions/:id', to: 'transmissions#show'
+
         resources :device_temprs
       end
 
       post '/auth/login', to: 'sessions#create'
-      get '/*a', to: 'application#not_found'
+      get '/me', to: 'sessions#me'
     end
   end
+
+  get '/*a', to: 'application#not_found'
 end

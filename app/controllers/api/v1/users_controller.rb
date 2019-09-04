@@ -5,18 +5,18 @@ module Api
     class UsersController < ApplicationController
       before_action :find_user
 
-      # GET /users
+      # GET /api/v1/users
       def index
         @users = current_account.users.all
         render json: @users, status: :ok
       end
 
-      # GET /users/:id
+      # GET /api/v1/users/:id
       def show
         render json: @user.to_json(only: [:id, :email, :time_zone]), status: :ok
       end
 
-      # POST /users
+      # POST /api/v1/users
       def create
         @user = current_account.users.build(user_params)
 
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      # PUT /users/:id
+      # PUT /api/v1/users/:id
       def update
         if @user.update(user_params)
           render json: @user, status: :ok
@@ -38,7 +38,7 @@ module Api
         end
       end
 
-      # DELETE /users/:id
+      # DELETE /api/v1/users/:id
       def destroy
         @user.destroy
       end

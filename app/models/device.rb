@@ -6,7 +6,7 @@ class Device < ApplicationRecord
   # Validations
   #
   validates :name, presence: true
-  validates :authentication, presence: true
+  validates_with DeviceAuthenticationValidator
 
   #
   # Relationships
@@ -16,6 +16,7 @@ class Device < ApplicationRecord
   belongs_to :site
 
   has_many :device_temprs
+  has_many :transmissions
 
   #
   # Serialisations
@@ -28,27 +29,21 @@ class Device < ApplicationRecord
   #
   scope :active, -> { where(active: true) }
 
-  def hostname
-    @hostname ||=
-      account.hostname
-  end
-
   def authentication
-    @authentication = {}
+    @authentication ||= {
+      hostname: account.hostname
+    }.tap do |h|
+      authentication_headers.each do |header|
+        h["headers.#{header[0].downcase}"] = header[1]
+      end
 
-    authentication_headers.each do |header|
-      @authentication["header.#{header[0]}"] = header[1]
+      authentication_query.each do |query|
+        h["query.#{query[0].downcase}"] = query[1]
+      end
+
+      authentication_path.present? &&
+        h['path'] = authentication_path
     end
-
-    authentication_query.each do |query|
-      @authentication["query.#{query[0]}"] = query[1]
-    end
-
-    if authentication_path.present?
-      @authentication['path'] = authentication_path
-    end
-
-    @authentication
   end
 
   def assign_tempr(tempr, params)
@@ -57,7 +52,7 @@ class Device < ApplicationRecord
       tempr: tempr,
       endpoint_type: params[:endpoint_type],
       queue_response: params[:queue_response],
-      template: params[:template].to_h
+      options: params[:options].to_h
     )
   end
 end
