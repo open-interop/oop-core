@@ -19,6 +19,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 gem 'rswag'
 gem 'active_model_serializers', '~> 0.10.0'
+gem "bunny", ">= 2.14.1"
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -35,6 +36,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.6'
   gem 'faker'
   gem 'factory_bot_rails'
+  gem 'dotenv-rails', groups: [:development, :test]
 end
 
 group :development do

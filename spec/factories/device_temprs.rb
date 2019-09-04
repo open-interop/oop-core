@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :device_tempr do
-    device
-    tempr
+    device { Device.first || create(:device) }
+    tempr { Tempr.first || create(:tempr) }
     endpoint_type { 'http' }
     queue_response { true }
-    template do
+    options do
       {
         host: Faker::Internet.domain_name,
         path: "/#{Faker::Internet.slug}",

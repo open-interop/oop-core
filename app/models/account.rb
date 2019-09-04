@@ -15,4 +15,9 @@ class Account < ApplicationRecord
   # Scopes
   #
   scope :active, -> { where(active: true) }
+
+  #
+  # Validations
+  #
+  validates :hostname, uniqueness: true
 end

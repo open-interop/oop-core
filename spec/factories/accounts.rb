@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :account do
-    association :owner, factory: :user
+    hostname { 'test.host' }
   end
 end

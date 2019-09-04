@@ -3,21 +3,22 @@
 module Api
   module V1
     class DeviceTemprsController < ApplicationController
+      before_action :find_device
       before_action :find_device_tempr
 
-      # GET /device_temprs
+      # GET /api/v1/device_temprs
       def index
-        @device_temprs = @device.device_temprs.all
+        @device_temprs = @device.device_temprs
 
-        render json: @device_temprs
+        render json: @device_temprs.to_json
       end
 
-      # GET /device_temprs/:id
+      # GET /api/v1/device_temprs/:id
       def show
         render json: @device_tempr
       end
 
-      # POST /device_temprs
+      # POST /api/v1/device_temprs
       def create
         @device_tempr = @device.device_temprs.new(device_tempr_params)
 
@@ -28,7 +29,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /device_temprs/:id
+      # PATCH/PUT /api/v1/device_temprs/:id
       def update
         if @device_tempr.update(device_tempr_params)
           render json: @device_tempr
@@ -37,7 +38,7 @@ module Api
         end
       end
 
-      # DELETE /device_temprs/:id
+      # DELETE /api/v1/device_temprs/:id
       def destroy
         @device_tempr.destroy
       end
@@ -60,9 +61,9 @@ module Api
           :tempr_id,
           :endpoint_type,
           :queue_response,
-          :template
+          :options
         ).tap do |whitelist|
-          whitelist[:template] = params[:device_tempr][:template]
+          whitelist[:options] = params[:device_tempr][:options]
         end
       end
     end

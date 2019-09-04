@@ -6,19 +6,19 @@ module Api
       before_action :find_device_group
       before_action :find_tempr
 
-      # GET /device_groups/:device_group_id/temprs
+      # GET /api/v1/device_groups/:device_group_id/temprs
       def index
         @temprs = @device_group.temprs.all
 
         render json: @temprs
       end
 
-      # GET /device_groups/:device_group_id/temprs/:id
+      # GET /api/v1/device_groups/:device_group_id/temprs/:id
       def show
         render json: @tempr
       end
 
-      # POST /device_groups/:device_group_id/temprs
+      # POST /api/v1/device_groups/:device_group_id/temprs
       def create
         @tempr = @device_group.temprs.build(tempr_params)
 
@@ -29,7 +29,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /device_groups/:device_group_id/temprs/:id
+      # PATCH/PUT /api/v1/device_groups/:device_group_id/temprs/:id
       def update
         if @tempr.update(tempr_params)
           render json: @tempr
@@ -38,7 +38,7 @@ module Api
         end
       end
 
-      # DELETE /device_groups/:device_group_id/temprs/:id
+      # DELETE /api/v1/device_groups/:device_group_id/temprs/:id
       def destroy
         @tempr.destroy
       end

@@ -5,19 +5,19 @@ module Api
     class DevicesController < ApplicationController
       before_action :find_device
 
-      # GET /devices
+      # GET /api/v1/devices
       def index
         @devices = current_account.devices.all
 
         render json: @devices
       end
 
-      # GET /devices/:id
+      # GET /api/v1/devices/:id
       def show
         render json: @device
       end
 
-      # POST /devices
+      # POST /api/v1/devices
       def create
         @device = current_account.devices.build(device_params)
 
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /devices/:id
+      # PATCH/PUT /api/v1/devices/:id
       def update
         if @device.update(device_params)
           render json: @device
@@ -37,12 +37,12 @@ module Api
         end
       end
 
-      # DELETE /devices/:id
+      # DELETE /api/v1/devices/:id
       def destroy
         @device.destroy
       end
 
-      # POST /devices/:id/assign_tempr
+      # POST /api/v1/devices/:id/assign_tempr
       def assign_tempr
         @tempr = @device.device_group.temprs.find(params[:tempr_id])
 
@@ -83,8 +83,8 @@ module Api
         params.require(:device_tempr).permit(
           :endpoint_type,
           :queue_response,
-          :template,
-          template: [:host, :port, :path, :requestMethod, :protocol, :headers]
+          :options,
+          options: [:host, :port, :path, :requestMethod, :protocol, :headers]
         )
       end
     end

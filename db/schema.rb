@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_28_191339) do
+ActiveRecord::Schema.define(version: 2019_09_02_114238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2019_08_28_191339) do
     t.integer "tempr_id"
     t.string "endpoint_type"
     t.boolean "queue_response"
-    t.text "template"
+    t.text "options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -86,13 +86,26 @@ ActiveRecord::Schema.define(version: 2019_08_28_191339) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "transmissions", force: :cascade do |t|
+    t.integer "device_id"
+    t.integer "device_tempr_id"
+    t.string "message_uuid"
+    t.string "transmission_uuid"
+    t.boolean "success"
+    t.integer "status"
+    t.datetime "transmitted_at"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "account_id"
-    t.string "time_zone"
+    t.string "time_zone", default: "London"
   end
 
 end

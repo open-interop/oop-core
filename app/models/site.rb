@@ -6,7 +6,6 @@ class Site < ApplicationRecord
   # Validations
   #
   validates :name, presence: true
-  validates :account_id, presence: true
 
   #
   # Relationships

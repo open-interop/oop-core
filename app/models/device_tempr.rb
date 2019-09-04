@@ -8,7 +8,7 @@ class DeviceTempr < ApplicationRecord
   #
   validates :endpoint_type, presence: true
   validates :queue_response, presence: true
-  validates :template, presence: true
+  validates :options, presence: true
 
   #
   # Relationships
@@ -19,9 +19,13 @@ class DeviceTempr < ApplicationRecord
   #
   # Serializations
   #
-  serialize :template, Hash
+  serialize :options, Hash
 
-  def as_json
-    ActiveModelSerializers::SerializableResource.new(self)
+  def template
+    @template ||= begin
+      options.tap do |h|
+        h[:body] = tempr&.body
+      end
+    end
   end
 end

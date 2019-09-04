@@ -1,21 +1,30 @@
 # frozen_string_literal: true
 
-# API endpoint to log the user in
 module Api
   module V1
+    # API endpoint to log the user in
     class SessionsController < ApplicationController
       skip_before_action :login_required, only: :create
 
-      # POST /auth/login
+      # POST /api/v1/auth/login
       def create
         @current_user =
-          User.authenticate_with_password(current_account, params[:email], params[:password])
+          User.authenticate_with_password(
+            current_account,
+            params[:email], params[:password]
+          )
 
         if logged_in?
           render json: @current_user.authenticated_token, status: :ok
         else
           access_denied
         end
+      end
+
+      # GET /api/v1/me
+      def me
+        render json:
+          current_user.to_json(except: %i[account_id password_digest])
       end
 
       private

@@ -7,11 +7,16 @@ class ApplicationController < ActionController::API
 
   before_action :login_required
 
-  #before_action do
-  #  Time.zone = logged_in? ? current_user.time_zone : 'London'
-  #end
+  rescue_from OpenInterop::Errors::AccessDenied, with: :access_denied
+  rescue_from OpenInterop::Errors::AccountNotFound, with: :not_found
+
+  private
 
   def not_found
-    render json: { error: 'not_found' }
+    render json: { error: 'not_found' }, status: 404
+  end
+
+  def access_denied
+    render json: { error: 'unauthorized' }, status: 401
   end
 end

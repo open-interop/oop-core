@@ -5,19 +5,19 @@ module Api
     class DeviceGroupsController < ::ApplicationController
       before_action :find_device_group, only: %i[show update destroy]
 
-      # GET /device_groups
+      # GET /api/v1/device_groups
       def index
         @device_groups = current_account.device_groups.all
 
         render json: @device_groups
       end
 
-      # GET /device_groups/:id
+      # GET /api/v1/device_groups/:id
       def show
         render json: @device_group
       end
 
-      # POST /device_groups
+      # POST /api/v1/device_groups
       def create
         @device_group = current_account.device_groups.build(device_group_params)
 
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /device_groups/:id
+      # PATCH/PUT /api/v1/device_groups/:id
       def update
         if @device_group.update(device_group_params)
           render json: @device_group
@@ -37,7 +37,7 @@ module Api
         end
       end
 
-      # DELETE /device_groups/:id
+      # DELETE /api/v1/device_groups/:id
       def destroy
         @device_group.destroy
       end
