@@ -22,7 +22,7 @@ module Api
         @site = current_account.sites.build(site_params)
 
         if @site.save
-          render json: @site, status: :created, location: @site
+          render json: @site, status: :created
         else
           render json: @site.errors, status: :unprocessable_entity
         end
