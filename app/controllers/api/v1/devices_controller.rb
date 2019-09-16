@@ -22,7 +22,7 @@ module Api
         @device = current_account.devices.build(device_params)
 
         if @device.save
-          render json: @device, status: :created, location: @device
+          render json: @device, status: :created
         else
           render json: @device.errors, status: :unprocessable_entity
         end

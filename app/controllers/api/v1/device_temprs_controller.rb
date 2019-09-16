@@ -23,7 +23,7 @@ module Api
         @device_tempr = @device.device_temprs.new(device_tempr_params)
 
         if @device_tempr.save
-          render json: @device_tempr, status: :created, location: @device_tempr
+          render json: @device_tempr, status: :created
         else
           render json: @device_tempr.errors, status: :unprocessable_entity
         end

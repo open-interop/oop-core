@@ -23,7 +23,7 @@ module Api
         @tempr = @device_group.temprs.build(tempr_params)
 
         if @tempr.save
-          render json: @tempr, status: :created, location: @tempr
+          render json: @tempr, status: :created
         else
           render json: @tempr.errors, status: :unprocessable_entity
         end
