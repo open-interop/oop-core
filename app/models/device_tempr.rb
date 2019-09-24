@@ -21,8 +21,17 @@ class DeviceTempr < ApplicationRecord
   #
   serialize :options, Hash
 
-  def as_json(options = nil)
-    ActiveModelSerializers::SerializableResource.new(self)
+  def as_json(_options = {})
+    {
+      id: id,
+      deviceId: device_id,
+      temprId: tempr_id,
+      endpointType: endpoint_type,
+      queueResponse: queue_response,
+      template: template,
+      createdAt: created_at,
+      updatedAt: created_at
+    }
   end
 
   def template

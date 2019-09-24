@@ -72,7 +72,7 @@ class Device < ApplicationRecord
   def queue_from_create
     bunny_exchange.publish(
       {
-        action: 'create',
+        action: 'add',
         device: {
           id: id,
           authentication: authentication

@@ -8,9 +8,17 @@ module Api
 
       # GET /api/v1/transmissions
       def index
-        @transmissions = @device.transmissions
+        @transmissions =
+          @device.transmissions
+                 .order('transmissions.created_at desc')
 
-        render json: @transmissions.to_json
+        filter_transmissions
+
+        @transmissions =
+          @transmissions.page(params[:page][:number])
+                        .per(params[:page][:size])
+
+        render json: @transmissions
       end
 
       # GET /api/v1/transmissions/1
@@ -26,7 +34,23 @@ module Api
 
       def find_transmission
         return if params[:id].blank?
+
         @transmission = @device.transmissions.find(params[:id])
+      end
+
+      def filter_transmissions
+        params[:page] ||= {
+          number: 1,
+          size: 10
+        }
+
+        %i[
+          device_tempr_id message_uuid
+          transmission_uuid success status
+        ].each do |filter|
+          params[filter].present? &&
+            @transmissions = @transmissions.where(filter => params[filter])
+        end
       end
     end
   end

@@ -8,7 +8,7 @@ module Api
 
       # GET /api/v1/device_groups/:device_group_id/temprs
       def index
-        @temprs = @device_group.temprs.all
+        @temprs = @device_group.temprs
 
         render json: @temprs
       end
@@ -52,6 +52,7 @@ module Api
 
       def find_tempr
         return if params[:id].blank?
+
         @tempr = @device_group.temprs.find(params[:id])
       end
 
@@ -59,10 +60,9 @@ module Api
         params.require(:tempr).permit(
           :name,
           :description,
-          :body
-        ).tap do |whitelist|
-          whitelist[:body] = params[:tempr][:body]
-        end
+          :device_group_id,
+          body: [:language, :script]
+        )
       end
     end
   end

@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/users
       def index
-        @users = current_account.users.all
+        @users = current_account.users
         render json: @users, status: :ok
       end
 

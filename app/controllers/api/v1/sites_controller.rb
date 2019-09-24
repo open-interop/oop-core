@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/sites
       def index
-        @sites = current_account.sites.all
+        @sites = current_account.sites
 
         render json: @sites
       end
@@ -46,11 +46,12 @@ module Api
 
       def find_site
         return if params[:id].blank?
+
         @site = current_account.sites.find(params[:id])
       end
 
       def site_params
-        params.fetch(:site).permit(
+        params.require(:site).permit(
           :site_id,
           :name,
           :description,
@@ -63,10 +64,8 @@ module Api
           :latitude,
           :longitude,
           :time_zone,
-          :external_uuids
-        ).tap do |whitelist|
-          whitelist[:external_uuids] = params[:site][:external_uuids]
-        end
+          { external_uuids: {} }
+        )
       end
     end
   end

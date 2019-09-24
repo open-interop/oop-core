@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/device_groups
       def index
-        @device_groups = current_account.device_groups.all
+        @device_groups = current_account.device_groups
 
         render json: @device_groups
       end

@@ -21,6 +21,8 @@ gem 'rswag'
 gem 'active_model_serializers', '~> 0.10.0'
 gem "bunny", ">= 2.14.1"
 
+gem 'kaminari'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
