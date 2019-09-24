@@ -13,10 +13,11 @@ class TransmissionQueue
         durable: true
       )
 
-    queue.subscribe(block: true, manual_ack: true) do |delivery_info, properties, body|
+    queue.subscribe(
+      block: true,
+      manual_ack: true
+    ) do |delivery_info, _properties, body|
       puts "#{Time.now.to_s(:db)}: Received: #{body}"
-      puts "#{Time.now.to_s(:db)}: Metadata: #{properties}"
-      sleep body.count('.').to_i
 
       transmission_body = JSON.parse(body)
 
@@ -33,8 +34,6 @@ class TransmissionQueue
 
       channel.ack(delivery_info.delivery_tag)
     end
-
-    sleep 0.5
 
     conn.close
   end

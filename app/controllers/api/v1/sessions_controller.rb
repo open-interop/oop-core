@@ -24,7 +24,7 @@ module Api
       # GET /api/v1/me
       def me
         render json:
-          current_user.to_json(except: %i[account_id password_digest])
+          current_user
       end
 
       private

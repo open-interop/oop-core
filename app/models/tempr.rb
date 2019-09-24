@@ -11,4 +11,9 @@ class Tempr < ApplicationRecord
   # Relationships
   #
   belongs_to :device_group
+
+  #
+  # Serializations
+  #
+  serialize :body, Hash
 end

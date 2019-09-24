@@ -6,19 +6,19 @@ module Api
       before_action :find_device
       before_action :find_device_tempr
 
-      # GET /api/v1/device_temprs
+      # GET /api/v1/devices/:device_id/device_temprs
       def index
         @device_temprs = @device.device_temprs
 
-        render json: @device_temprs.to_json
+        render json: @device_temprs
       end
 
-      # GET /api/v1/device_temprs/:id
+      # GET /api/v1/devices/:device_id/device_temprs/:id
       def show
         render json: @device_tempr
       end
 
-      # POST /api/v1/device_temprs
+      # POST /api/v1/devices/:device_id/device_temprs
       def create
         @device_tempr = @device.device_temprs.new(device_tempr_params)
 
@@ -29,7 +29,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /api/v1/device_temprs/:id
+      # PATCH/PUT /api/v1/devices/:device_id/device_temprs/:id
       def update
         if @device_tempr.update(device_tempr_params)
           render json: @device_tempr
@@ -38,7 +38,7 @@ module Api
         end
       end
 
-      # DELETE /api/v1/device_temprs/:id
+      # DELETE /api/v1/devices/:device_id/device_temprs/:id
       def destroy
         @device_tempr.destroy
       end
@@ -61,10 +61,8 @@ module Api
           :tempr_id,
           :endpoint_type,
           :queue_response,
-          :options
-        ).tap do |whitelist|
-          whitelist[:options] = params[:device_tempr][:options]
-        end
+          { options: {} }
+        )
       end
     end
   end
