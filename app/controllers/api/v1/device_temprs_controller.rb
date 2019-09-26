@@ -10,7 +10,7 @@ module Api
       def index
         @device_temprs = @device.device_temprs
 
-        render json: @device_temprs
+        render json: DeviceTemprPresenter.collection(@device_temprs, params[:page]), status: :ok
       end
 
       # GET /api/v1/devices/:device_id/device_temprs/:id

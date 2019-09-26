@@ -14,11 +14,7 @@ module Api
 
         filter_transmissions
 
-        @transmissions =
-          @transmissions.page(params[:page][:number])
-                        .per(params[:page][:size])
-
-        render json: @transmissions
+        render json: TransmissionPresenter.collection(@transmissions, params[:page]), status: :ok
       end
 
       # GET /api/v1/transmissions/1
@@ -39,11 +35,6 @@ module Api
       end
 
       def filter_transmissions
-        params[:page] ||= {
-          number: 1,
-          size: 10
-        }
-
         %i[
           device_tempr_id message_uuid
           transmission_uuid success status
