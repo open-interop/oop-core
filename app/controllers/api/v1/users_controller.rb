@@ -8,7 +8,8 @@ module Api
       # GET /api/v1/users
       def index
         @users = current_account.users
-        render json: @users, status: :ok
+
+        render json: UserPresenter.collection(@users, params[:page]), status: :ok
       end
 
       # GET /api/v1/users/:id

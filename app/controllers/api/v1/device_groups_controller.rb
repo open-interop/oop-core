@@ -9,7 +9,7 @@ module Api
       def index
         @device_groups = current_account.device_groups
 
-        render json: @device_groups
+        render json: DeviceGroupPresenter.collection(@device_groups, params[:page]), status: :ok
       end
 
       # GET /api/v1/device_groups/:id

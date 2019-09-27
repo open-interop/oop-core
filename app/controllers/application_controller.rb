@@ -8,4 +8,8 @@ class ApplicationController < ActionController::API
   before_action :login_required
 
   include ErrorsController
+
+  before_action do
+    params[:page] ||= {}
+  end
 end

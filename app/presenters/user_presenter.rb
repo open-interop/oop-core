@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class UserSerializer < ActiveModel::Serializer
+class UserPresenter < BasePresenter
   attributes :id, :email, :created_at, :updated_at
 end
