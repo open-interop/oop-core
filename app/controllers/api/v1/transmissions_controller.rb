@@ -36,11 +36,26 @@ module Api
 
       def filter_transmissions
         %i[
-          device_tempr_id message_uuid
-          transmission_uuid success status
+          device_tempr_id success status
         ].each do |filter|
-          params[filter].present? &&
-            @transmissions = @transmissions.where(filter => params[filter])
+          filter_value = params[filter.to_s.camelize(:lower)] || params[filter]
+
+          filter_value.present? &&
+            @transmissions =
+              @transmissions.where(filter => params[filter_value])
+        end
+
+        %i[
+          message_uuid transmission_uuid
+        ].each do |filter|
+          filter_value = params[filter.to_s.camelize(:lower)] || params[filter]
+
+          filter_value.present? &&
+            @transmissions =
+              @transmissions.where(
+                "\"transmissions\".\"#{filter}\" ILIKE ?",
+                "%#{filter_value}%"
+              )
         end
       end
     end

@@ -32,6 +32,10 @@ RSpec.describe Api::V1::TransmissionsController, type: :controller do
 
   describe 'GET #index' do
     it 'returns a success response' do
+      allow_any_instance_of(Device).to(
+        receive(:bunny_connection).and_return(BunnyMock.new.start)
+      )
+
       get(:index, params: { device_id: transmission.device.to_param })
       expect(response).to be_successful
     end
@@ -39,6 +43,10 @@ RSpec.describe Api::V1::TransmissionsController, type: :controller do
 
   describe 'GET #show' do
     it 'returns a success response' do
+      allow_any_instance_of(Device).to(
+        receive(:bunny_connection).and_return(BunnyMock.new.start)
+      )
+
       get( :show, params: { device_id: transmission.device.to_param, id: transmission.to_param })
       expect(response).to be_successful
     end

@@ -61,7 +61,7 @@ module Api
           :name,
           :description,
           :device_group_id,
-          body: [:language, :script]
+          body: %i[language script]
         )
       end
     end
