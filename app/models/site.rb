@@ -11,5 +11,10 @@ class Site < ApplicationRecord
   # Relationships
   #
   belongs_to :account
-  belongs_to :site, optional: :true
+  belongs_to :site, optional: true
+
+  #
+  # Serializers
+  #
+  serialize :external_uuids, Hash
 end

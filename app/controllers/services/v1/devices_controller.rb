@@ -7,7 +7,9 @@ module Services
 
       # GET /services/v1/devices/auth
       def auth
-        render json: Device.includes(:account).active.to_json(only: %i[id], methods: %i[authentication])
+        render json:
+          Device.includes(:account, :site).active
+                .to_json(only: %i[id], methods: %i[authentication site_info])
       end
 
       # GET /services/v1/devices/:id/temprs

@@ -53,6 +53,13 @@ class Device < ApplicationRecord
     end
   end
 
+  def site_info
+    {
+      name: site.name,
+      externalUuids: site.external_uuids
+    }
+  end
+
   def assign_tempr(tempr, params)
     device_temprs.create(
       device: self,

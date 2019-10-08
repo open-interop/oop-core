@@ -38,6 +38,7 @@ group :development, :test do
   gem 'faker'
   gem 'factory_bot_rails'
   gem 'dotenv-rails', groups: [:development, :test]
+  gem 'bunny-mock'
 end
 
 group :development do
