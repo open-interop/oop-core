@@ -3,22 +3,29 @@
 module Api
   module V1
     class DeviceTemprsController < ApplicationController
-      before_action :find_device
+      before_action :find_device_group
       before_action :find_device_tempr
 
-      # GET /api/v1/devices/:device_id/device_temprs
+      # GET /api/v1/device_groups/:device_group_id/device_temprs
       def index
-        @device_temprs = @device.device_temprs
+        @device_temprs =
+          DeviceTemprFilter.records(
+            params,
+            scope: @device_group
+          )
 
-        render json: DeviceTemprPresenter.collection(@device_temprs, params[:page]), status: :ok
+        render(
+          json: DeviceTemprPresenter.collection(@device_temprs, params[:page]),
+          status: :ok
+        )
       end
 
-      # GET /api/v1/devices/:device_id/device_temprs/:id
+      # GET /api/v1/device_groups/:device_group_id/device_temprs/:id
       def show
         render json: @device_tempr
       end
 
-      # POST /api/v1/devices/:device_id/device_temprs
+      # POST /api/v1/device_groups/:device_group_id/device_temprs
       def create
         @device_tempr = @device.device_temprs.new(device_tempr_params)
 
@@ -29,7 +36,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /api/v1/devices/:device_id/device_temprs/:id
+      # PATCH/PUT /api/v1/device_groups/:device_group_id/device_temprs/:id
       def update
         if @device_tempr.update(device_tempr_params)
           render json: @device_tempr
@@ -38,20 +45,30 @@ module Api
         end
       end
 
-      # DELETE /api/v1/devices/:device_id/device_temprs/:id
+      # DELETE /api/v1/device_groups/:device_group_id/device_temprs/:id
       def destroy
         @device_tempr.destroy
       end
 
       private
 
-      def find_device
-        @device = current_account.devices.find(params[:device_id])
+      def find_device_group
+        @device_group = current_account.device_groups.find(params[:device_group_id])
       end
 
       def find_device_tempr
         return if params[:id].blank?
-        @device_tempr = @device.device_temprs.find(params[:id])
+
+        @device_tempr =
+          DeviceTempr.includes(:device_group)
+                     .where(
+                       id: params[:id],
+                       device_group: { id: @device_group.id }
+                     )
+                     .references(:device_groups).first
+
+        @device_tempr.blank? &&
+          raise(ActiveRecord::RecordNotFound)
       end
 
       # Only allow a trusted parameter "white list" through.

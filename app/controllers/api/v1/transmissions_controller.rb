@@ -9,10 +9,10 @@ module Api
       # GET /api/v1/transmissions
       def index
         @transmissions =
-          @device.transmissions
-                 .order('transmissions.created_at desc')
-
-        filter_transmissions
+          TransmissionFilter.records(
+            params,
+            scope: @device
+          ).order('transmissions.created_at desc')
 
         render json:
           TransmissionPresenter.collection(@transmissions, params[:page]), status: :ok
@@ -33,35 +33,6 @@ module Api
         return if params[:id].blank?
 
         @transmission = @device.transmissions.find(params[:id])
-      end
-
-      def filter_transmissions
-        params.keys.include?('success') &&
-          @transmissions =
-            @transmissions.where(success: params[:success])
-
-        %w[
-          device_tempr_id status
-        ].each do |filter|
-          filter_value = (params[filter.camelize(:lower)] || params[filter])
-
-          filter_value.present? &&
-            @transmissions =
-              @transmissions.where(filter => filter_value)
-        end
-
-        %w[
-          message_uuid transmission_uuid
-        ].each do |filter|
-          filter_value = params[filter.camelize(:lower)] || params[filter]
-
-          filter_value.present? &&
-            @transmissions =
-              @transmissions.where(
-                "\"transmissions\".\"#{filter}\" ILIKE ?",
-                "%#{filter_value}%"
-              )
-        end
       end
     end
   end
