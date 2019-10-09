@@ -14,7 +14,8 @@ module Api
 
         filter_transmissions
 
-        render json: TransmissionPresenter.collection(@transmissions, params[:page]), status: :ok
+        render json:
+          TransmissionPresenter.collection(@transmissions, params[:page]), status: :ok
       end
 
       # GET /api/v1/transmissions/1
@@ -35,20 +36,24 @@ module Api
       end
 
       def filter_transmissions
-        %i[
-          device_tempr_id success status
+        params.keys.include?('success') &&
+          @transmissions =
+            @transmissions.where(success: params[:success])
+
+        %w[
+          device_tempr_id status
         ].each do |filter|
-          filter_value = params[filter.to_s.camelize(:lower)] || params[filter]
+          filter_value = (params[filter.camelize(:lower)] || params[filter])
 
           filter_value.present? &&
             @transmissions =
-              @transmissions.where(filter => params[filter_value])
+              @transmissions.where(filter => filter_value)
         end
 
-        %i[
+        %w[
           message_uuid transmission_uuid
         ].each do |filter|
-          filter_value = params[filter.to_s.camelize(:lower)] || params[filter]
+          filter_value = params[filter.camelize(:lower)] || params[filter]
 
           filter_value.present? &&
             @transmissions =
