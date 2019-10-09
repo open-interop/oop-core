@@ -9,7 +9,8 @@ module Api
       def index
         @sites = current_account.sites
 
-        render json: SitePresenter.collection(@sites, params[:page]), status: :ok
+        render json:
+          SitePresenter.collection(@sites, params[:page]), status: :ok
       end
 
       # GET /api/v1/sites/:id
