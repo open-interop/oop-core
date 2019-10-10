@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :users
       resources :device_groups do
         resources :temprs
+        resources :device_temprs
       end
       resources :sites
       resources :devices do
@@ -23,8 +24,6 @@ Rails.application.routes.draw do
 
         get 'transmissions', to: 'transmissions#index'
         get 'transmissions/:id', to: 'transmissions#show'
-
-        resources :device_temprs
       end
 
       post '/auth/login', to: 'sessions#create'

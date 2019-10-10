@@ -9,7 +9,7 @@ RSpec.describe 'API::V1::DeviceTemprs', type: :request do
         receive(:bunny_connection).and_return(BunnyMock.new.start)
       )
 
-      get api_v1_device_device_temprs_path(device.id), headers: { Authorization: JsonWebToken.encode(user_id: FactoryBot.create(:user).id) }
+      get api_v1_device_group_device_temprs_path(device.device_group.id), headers: { Authorization: JsonWebToken.encode(user_id: FactoryBot.create(:user).id) }
       expect(response).to have_http_status(200)
     end
   end
