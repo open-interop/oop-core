@@ -60,10 +60,10 @@ module Api
         return if params[:id].blank?
 
         @device_tempr =
-          DeviceTempr.includes(:device_group)
+          DeviceTempr.includes(device: :device_group)
                      .where(
                        id: params[:id],
-                       device_group: { id: @device_group.id }
+                       device_groups: { id: @device_group.id }
                      )
                      .references(:device_groups).first
 
