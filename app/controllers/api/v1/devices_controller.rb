@@ -71,6 +71,7 @@ module Api
           :longitude,
           :latitude,
           :time_zone,
+          :active,
           authentication_headers: [[]],
           authentication_query: [[]]
         ).tap do |whitelist|
