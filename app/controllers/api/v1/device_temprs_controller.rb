@@ -27,7 +27,7 @@ module Api
 
       # POST /api/v1/device_groups/:device_group_id/device_temprs
       def create
-        @device_tempr = @device.device_temprs.new(device_tempr_params)
+        @device_tempr = DeviceTempr.new(device_tempr_params)
 
         if @device_tempr.save
           render json: @device_tempr, status: :created
@@ -53,7 +53,8 @@ module Api
       private
 
       def find_device_group
-        @device_group = current_account.device_groups.find(params[:device_group_id])
+        @device_group =
+          current_account.device_groups.find(params[:device_group_id])
       end
 
       def find_device_tempr
