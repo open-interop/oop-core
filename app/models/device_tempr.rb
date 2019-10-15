@@ -7,7 +7,7 @@ class DeviceTempr < ApplicationRecord
   # Validations
   #
   validates :endpoint_type, presence: true
-  validates :queue_response, presence: true
+  validates :queue_response, inclusion: { in: [true, false] }
   validates :options, presence: true
 
   #
