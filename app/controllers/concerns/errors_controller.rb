@@ -11,8 +11,6 @@ module ErrorsController
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
   end
 
-  private
-
   def not_found(errors = '')
     render json: {
       message: 'not_found',

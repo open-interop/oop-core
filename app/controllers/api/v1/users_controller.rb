@@ -9,12 +9,13 @@ module Api
       def index
         @users = current_account.users
 
-        render json: UserPresenter.collection(@users, params[:page]), status: :ok
+        render json:
+          UserPresenter.collection(@users, params[:page]), status: :ok
       end
 
       # GET /api/v1/users/:id
       def show
-        render json: @user.to_json(only: [:id, :email, :time_zone]), status: :ok
+        render json: @user.to_json(only: %i[id email time_zone]), status: :ok
       end
 
       # POST /api/v1/users
@@ -22,7 +23,8 @@ module Api
         @user = current_account.users.build(user_params)
 
         if @user.save
-          render json: @user.to_json(only: [:id, :email, :time_zone]), status: :created
+          render json:
+            @user.to_json(only: %i[id email time_zone]), status: :created
         else
           render json: @user.errors,
                  status: :unprocessable_entity
@@ -50,8 +52,6 @@ module Api
         return if params[:id].blank?
 
         @user = current_account.users.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        render json: { errors: 'User not found' }, status: :not_found
       end
 
       def user_params

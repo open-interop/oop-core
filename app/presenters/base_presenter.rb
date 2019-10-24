@@ -20,8 +20,8 @@ class BasePresenter
               .per(@page_params[:size])
 
     {
-      totalRecords: @records.total_count,
-      numberOfPages: @records.total_pages,
+      total_records: @records.total_count,
+      number_of_pages: @records.total_pages,
       page: { number: @records.current_page, size: @records.limit_value },
       data: data
     }
@@ -31,7 +31,7 @@ class BasePresenter
     @records.map do |record|
       {}.tap do |h|
         self.class.fields.each do |f|
-          h[f.to_s.camelize(:lower)] = record.send(f)
+          h[f] = record.send(f)
         end
       end
     end
