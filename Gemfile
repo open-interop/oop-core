@@ -18,7 +18,7 @@ gem 'bcrypt', '3.1.12'
 
 gem 'jwt'
 gem 'rswag'
-gem "bunny", ">= 2.14.1"
+gem 'bunny', '>= 2.14.1'
 
 gem 'kaminari'
 
@@ -33,11 +33,11 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 3.6'
   gem 'faker'
   gem 'factory_bot_rails'
-  gem 'dotenv-rails', groups: [:development, :test]
+  gem 'dotenv-rails', groups: %i[development test]
   gem 'bunny-mock'
 end
 
@@ -47,4 +47,4 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

@@ -6,9 +6,11 @@ class DeviceTempr < ApplicationRecord
   #
   # Validations
   #
+  validates :name, presence: true
   validates :endpoint_type, presence: true
   validates :queue_response, inclusion: { in: [true, false] }
   validates :options, presence: true
+  validates_with DeviceTemprOptionsValidator
 
   #
   # Relationships
@@ -20,19 +22,6 @@ class DeviceTempr < ApplicationRecord
   # Serializations
   #
   serialize :options, Hash
-
-  def as_json(_options = {})
-    {
-      id: id,
-      deviceId: device_id,
-      temprId: tempr_id,
-      endpointType: endpoint_type,
-      queueResponse: queue_response,
-      template: template,
-      createdAt: created_at,
-      updatedAt: created_at
-    }
-  end
 
   def template
     @template ||= begin

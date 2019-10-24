@@ -7,7 +7,8 @@ class ServicesController < ApplicationController
   private
 
   def authenticate_as_microservice
-    return if request.headers['X-Core-Token'] == ENV['OOP_CORE_TOKEN']
+    return if ENV['OOP_CORE_TOKEN'].present? &&
+              request.headers['X-Core-Token'] == ENV['OOP_CORE_TOKEN']
 
     access_denied
   end

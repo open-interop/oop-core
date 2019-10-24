@@ -4,6 +4,8 @@
 class User < ApplicationRecord
   has_secure_password
 
+  attr_accessor :password_confirmation
+
   #
   # Validations
   #
@@ -12,7 +14,10 @@ class User < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password,
             length: { minimum: 6 },
-            if: -> { new_record? || !password.nil? }
+            if: -> { new_record? || !password.nil? },
+            confirmation: true
+  validates :password_confirmation, presence: true, if: -> { !password.nil? }
+  validates :time_zone, presence: true
 
   #
   # Relationships

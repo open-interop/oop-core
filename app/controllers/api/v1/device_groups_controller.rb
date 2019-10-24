@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class DeviceGroupsController < ::ApplicationController
+    class DeviceGroupsController < ApplicationController
       before_action :find_device_group, only: %i[show update destroy]
 
       # GET /api/v1/device_groups

@@ -9,7 +9,8 @@ module Api
       def index
         @devices = current_account.devices
 
-        render json: DevicePresenter.collection(@devices, params[:page]), status: :ok
+        render json:
+          DevicePresenter.collection(@devices, params[:page]), status: :ok
       end
 
       # GET /api/v1/devices/:id
@@ -57,6 +58,7 @@ module Api
 
       def find_device
         return if params[:id].blank?
+
         @device = current_account.devices.find(params[:id])
       end
 
@@ -75,8 +77,11 @@ module Api
           authentication_headers: [[]],
           authentication_query: [[]]
         ).tap do |whitelist|
-          whitelist[:authentication_headers] = params[:device][:authentication_headers]
-          whitelist[:authentication_query] = params[:device][:authentication_query]
+          whitelist[:authentication_headers] =
+            params[:device][:authentication_headers]
+
+          whitelist[:authentication_query] =
+            params[:device][:authentication_query]
         end
       end
 
@@ -85,7 +90,7 @@ module Api
           :endpoint_type,
           :queue_response,
           :options,
-          options: [:host, :port, :path, :requestMethod, :protocol, :headers]
+          options: %i[host port path request_method protocol headers]
         )
       end
     end

@@ -32,21 +32,21 @@ class BaseFilter
 
   def filter_integer_fields
     self.class.filterable_fields[:integer].each do |field|
-      filter_params[field.camelize(:lower)].present? &&
+      filter_params[field].present? &&
         @filtered_records =
           @filtered_records.where(
-            field => filter_params[field.camelize(:lower)]
+            field => filter_params[field]
           )
     end
   end
 
   def filter_string_fields
     self.class.filterable_fields[:string].each do |field|
-      filter_params[field.camelize(:lower)].present? &&
+      filter_params[field].present? &&
         @filtered_records =
           @filtered_records.where(
             "\"transmissions\".\"#{field}\" ILIKE ?",
-            "%#{filter_params[field.camelize(:lower)]}%"
+            "%#{filter_params[field]}%"
           )
     end
   end
@@ -56,7 +56,7 @@ class BaseFilter
       filter_params.keys.include?(field) &&
         @filtered_records =
           @filtered_records.where(
-            field => filter_params[field.camelize(:lower)]
+            field => filter_params[field]
           )
     end
   end
@@ -70,7 +70,7 @@ class BaseFilter
       self.class.filterable_fields[:integer] +
       self.class.filterable_fields[:string] +
       self.class.filterable_fields[:boolean]
-    ).map { |f| [f, f.camelize(:lower)] }.flatten
+    ).map { |f| [f, f] }.flatten
   end
 
   def filter_params
