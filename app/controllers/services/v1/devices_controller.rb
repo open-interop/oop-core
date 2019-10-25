@@ -15,10 +15,9 @@ module Services
       # GET /services/v1/devices/:id/temprs
       def temprs
         render json:
-          {
-            ttl: 10_000,
-            data: @device.device_temprs
-          }
+          DeviceTemprPresenter.collection_for_microservices(
+            @device.device_temprs
+          )
       end
 
       private

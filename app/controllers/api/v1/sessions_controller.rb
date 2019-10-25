@@ -24,7 +24,7 @@ module Api
       # GET /api/v1/me
       def me
         render json:
-          current_user.to_json(only: %i[id email time_zone])
+          current_user.to_json(only: %i[id email time_zone created_at updated_at])
       end
 
       private

@@ -15,7 +15,7 @@ module Api
 
       # GET /api/v1/users/:id
       def show
-        render json: @user.to_json(only: %i[id email time_zone]), status: :ok
+        render json: @user.to_json(only: %i[id email time_zone created_at updated_at]), status: :ok
       end
 
       # POST /api/v1/users
@@ -24,7 +24,7 @@ module Api
 
         if @user.save
           render json:
-            @user.to_json(only: %i[id email time_zone]), status: :created
+            @user.to_json(only: %i[id email time_zone created_at updated_at]), status: :created
         else
           render json: @user.errors,
                  status: :unprocessable_entity
