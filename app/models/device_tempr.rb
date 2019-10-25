@@ -24,10 +24,15 @@ class DeviceTempr < ApplicationRecord
   serialize :options, Hash
 
   def template
-    @template ||= begin
-      options.tap do |h|
-        h[:body] = tempr&.body
-      end
-    end
+    @template ||=
+      {
+        host: options[:host],
+        port: options[:port],
+        path: options[:path],
+        requestMethod: options[:request_method] || options[:requestMethod],
+        protocol: options[:protocol],
+        headers: options[:headers],
+        body: tempr&.body
+      }
   end
 end

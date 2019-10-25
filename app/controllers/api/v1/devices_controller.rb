@@ -86,7 +86,7 @@ module Api
       end
 
       def device_tempr_params
-        params.require(:device_tempr).permit(
+        params.fetch(:device_tempr).permit(
           :endpoint_type,
           :queue_response,
           :options,
