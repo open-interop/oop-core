@@ -39,7 +39,7 @@ class Device < ApplicationRecord
 
   def authentication
     @authentication ||= {
-      hostname: account.hostname
+      'hostname' => account.hostname
     }.tap do |h|
       authentication_headers.each do |header|
         h["headers.#{header[0].downcase}"] = header[1]
@@ -52,20 +52,6 @@ class Device < ApplicationRecord
       authentication_path.present? &&
         h['path'] = authentication_path
     end
-  end
-
-  def site_info
-    {
-      name: site.name,
-      externalUuids: site.external_uuids
-    }
-  end
-
-  def assign_tempr(tempr, params)
-    device_temprs.create(
-      device: self,
-      tempr: tempr
-    )
   end
 
   def authentication_details_changed?
@@ -89,6 +75,8 @@ class Device < ApplicationRecord
   end
 
   def queue_from_update
+    @authentication = nil
+
     bunny_exchange.publish(
       {
         action: 'update',

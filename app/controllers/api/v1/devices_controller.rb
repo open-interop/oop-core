@@ -47,11 +47,9 @@ module Api
       def assign_tempr
         @tempr = @device.device_group.temprs.find(params[:tempr_id])
 
-        if @device.assign_tempr(@tempr, device_tempr_params)
-          render nothing: true, status: :created
-        else
-          render nothing: true, status: :unprocessable_entity
-        end
+        @device_tempr = @device.device_temprs.create(tempr: @tempr)
+
+        render json: @device_tempr, status: :created
       end
 
       private
@@ -83,15 +81,6 @@ module Api
           whitelist[:authentication_query] =
             params[:device][:authentication_query]
         end
-      end
-
-      def device_tempr_params
-        params.fetch(:device_tempr).permit(
-          :endpoint_type,
-          :queue_response,
-          :options,
-          options: %i[host port path request_method protocol headers]
-        )
       end
     end
   end

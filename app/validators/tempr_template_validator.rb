@@ -25,6 +25,9 @@ class TemprTemplateValidator < ActiveModel::Validator
   end
 
   def missing_options?(record_options)
+    return true if record_options.blank?
+    return true if record_options.is_a?(Array)
+
     [
       record_options[:host],
       record_options[:port],
