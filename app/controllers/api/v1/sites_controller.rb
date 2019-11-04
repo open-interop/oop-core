@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/sites
       def index
-        @sites = current_account.sites
+        @sites = SiteFilter.records(params, scope: current_account)
 
         render json:
           SitePresenter.collection(@sites, params[:page]), status: :ok

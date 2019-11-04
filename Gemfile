@@ -39,6 +39,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'dotenv-rails', groups: %i[development test]
   gem 'bunny-mock'
+  gem 'simplecov'
 end
 
 group :development do

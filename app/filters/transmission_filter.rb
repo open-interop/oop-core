@@ -10,5 +10,10 @@ class TransmissionFilter < BaseFilter
     Transmission
       .includes(:device)
       .where(devices: { id: scope.id })
+      .order("#{table_name}.created_at desc")
+  end
+
+  def table_name
+    Transmission.table_name
   end
 end

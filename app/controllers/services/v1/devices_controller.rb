@@ -9,14 +9,15 @@ module Services
       def auth
         render json:
           Device.includes(:account, :site).active
-                .to_json(only: %i[id], methods: %i[authentication site_info])
+                .to_json(only: %i[id], methods: %i[authentication])
       end
 
       # GET /services/v1/devices/:id/temprs
       def temprs
         render json:
-          DeviceTemprPresenter.collection_for_microservices(
-            @device.device_temprs
+          TemprPresenter.collection_for_microservices(
+            @device.id,
+            @device.temprs,
           )
       end
 

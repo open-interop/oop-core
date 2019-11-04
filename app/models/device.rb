@@ -16,6 +16,7 @@ class Device < ApplicationRecord
   belongs_to :site
 
   has_many :device_temprs
+  has_many :temprs, through: :device_temprs
   has_many :transmissions
 
   #
@@ -63,10 +64,7 @@ class Device < ApplicationRecord
   def assign_tempr(tempr, params)
     device_temprs.create(
       device: self,
-      tempr: tempr,
-      endpoint_type: params[:endpoint_type],
-      queue_response: params[:queue_response],
-      options: params[:options].to_h
+      tempr: tempr
     )
   end
 

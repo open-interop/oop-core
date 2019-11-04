@@ -27,3 +27,5 @@ node_modules
 config/credentials.yml.enc
 
 .env
+coverage
+.DS_Store

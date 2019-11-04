@@ -7,9 +7,16 @@ module Api
 
       # GET /api/v1/device_groups
       def index
-        @device_groups = current_account.device_groups
+        @device_groups =
+          DeviceGroupFilter.records(
+            params,
+            scope: current_account
+          )
 
-        render json: DeviceGroupPresenter.collection(@device_groups, params[:page]), status: :ok
+        render(
+          json: DeviceGroupPresenter.collection(@device_groups, params[:page]),
+          status: :ok
+        )
       end
 
       # GET /api/v1/device_groups/:id

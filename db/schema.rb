@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_15_122201) do
+ActiveRecord::Schema.define(version: 2019_11_04_122136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 2019_10_15_122201) do
     t.text "external_uuids"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "full_name"
   end
 
   create_table "temprs", force: :cascade do |t|
@@ -85,6 +86,11 @@ ActiveRecord::Schema.define(version: 2019_10_15_122201) do
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "account_id"
+    t.string "endpoint_type"
+    t.boolean "queue_response", default: false
+    t.boolean "queue_request", default: false
+    t.text "template"
   end
 
   create_table "transmissions", force: :cascade do |t|

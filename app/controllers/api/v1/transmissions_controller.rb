@@ -12,7 +12,7 @@ module Api
           TransmissionFilter.records(
             params,
             scope: @device
-          ).order('transmissions.created_at desc')
+          )
 
         render json:
           TransmissionPresenter.collection(@transmissions, params[:page]), status: :ok

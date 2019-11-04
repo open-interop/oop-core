@@ -72,7 +72,7 @@ RSpec.describe Api::V1::SitesController, type: :controller do
         post :create, params: {site: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(site_url(Site.last))
+        expect(response.location).to eq(api_v1_site_url(Site.last))
       end
     end
 
