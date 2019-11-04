@@ -3,24 +3,23 @@
 module Api
   module V1
     class TemprsController < ApplicationController
-      before_action :find_device_group
       before_action :find_tempr
 
-      # GET /api/v1/device_groups/:device_group_id/temprs
+      # GET /api/v1/temprs
       def index
-        @temprs = @device_group.temprs
+        @temprs = TemprFilter.records(params, scope: current_account)
 
         render json: TemprPresenter.collection(@temprs, params[:page]), status: :ok
       end
 
-      # GET /api/v1/device_groups/:device_group_id/temprs/:id
+      # GET /api/v1/temprs/:id
       def show
         render json: @tempr
       end
 
-      # POST /api/v1/device_groups/:device_group_id/temprs
+      # POST /api/v1/temprs
       def create
-        @tempr = @device_group.temprs.build(tempr_params)
+        @tempr = current_account.temprs.build(tempr_params)
 
         if @tempr.save
           render json: @tempr, status: :created
@@ -29,7 +28,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /api/v1/device_groups/:device_group_id/temprs/:id
+      # PATCH/PUT /api/v1/temprs/:id
       def update
         if @tempr.update(tempr_params)
           render json: @tempr
@@ -38,22 +37,18 @@ module Api
         end
       end
 
-      # DELETE /api/v1/device_groups/:device_group_id/temprs/:id
+      # DELETE /api/v1/temprs/:id
       def destroy
         @tempr.destroy
+        render nothing: true, status: 200
       end
 
       private
 
-      def find_device_group
-        @device_group =
-          current_account.device_groups.find(params[:device_group_id])
-      end
-
       def find_tempr
         return if params[:id].blank?
 
-        @tempr = @device_group.temprs.find(params[:id])
+        @tempr = current_account.temprs.find(params[:id])
       end
 
       def tempr_params
@@ -61,7 +56,12 @@ module Api
           :name,
           :description,
           :device_group_id,
-          body: %i[language script]
+          :device_id,
+          :tempr_id,
+          :endpoint_type,
+          :queue_response,
+          :queue_request,
+          { template: {} }
         )
       end
     end

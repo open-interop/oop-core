@@ -15,7 +15,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
     end
 
     let!(:transmissions) do
-      Array.new(10) do
+      Array.new(30) do
         FactoryBot.create(:transmission, device: device)
       end
     end
@@ -31,11 +31,11 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       expect(response.content_type).to eq('application/json; charset=utf-8')
     end
 
-    it { expect(json_body['total_records']).to eq(10) }
-    it { expect(json_body['number_of_pages']).to eq(1) }
+    it { expect(json_body['total_records']).to eq(30) }
+    it { expect(json_body['number_of_pages']).to eq(2) }
     it { expect(json_body['page']['number']).to eq(1) }
-    it { expect(json_body['page']['size']).to eq(10) }
-    it { expect(json_body['data'].size).to eq(10) }
+    it { expect(json_body['page']['size']).to eq(20) }
+    it { expect(json_body['data'].size).to eq(20) }
 
     describe 'matches the latest transmission' do
       it { expect(json_body['data'][0]['id']).to eq(transmissions.last.id) }

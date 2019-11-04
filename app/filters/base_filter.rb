@@ -45,7 +45,7 @@ class BaseFilter
       filter_params[field].present? &&
         @filtered_records =
           @filtered_records.where(
-            "\"transmissions\".\"#{field}\" ILIKE ?",
+            "\"#{table_name}\".\"#{field}\" ILIKE ?",
             "%#{filter_params[field]}%"
           )
     end
@@ -62,6 +62,10 @@ class BaseFilter
   end
 
   def base_scope
+    raise 'Not implemented'
+  end
+
+  def table_name
     raise 'Not implemented'
   end
 

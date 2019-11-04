@@ -10,6 +10,7 @@ class Account < ApplicationRecord
   has_many :device_groups
   has_many :devices
   has_many :sites
+  has_many :temprs
 
   #
   # Scopes

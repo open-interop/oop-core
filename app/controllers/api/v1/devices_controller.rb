@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/devices
       def index
-        @devices = current_account.devices
+        @devices = DeviceFilter.records(params, scope: current_account)
 
         render json:
           DevicePresenter.collection(@devices, params[:page]), status: :ok

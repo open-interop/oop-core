@@ -4,15 +4,6 @@
 # this is the join table between device and tempr
 class DeviceTempr < ApplicationRecord
   #
-  # Validations
-  #
-  validates :name, presence: true
-  validates :endpoint_type, presence: true
-  validates :queue_response, inclusion: { in: [true, false] }
-  validates :options, presence: true
-  validates_with DeviceTemprOptionsValidator
-
-  #
   # Relationships
   #
   belongs_to :device

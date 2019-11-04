@@ -12,11 +12,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users
-      resources :device_groups do
-        resources :temprs
-        resources :device_temprs
-      end
+
+      resources :device_groups
+
+      resources :temprs
+
       resources :sites
+
       resources :devices do
         member do
           post 'assign_tempr', to: 'devices#assign_tempr'
@@ -25,6 +27,9 @@ Rails.application.routes.draw do
         get 'transmissions', to: 'transmissions#index'
         get 'transmissions/:id', to: 'transmissions#show'
       end
+
+      post '/passwords', to: 'passwords#create'
+      post '/passwords/reset', to: 'passwords#reset'
 
       post '/auth/login', to: 'sessions#create'
       get '/me', to: 'sessions#me'

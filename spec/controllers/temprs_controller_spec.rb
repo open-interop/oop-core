@@ -24,104 +24,101 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe Api::V1::TemprsController, type: :controller do
+  let!(:device_group) { FactoryBot.create(:device_group) }
+  let!(:tempr) { FactoryBot.create(:tempr, device_group: device_group) }
 
   # This should return the minimal set of attributes required to create a valid
   # Tempr. As you add validations to Tempr, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  let(:valid_attributes) do
+    FactoryBot.attributes_for(:tempr, device_group_id: device_group.id)
+  end
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+  let(:invalid_attributes) { { name: nil } }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # TemprsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
-
-  describe "GET #index" do
-    it "returns a success response" do
-      tempr = Tempr.create! valid_attributes
-      get :index, params: {}, session: valid_session
+  describe 'GET #index' do
+    it 'returns a success response' do
+      get :index, params: {}
       expect(response).to be_successful
     end
   end
 
-  describe "GET #show" do
-    it "returns a success response" do
-      tempr = Tempr.create! valid_attributes
-      get :show, params: {id: tempr.to_param}, session: valid_session
+  describe 'GET #show' do
+    it 'returns a success response' do
+      get :show, params: { id: tempr.to_param }
       expect(response).to be_successful
     end
   end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Tempr" do
-        expect {
-          post :create, params: {tempr: valid_attributes}, session: valid_session
-        }.to change(Tempr, :count).by(1)
+  describe 'POST #create' do
+    context 'with valid params' do
+      it 'creates a new Tempr' do
+        expect do
+          post :create, params: { tempr: valid_attributes }
+        end.to change(Tempr, :count).by(1)
       end
 
-      it "renders a JSON response with the new tempr" do
+      context 'renders a JSON response with the new tempr' do
+        before do
+          post :create, params: { tempr: valid_attributes }
+        end
 
-        post :create, params: {tempr: valid_attributes}, session: valid_session
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(tempr_url(Tempr.last))
-      end
-    end
-
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new tempr" do
-
-        post :create, params: {tempr: invalid_attributes}, session: valid_session
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested tempr" do
-        tempr = Tempr.create! valid_attributes
-        put :update, params: {id: tempr.to_param, tempr: new_attributes}, session: valid_session
-        tempr.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the tempr" do
-        tempr = Tempr.create! valid_attributes
-
-        put :update, params: {id: tempr.to_param, tempr: valid_attributes}, session: valid_session
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
+        it { expect(response).to have_http_status(:created) }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
       end
     end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the tempr" do
-        tempr = Tempr.create! valid_attributes
+    context 'with invalid params' do
+      before do
+        post :create, params: { tempr: invalid_attributes }
+      end
 
-        put :update, params: {id: tempr.to_param, tempr: invalid_attributes}, session: valid_session
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
+      context 'renders a JSON response with errors for the new tempr' do
+        it { expect(response).to have_http_status(:unprocessable_entity) }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
       end
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested tempr" do
-      tempr = Tempr.create! valid_attributes
+  describe 'PUT #update' do
+    context 'with valid params' do
+      let(:new_attributes) { { name: 'New Name' } }
+
+      context 'updates the requested tempr' do
+        before do
+          put :update, params: { id: tempr.to_param, tempr: new_attributes }
+          tempr.reload
+        end
+
+        it { expect(tempr.name).to eq('New Name') }
+      end
+
+      context 'renders a JSON response with the tempr' do
+        before do
+          put :update, params: { id: tempr.to_param, tempr: valid_attributes }
+        end
+
+        it { expect(response).to have_http_status(:ok) }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
+      end
+    end
+
+    context 'with invalid params' do
+      context 'renders a JSON response with errors for the tempr' do
+        before do
+          put :update, params: { id: tempr.to_param, tempr: invalid_attributes }
+        end
+
+        it { expect(response).to have_http_status(:unprocessable_entity) }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'destroys the requested tempr' do
       expect {
-        delete :destroy, params: {id: tempr.to_param}, session: valid_session
+        delete :destroy, params: {id: tempr.to_param}
       }.to change(Tempr, :count).by(-1)
     end
   end
