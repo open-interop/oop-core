@@ -7,7 +7,7 @@ module Api
 
       # GET /api/v1/users
       def index
-        @users = current_account.users
+        @users = UserFilter.records(params, scope: current_account)
 
         render json:
           UserPresenter.collection(@users, params[:page]), status: :ok

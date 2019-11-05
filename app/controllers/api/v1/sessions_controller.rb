@@ -11,7 +11,7 @@ module Api
         @current_user =
           User.authenticate_with_password(
             current_account,
-            params[:email], params[:password]
+            login_params[:email], login_params[:password]
           )
 
         if logged_in?

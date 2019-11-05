@@ -21,10 +21,6 @@ module AuthenticationController
     logged_in? || access_denied
   end
 
-  def access_denied
-    render json: { error: 'unauthorized' }, status: :unauthorized
-  end
-
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header

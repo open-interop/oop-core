@@ -25,14 +25,22 @@ class User < ApplicationRecord
   belongs_to :account
 
   #
+  # Callbacks
+  #
+  after_create :send_welcome_email
+
+  def send_welcome_email
+    UserMailer.welcome(self).deliver_now
+  end
+
+  #
   # Authentication
   #
   def self.authenticate_with_password(account, email, password)
     user =
       account.users.find_by(email: email)
 
-    user.blank? &&
-      raise(OpenInterop::Errors::AccessDenied)
+    return if user.blank?
 
     user.authenticate(password)
   end
