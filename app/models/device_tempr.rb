@@ -10,6 +10,11 @@ class DeviceTempr < ApplicationRecord
   belongs_to :tempr
 
   #
+  # Validations
+  #
+  validates :tempr_id, uniqueness: { scope: :device_id }
+
+  #
   # Serializations
   #
   serialize :options, Hash

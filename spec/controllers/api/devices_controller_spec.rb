@@ -3,12 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::DevicesController, type: :controller do
-  before do
-    allow_any_instance_of(Device).to(
-      receive(:bunny_connection).and_return(BunnyMock.new.start)
-    )
-  end
-
   let!(:device) { FactoryBot.create(:device) }
 
   let(:valid_attributes) do

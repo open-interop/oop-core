@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users
 
+      resources :device_temprs, only: %i[index create destroy]
+
       resources :device_groups
 
       resources :temprs
