@@ -4,8 +4,8 @@
 class SiteFilter < BaseFilter
   filterable_attributes integer: %w[id account_id site_id latitude longitude],
                         string: %w[
-                          name description address city state
-                          zip_code country region time_zone
+                          name full_name description address city
+                          state zip_code country region time_zone
                         ],
                         boolean: %w[]
 

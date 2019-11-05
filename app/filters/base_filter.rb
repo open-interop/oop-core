@@ -9,14 +9,32 @@ class BaseFilter
   end
 
   def self.filterable_fields
-    @filterable_fields
+    @filterable_fields || {}
   end
 
   def self.filterable_attributes(filterable_fields = {})
     @filterable_fields = filterable_fields
   end
 
+  def self.required_or_field
+    @required_or_field || []
+  end
+
+  def self.require_one_of(required_or_field = [])
+    @required_or_field = required_or_field
+  end
+
+  def self.required_and_field
+    @required_and_field || []
+  end
+
+  def self.required_fields(required_and_field = [])
+    @required_and_field = required_and_field
+  end
+
   def records
+    return base_scope.none unless required_attributes?
+
     @records ||= begin
       @filtered_records = base_scope
 
@@ -74,14 +92,22 @@ class BaseFilter
       self.class.filterable_fields[:integer] +
       self.class.filterable_fields[:string] +
       self.class.filterable_fields[:boolean]
-    ).map { |f| [f, f] }.flatten
+    ).flatten
   end
 
   def filter_params
     params.fetch(:filter).permit(all_filterable_fields)
   end
 
-  def self.records(filter_params, options)
+  def required_attributes?
+    self.class.required_and_field.all? { |f| params[:filter]&.include?(f) } &&
+      (
+        self.class.required_or_field.blank? ||
+          self.class.required_or_field.any? { |f| params[:filter]&.include?(f) }
+      )
+  end
+
+  def self.records(filter_params, options = {})
     new(filter_params, options).records
   end
 end

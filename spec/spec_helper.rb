@@ -51,6 +51,12 @@ RSpec.configure do |config|
     FactoryBot.create(:account, hostname: 'www.example.com')
   end
 
+  config.before(:each) do
+    allow_any_instance_of(Device).to(
+      receive(:bunny_connection).and_return(BunnyMock.new.start)
+    )
+  end
+
   config.before(:each, type: :controller) do
     FactoryBot.create(:account, hostname: 'test.host')
 

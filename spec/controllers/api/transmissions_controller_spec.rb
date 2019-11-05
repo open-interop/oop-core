@@ -3,12 +3,6 @@ require 'rails_helper'
 RSpec.describe Api::V1::TransmissionsController, type: :controller do
   let(:transmission) { FactoryBot.create(:transmission) }
 
-  before do
-    allow_any_instance_of(Device).to(
-      receive(:bunny_connection).and_return(BunnyMock.new.start)
-    )
-  end
-
   describe 'GET #index' do
     context 'returns a success response' do
       before do
