@@ -1,30 +1,89 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
 version: 2
 jobs:
   build:
-    working_directory: ~/appName
     docker:
-      - image: ruby:2.6.3
+      # specify the version you desire here
+      - image: circleci/ruby:2.6.3-node-browsers
         environment:
           PG_HOST: localhost
           PG_USER: ubuntu
           RAILS_ENV: test
           RACK_ENV: test
-      # The following example uses the official postgres 9.6 image, you may also use circleci/postgres:9.6
-      # which includes a few enhancements and modifications. It is possible to use either image.
-      - image: postgres:10-postgis
+
+      - image: circleci/postgres:10-postgis
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: db_name
+
       - image: rabbitmq:3.7
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
     steps:
       - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
       - run:
-          name: Install Ruby Dependencies
-          command: bundle install
-      - run:
-          name: Set up DB
+          name: install dependencies
           command: |
-            bundle exec rake db:create db:schema:load --trace
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Database setup
+      - run:
+          name: Setup the database
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:schema:load --trace
             bundle exec rake db:migrate
-        environment:
-          DATABASE_URL: "postgres://ubuntu@localhost:5432/db_name"
+
+          environment:
+            DATABASE_URL: "postgres://ubuntu@localhost:5432/db_name"
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | \
+              circleci tests split --split-by=timings)"
+
+            bundle exec rspec \
+              --format progress \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/rspec.xml \
+              --format progress \
+              $TEST_FILES
+
+          environment:
+            DATABASE_URL: "postgres://ubuntu@localhost:5432/db_name"
+            OOP_CORE_TOKEN: core_test_auth_token
+            OOP_AMQP_ADDRESS: amqp://localhost
+            OOP_CORE_RESPONSE_Q: oop.core.transmissions
+            OOP_CORE_DEVICE_UPDATE_EXCHANGE: oop.core.devices
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
