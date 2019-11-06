@@ -95,6 +95,24 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
         end
         it { expect(json_body['total_records']).to eq(matching_transmissions.size) }
       end
+
+      context 'with all records' do
+        before do
+          get(
+            api_v1_device_transmissions_path(device),
+            params: { page: { size: -1 } },
+            headers: authorization_headers
+          )
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        it { expect(json_body['total_records']).to eq(21) }
+        it { expect(json_body['number_of_pages']).to eq(1) }
+        it { expect(json_body['page']['number']).to eq(1) }
+        it { expect(json_body['page']['size']).to eq(21) }
+        it { expect(json_body['data'].size).to eq(21) }
+      end
     end
   end
 end

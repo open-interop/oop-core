@@ -61,7 +61,7 @@ module Api
           :endpoint_type,
           :queue_response,
           :queue_request,
-          { template: {} }
+          { template: {}, example_transmission: {} }
         )
       end
     end

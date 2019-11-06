@@ -15,9 +15,15 @@ class BasePresenter
   end
 
   def collection_for_json
-    @records =
-      @records.page(@page_params[:number] || 1)
-              .per(@page_params[:size] || 20)
+    if @page_params[:size].to_i == -1
+      @records =
+        @records.page(1)
+                .per(@records.count)
+    else
+      @records =
+        @records.page(@page_params[:number] || 1)
+                .per(@page_params[:size] || 20)
+    end
 
     {
       total_records: @records.total_count,
