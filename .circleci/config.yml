@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/appName
+    docker:
+      - image: ruby:2.6.3
+        environment:
+          PG_HOST: localhost
+          PG_USER: ubuntu
+          RAILS_ENV: test
+          RACK_ENV: test
+      # The following example uses the official postgres 9.6 image, you may also use circleci/postgres:9.6
+      # which includes a few enhancements and modifications. It is possible to use either image.
+      - image: postgres:10-postgis
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: db_name
+      - image: rabbitmq:3.7
+    steps:
+      - checkout
+      - run:
+          name: Install Ruby Dependencies
+          command: bundle install
+      - run:
+          name: Set up DB
+          command: |
+            bundle exec rake db:create db:schema:load --trace
+            bundle exec rake db:migrate
+        environment:
+          DATABASE_URL: "postgres://ubuntu@localhost:5432/db_name"
