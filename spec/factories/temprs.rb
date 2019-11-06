@@ -6,6 +6,12 @@ FactoryBot.define do
     endpoint_type { 'http' }
     queue_request { false }
     queue_response { false }
+    example_transmission do
+      {
+          key1: 'some-value',
+          key2: 'some-value'
+      }
+    end
     template do
       {
         host: 'example.com',

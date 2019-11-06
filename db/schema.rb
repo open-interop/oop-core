@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_122136) do
+ActiveRecord::Schema.define(version: 2019_11_06_111334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2019_11_04_122136) do
     t.boolean "queue_response", default: false
     t.boolean "queue_request", default: false
     t.text "template"
+    t.text "example_transmission"
   end
 
   create_table "transmissions", force: :cascade do |t|
