@@ -23,6 +23,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rspec-rails', '~> 3.6'
+  gem 'rspec_junit_formatter'
   gem 'simplecov'
   gem 'timecop'
 end
