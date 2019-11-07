@@ -69,5 +69,21 @@ RSpec.describe Api::V1::DeviceTemprsController, type: :controller do
         delete :destroy, params: { id: device_tempr.to_param, device_id: device.id, tempr_id: tempr.id }
       }.to change(DeviceTempr, :count).by(-1)
     end
+
+    context 'renders nothing' do
+      before do
+        delete :destroy, params: { id: device_tempr.to_param, device_id: device.id, tempr_id: tempr.id }
+      end
+
+      it { expect(response).to be_successful }
+    end
+
+    context 'without a device' do
+      before do
+        delete :destroy, params: { id: device_tempr.to_param, device_id: nil, tempr_id: tempr.id }
+      end
+
+      it { expect(response).to have_http_status(:not_found) }
+    end
   end
 end

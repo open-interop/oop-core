@@ -14,16 +14,20 @@ class BasePresenter
     @fields = fields
   end
 
+  def all_records?
+    @page_params[:size].to_i == -1 && @records.count.positive?
+  end
+
+  def page_size
+    return @page_params[:size] unless all_records?
+
+    @records.count
+  end
+
   def collection_for_json
-    if @page_params[:size].to_i == -1
-      @records =
-        @records.page(1)
-                .per(@records.count)
-    else
-      @records =
-        @records.page(@page_params[:number] || 1)
-                .per(@page_params[:size] || 20)
-    end
+    @records =
+      @records.page(@page_params[:number] || 1)
+              .per(page_size)
 
     {
       total_records: @records.total_count,
