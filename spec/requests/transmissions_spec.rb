@@ -19,6 +19,26 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       )
     end
 
+    context 'with filters with no records' do
+      context 'with all records' do
+        before do
+          get(
+            api_v1_device_transmissions_path(device),
+            params: { page: { size: -1 } },
+            headers: authorization_headers
+          )
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        it { expect(json_body['total_records']).to eq(0) }
+        it { expect(json_body['number_of_pages']).to eq(0) }
+        it { expect(json_body['page']['number']).to eq(1) }
+        it { expect(json_body['page']['size']).to eq(20) }
+        it { expect(json_body['data'].size).to eq(0) }
+      end
+    end
+
     context 'with filters' do
       let!(:transmissions) do
         Array.new(21) do

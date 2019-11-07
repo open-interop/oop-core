@@ -40,7 +40,6 @@ module Api
       # Must provide ?device_id and ?tempr_id
       def destroy
         @device_tempr.destroy
-        render nothing: true, status: :successful
       end
 
       private
