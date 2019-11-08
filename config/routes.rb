@@ -17,7 +17,11 @@ Rails.application.routes.draw do
 
       resources :device_groups
 
-      resources :temprs
+      resources :temprs do
+        member do
+          post 'preview'
+        end
+      end
 
       resources :sites
 

@@ -14,6 +14,7 @@ class Site < ApplicationRecord
   belongs_to :site, optional: true
 
   has_many :sites
+  has_many :devices
 
   #
   # Serializers

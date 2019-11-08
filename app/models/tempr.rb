@@ -21,5 +21,4 @@ class Tempr < ApplicationRecord
   #
   serialize :body, Hash
   serialize :template, Hash
-  serialize :example_transmission, Hash
 end
