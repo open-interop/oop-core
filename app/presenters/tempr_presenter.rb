@@ -14,7 +14,8 @@ class TemprPresenter < BasePresenter
           endpointType: record.endpoint_type,
           queueRequest: record.queue_request,
           queueResponse: record.queue_response,
-          template: record.template,
+          template:
+            record.template.transform_keys { |k| k.to_s.camelcase(:lower) },
           createdAt: record.created_at,
           updatedAt: record.updated_at
         }
