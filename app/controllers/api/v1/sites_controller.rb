@@ -43,6 +43,12 @@ module Api
         @site.destroy
       end
 
+      # GET /api/v1/sites/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@site.audits, params[:page]), status: :ok
+      end
+
       private
 
       def find_site

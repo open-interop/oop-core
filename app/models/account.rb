@@ -21,4 +21,6 @@ class Account < ApplicationRecord
   # Validations
   #
   validates :hostname, uniqueness: true
+
+  audited
 end

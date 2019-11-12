@@ -37,6 +37,8 @@ class Device < ApplicationRecord
   after_update :queue_from_update, if: :authentication_details_changed?
   after_destroy :queue_from_destroy
 
+  audited
+
   def authentication
     @authentication ||= {
       'hostname' => account.hostname
