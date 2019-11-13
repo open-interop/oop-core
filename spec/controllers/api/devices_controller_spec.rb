@@ -35,6 +35,16 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
   end
 
+  describe 'GET #history' do
+    context 'returns a success response' do
+      before do
+        get :history, params: { id: device.to_param }
+      end
+
+      it { expect(response).to be_successful }
+    end
+  end
+
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Device' do

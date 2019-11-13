@@ -52,6 +52,12 @@ module Api
         render json: @device_tempr, status: :created
       end
 
+      # GET /api/v1/devices/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@device.audits, params[:page]), status: :ok
+      end
+
       private
 
       def find_device

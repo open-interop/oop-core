@@ -46,6 +46,12 @@ module Api
         @user.destroy
       end
 
+      # GET /api/v1/users/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@user.audits, params[:page]), status: :ok
+      end
+
       private
 
       def find_user

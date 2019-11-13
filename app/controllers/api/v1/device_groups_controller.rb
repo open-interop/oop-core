@@ -3,7 +3,7 @@
 module Api
   module V1
     class DeviceGroupsController < ApplicationController
-      before_action :find_device_group, only: %i[show update destroy]
+      before_action :find_device_group
 
       # GET /api/v1/device_groups
       def index
@@ -49,14 +49,22 @@ module Api
         @device_group.destroy
       end
 
+      # GET /api/v1/device_groups/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@device_group.audits, params[:page]), status: :ok
+      end
+
       private
 
       def find_device_group
+        return if params[:id].blank?
+
         @device_group = current_account.device_groups.find(params[:id])
       end
 
       def device_group_params
-        params.fetch(:device_group).permit(:name, :description)
+        params.require(:device_group).permit(:name, :description)
       end
     end
   end

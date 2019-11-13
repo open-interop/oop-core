@@ -20,6 +20,8 @@ class Site < ApplicationRecord
   #
   serialize :external_uuids, Hash
 
+  audited
+
   after_save :set_full_name, if: :update_full_name?
 
   def update_full_name?

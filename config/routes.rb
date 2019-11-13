@@ -11,19 +11,36 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users
+      resources :users do
+        member do
+          get 'history', to: 'users#history'
+        end
+      end
 
       resources :device_temprs, only: %i[index create destroy]
 
-      resources :device_groups
+      resources :device_groups do
+        member do
+          get 'history', to: 'device_groups#history'
+        end
+      end
 
-      resources :temprs
+      resources :temprs do
+        member do
+          get 'history', to: 'temprs#history'
+        end
+      end
 
-      resources :sites
+      resources :sites do
+        member do
+          get 'history', to: 'sites#history'
+        end
+      end
 
       resources :devices do
         member do
           post 'assign_tempr', to: 'devices#assign_tempr'
+          get 'history', to: 'devices#history'
         end
 
         get 'transmissions', to: 'transmissions#index'
