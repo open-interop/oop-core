@@ -24,6 +24,8 @@ class User < ApplicationRecord
   #
   belongs_to :account
 
+  audited except: :password_digest
+
   #
   # Callbacks
   #
@@ -31,6 +33,10 @@ class User < ApplicationRecord
 
   def send_welcome_email
     UserMailer.welcome(self).deliver_now
+  end
+
+  def username
+    email
   end
 
   #

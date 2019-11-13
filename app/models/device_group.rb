@@ -14,4 +14,6 @@ class DeviceGroup < ApplicationRecord
 
   has_many :devices
   has_many :temprs
+
+  audited
 end
