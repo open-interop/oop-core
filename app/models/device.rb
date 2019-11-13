@@ -7,6 +7,7 @@ class Device < ApplicationRecord
   #
   validates :name, presence: true
   validates_with DeviceAuthenticationValidator
+  validates :authentication_path, uniqueness: { scope: :account_id }
 
   #
   # Relationships
@@ -36,6 +37,8 @@ class Device < ApplicationRecord
   after_create :queue_from_create
   after_update :queue_from_update, if: :authentication_details_changed?
   after_destroy :queue_from_destroy
+
+  audited
 
   def authentication
     @authentication ||= {

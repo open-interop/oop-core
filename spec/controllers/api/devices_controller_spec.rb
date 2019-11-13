@@ -8,6 +8,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let(:valid_attributes) do
     FactoryBot.attributes_for(
       :device,
+      authentication_path: '/gateway/test/path',
       device_group_id: device.device_group_id,
       site_id: device.site_id
     )
@@ -28,6 +29,16 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     context 'returns a success response' do
       before do
         get :show, params: { id: device.to_param }
+      end
+
+      it { expect(response).to be_successful }
+    end
+  end
+
+  describe 'GET #history' do
+    context 'returns a success response' do
+      before do
+        get :history, params: { id: device.to_param }
       end
 
       it { expect(response).to be_successful }

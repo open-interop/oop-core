@@ -24,6 +24,13 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
     end
   end
 
+  describe 'GET #history' do
+    it 'returns a success response' do
+      get :history, params: { id: tempr.to_param }
+      expect(response).to be_successful
+    end
+  end
+
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Tempr' do

@@ -62,6 +62,12 @@ module Api
         end
       end
 
+      # GET /api/v1/temprs/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@tempr.audits, params[:page]), status: :ok
+      end
+
       private
 
       def find_tempr
