@@ -8,6 +8,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let(:valid_attributes) do
     FactoryBot.attributes_for(
       :device,
+      authentication_path: '/gateway/test/path',
       device_group_id: device.device_group_id,
       site_id: device.site_id
     )

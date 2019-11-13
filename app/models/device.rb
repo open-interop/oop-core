@@ -7,6 +7,7 @@ class Device < ApplicationRecord
   #
   validates :name, presence: true
   validates_with DeviceAuthenticationValidator
+  validates :authentication_path, uniqueness: { scope: :account_id }
 
   #
   # Relationships
