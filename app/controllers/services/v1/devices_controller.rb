@@ -26,7 +26,7 @@ module Services
       def find_device
         return if params[:id].blank?
 
-        @device = Device.find(params[:id])
+        @device = Device.active.find(params[:id])
       end
     end
   end

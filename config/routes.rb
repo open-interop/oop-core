@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :temprs do
         member do
           get 'history', to: 'temprs#history'
+          post 'preview'
         end
       end
 

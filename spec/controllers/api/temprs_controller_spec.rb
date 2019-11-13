@@ -96,6 +96,69 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
     end
   end
 
+  describe 'POST #preview' do
+    context 'with valid params' do
+      before do
+        allow_any_instance_of(OpenInterop::TemprRenderer).to(
+          receive(:json_response).and_return(
+            'rendered' => {
+              'host' => 'example.com',
+              'port' => '80',
+              'path' => '/test/some-value/some-other-value',
+              'request_method' => 'POST',
+              'protocol' => 'http',
+              'headers' => {
+                'Content-Type' => 'application/json'
+              },
+              'body' => {
+                'body' => 'asd of this thing some-value and also some-other-value'
+              }
+            },
+            'console' => ''
+          )
+        )
+      end
+
+      context 'renders a JSON response with the new tempr' do
+        before do
+          post :preview, params: {
+            id: tempr.to_param,
+            tempr: {
+              example_transmission: tempr.example_transmission,
+              template: tempr.template
+            }
+          }
+        end
+
+        it { expect(response).to be_successful }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
+      end
+    end
+
+    context 'with invalid params' do
+      before do
+        allow_any_instance_of(OpenInterop::TemprRenderer).to(
+          receive(:json_response).and_return(
+            'rendered' => {},
+            'console' => ''
+          )
+        )
+      end
+
+      before do
+        post :preview, params: {
+          id: tempr.to_param,
+          tempr: invalid_attributes
+        }
+      end
+
+      context 'renders a JSON response with errors for the new tempr' do
+        it { expect(response).to be_successful }
+        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     it 'destroys the requested tempr' do
       expect {
