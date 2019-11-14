@@ -44,18 +44,18 @@ module Api
         render nothing: true, status: 200
       end
 
-      # POST /api/v1/temprs/:id/preview
+      # POST /api/v1/temprs/preview
       def preview
         @renderer = OpenInterop::TemprRenderer.new(
-          tempr_params[:example_transmission],
+          tempr_params[:example_transmission] || '',
           tempr_params[:template]
         )
 
         @renderer.render
 
-        if @renderer.json_response['rendered']['body'].blank?
+        if @renderer.empty_response?
           render json: ''
-        elsif @renderer.json_response['rendered']['body']['language']
+        elsif @renderer.advanced_response?
           render json: @renderer.json_response['rendered']['body']['body']
         else
           render json: @renderer.json_response['rendered']['body']

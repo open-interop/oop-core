@@ -122,7 +122,6 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
       context 'renders a JSON response with the new tempr' do
         before do
           post :preview, params: {
-            id: tempr.to_param,
             tempr: {
               example_transmission: tempr.example_transmission,
               template: tempr.template
@@ -147,7 +146,6 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
 
       before do
         post :preview, params: {
-          id: tempr.to_param,
           tempr: invalid_attributes
         }
       end

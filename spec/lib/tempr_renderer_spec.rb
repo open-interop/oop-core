@@ -63,6 +63,10 @@ RSpec.describe OpenInterop::TemprRenderer do
 
       before { renderer.render }
 
+      it { expect(renderer.empty_response?).to eq(false) }
+
+      it { expect(renderer.advanced_response?).to eq(false) }
+
       it do
         expect(renderer.json_response['rendered']['path']).to(
           eq('/test/some-value/some-other-value')
@@ -96,7 +100,7 @@ RSpec.describe OpenInterop::TemprRenderer do
                     "secondKey" : message.message.body.key2
                   };'
             }
-          }
+          }.with_indifferent_access
 
         FactoryBot.create(:tempr, template: javascript_template)
       end
@@ -127,6 +131,10 @@ RSpec.describe OpenInterop::TemprRenderer do
       before { renderer.render }
 
       let(:json_body) { JSON.parse(renderer.json_response['rendered']['body']) }
+
+      it { expect(renderer.empty_response?).to eq(false) }
+
+      it { expect(renderer.advanced_response?).to eq(true) }
 
       it do
         expect(renderer.json_response['rendered']['path']).to(
