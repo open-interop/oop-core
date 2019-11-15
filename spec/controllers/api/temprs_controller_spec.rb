@@ -129,6 +129,9 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
           }
         end
 
+        let(:json_body) { JSON.parse(response.body) }
+
+        it { expect(json_body['body']).to eq('asd of this thing some-value and also some-other-value') }
         it { expect(response).to be_successful }
         it { expect(response.content_type).to eq('application/json; charset=utf-8') }
       end
@@ -164,5 +167,4 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
       }.to change(Tempr, :count).by(-1)
     end
   end
-
 end

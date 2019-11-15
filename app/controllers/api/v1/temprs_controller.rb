@@ -55,8 +55,6 @@ module Api
 
         if @renderer.empty_response?
           render json: ''
-        elsif @renderer.advanced_response?
-          render json: @renderer.json_response['rendered']['body']['body']
         else
           render json: @renderer.json_response['rendered']['body']
         end
