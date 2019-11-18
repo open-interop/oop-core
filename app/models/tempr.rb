@@ -12,9 +12,13 @@ class Tempr < ApplicationRecord
   #
   belongs_to :account
   belongs_to :device_group
+  belongs_to :tempr, optional: true
+  validates_with AccountValidator, fields: %i[device_group]
 
   has_many :device_temprs
   has_many :devices, through: :device_temprs
+
+  has_one :chained_tempr, class_name: 'Tempr', foreign_key: 'tempr_id'
 
   #
   # Serializations
