@@ -6,6 +6,7 @@ class Site < ApplicationRecord
   # Validations
   #
   validates :name, presence: true
+  validates_with AccountValidator, fields: %i[site]
 
   #
   # Relationships
@@ -13,8 +14,8 @@ class Site < ApplicationRecord
   belongs_to :account
   belongs_to :site, optional: true
 
-  has_many :sites
-  has_many :devices
+  has_many :sites, dependent: :restrict_with_error
+  has_many :devices, dependent: :restrict_with_error
 
   #
   # Serializers

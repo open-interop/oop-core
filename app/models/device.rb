@@ -8,6 +8,7 @@ class Device < ApplicationRecord
   validates :name, presence: true
   validates_with DeviceAuthenticationValidator
   validates :authentication_path, uniqueness: { scope: :account_id }
+  validates_with AccountValidator, fields: %i[site device_group]
 
   #
   # Relationships
@@ -18,7 +19,7 @@ class Device < ApplicationRecord
 
   has_many :device_temprs
   has_many :temprs, through: :device_temprs
-  has_many :transmissions
+  has_many :transmissions, dependent: :restrict_with_error
 
   #
   # Serialisations

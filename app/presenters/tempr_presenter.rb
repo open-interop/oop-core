@@ -1,24 +1,36 @@
+# frozen_string_literal: true
+
 class TemprPresenter < BasePresenter
   attributes :id, :device_group_id, :name,
              :description, :endpoint_type,
-             :queue_request, :queue_response, :template, :created_at, :updated_at
+             :queue_request, :queue_response, :template,
+             :created_at, :updated_at
+
+  def self.record_for_microservice(device_id, record)
+    return if record.blank?
+
+    {
+      id: record.id,
+      deviceId: device_id,
+      name: record.name,
+      endpointType: record.endpoint_type,
+      queueRequest: record.queue_request,
+      queueResponse: record.queue_response,
+      template:
+        record.template.transform_keys do |k|
+          k.to_s.camelcase(:lower)
+        end,
+      createdAt: record.created_at,
+      updatedAt: record.updated_at,
+      tempr: record_for_microservice(device_id, record.chained_tempr)
+    }
+  end
 
   def self.collection_for_microservices(device_id, records)
     {
       ttl: 10_000,
       data: records.map do |record|
-        {
-          id: record.id,
-          deviceId: device_id,
-          name: record.name,
-          endpointType: record.endpoint_type,
-          queueRequest: record.queue_request,
-          queueResponse: record.queue_response,
-          template:
-            record.template.transform_keys { |k| k.to_s.camelcase(:lower) },
-          createdAt: record.created_at,
-          updatedAt: record.updated_at
-        }
+        record_for_microservice(device_id, record)
       end
     }
   end

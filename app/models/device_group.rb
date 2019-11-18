@@ -12,8 +12,8 @@ class DeviceGroup < ApplicationRecord
   #
   belongs_to :account
 
-  has_many :devices
-  has_many :temprs
+  has_many :devices, dependent: :restrict_with_error
+  has_many :temprs, dependent: :restrict_with_error
 
   audited
 end

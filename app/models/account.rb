@@ -6,11 +6,11 @@ class Account < ApplicationRecord
   #
   belongs_to :owner, class_name: 'User', optional: true
 
-  has_many :users
-  has_many :device_groups
-  has_many :devices
-  has_many :sites
-  has_many :temprs
+  has_many :users, dependent: :restrict_with_error
+  has_many :device_groups, dependent: :restrict_with_error
+  has_many :devices, dependent: :restrict_with_error
+  has_many :sites, dependent: :restrict_with_error
+  has_many :temprs, dependent: :restrict_with_error
 
   #
   # Scopes

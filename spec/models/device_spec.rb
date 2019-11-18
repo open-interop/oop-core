@@ -7,7 +7,7 @@ RSpec.describe Device, type: :model do
     )
   end
 
-  let (:device) { FactoryBot.create(:device) }
+  let!(:device) { FactoryBot.create(:device) }
 
   context 'with authentication_path set' do
     before do
@@ -46,14 +46,50 @@ RSpec.describe Device, type: :model do
     end
 
     it { expect(device.valid?).to be(true) }
-    it { expect(device.authentication).to eq({
-      'query.authentication_token' => '987',
-      'hostname' => 'test.host'
-    })}
+    it do
+      expect(device.authentication).to eq(
+        'query.authentication_token' => '987',
+        'hostname' => 'test.host'
+      )
+    end
   end
 
   context 'with no authentication set' do
     before { device.authentication_path = nil }
     it { expect(device.valid?).to be(false) }
+  end
+
+  context 'with children' do
+    let!(:transmissions) do
+      Array.new(2) do
+        FactoryBot.create(:transmission, device: device)
+      end
+    end
+
+    it do
+      expect do
+        device.destroy
+      end.to change(Device, :count).by(0)
+    end
+
+    it { expect(device.destroy).to eq(false) }
+
+    it do
+      expect do
+        device.destroy
+      end.to change(Transmission, :count).by(0)
+    end
+
+    context 'once children are removed' do
+      before { transmissions.each(&:destroy) }
+
+      it do
+        expect do
+          device.destroy
+        end.to change(Device, :count).by(-1)
+      end
+
+      it { expect(device.destroy).to_not eq(false) }
+    end
   end
 end
