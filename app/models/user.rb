@@ -10,7 +10,7 @@ class User < ApplicationRecord
   # Validations
   #
   validates :account_id, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password,
             length: { minimum: 6 },
@@ -44,7 +44,7 @@ class User < ApplicationRecord
   #
   def self.authenticate_with_password(account, email, password)
     user =
-      account.users.find_by(email: email)
+      account.users.where('lower(email) = ?', email.downcase).first
 
     return if user.blank?
 

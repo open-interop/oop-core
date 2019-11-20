@@ -25,7 +25,7 @@ class DeviceTempr < ApplicationRecord
         host: options[:host],
         port: options[:port],
         path: options[:path],
-        requestMethod: options[:request_method] || options[:requestMethod],
+        request_method: options[:request_method] || options[:requestMethod],
         protocol: options[:protocol],
         headers: options[:headers],
         body: tempr&.body

@@ -131,7 +131,7 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
 
         let(:json_body) { JSON.parse(response.body) }
 
-        it { expect(json_body['body']).to eq('asd of this thing some-value and also some-other-value') }
+        it { expect(json_body['rendered']['body']['body']).to eq('asd of this thing some-value and also some-other-value') }
         it { expect(response).to be_successful }
 
         it do
