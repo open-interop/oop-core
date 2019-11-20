@@ -87,7 +87,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
 
         let(:json_body) { JSON.parse(response.body) }
 
-        let(:matching_transmissions) { transmissions.select {|t| t.status == 200 } }
+        let(:matching_transmissions) { transmissions.select { |t| t.status == 200 } }
 
         it { expect(response).to have_http_status(200) }
         it do
@@ -107,13 +107,98 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
 
         let(:json_body) { JSON.parse(response.body) }
 
-        let(:matching_transmissions) { transmissions.select {|t| t.success == false } }
+        let(:matching_transmissions) { transmissions.select { |t| t.success == false } }
 
         it { expect(response).to have_http_status(200) }
         it do
           expect(response.content_type).to eq('application/json; charset=utf-8')
         end
         it { expect(json_body['total_records']).to eq(matching_transmissions.size) }
+      end
+
+      context 'with datetime filter' do
+        let(:filtered_datetime) { Time.now - 1.day }
+
+        before do
+          FactoryBot.create(:transmission, transmitted_at: Time.now - 2.days)
+
+          get(
+            api_v1_device_transmissions_path(device),
+            params: { filter: { transmitted_at: { lt: filtered_datetime } } },
+            headers: authorization_headers
+          )
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        it { expect(response).to have_http_status(200) }
+        it do
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+        end
+        it { expect(json_body['total_records']).to eq(1) }
+      end
+
+      context 'with sort by transmitted_at' do
+        let!(:old_transmission) do
+          FactoryBot.create(:transmission, transmitted_at: Time.now - 2.days)
+        end
+
+        context 'ascending' do
+          before do
+            get(
+              api_v1_device_transmissions_path(device),
+              params: { filter: { sort: { field: 'transmitted_at', direction: 'asc' } } },
+              headers: authorization_headers
+            )
+          end
+
+          let(:json_body) { JSON.parse(response.body) }
+
+          it { expect(response).to have_http_status(200) }
+          it do
+            expect(response.content_type).to eq('application/json; charset=utf-8')
+          end
+
+          it { expect(json_body['data'][0]['id']).to eq(old_transmission.id) }
+        end
+
+        context 'descending' do
+          before do
+            get(
+              api_v1_device_transmissions_path(device),
+              params: { filter: { sort: { field: 'transmitted_at', direction: 'desc' } } },
+              headers: authorization_headers
+            )
+          end
+
+          let(:json_body) { JSON.parse(response.body) }
+
+          it { expect(response).to have_http_status(200) }
+          it do
+            expect(response.content_type).to eq('application/json; charset=utf-8')
+          end
+
+          it { expect(json_body['data'][0]['id']).to_not eq(old_transmission.id) }
+        end
+
+        context 'missing' do
+          before do
+            get(
+              api_v1_device_transmissions_path(device),
+              params: { filter: { sort: { field: 'transmitted_at' } } },
+              headers: authorization_headers
+            )
+          end
+
+          let(:json_body) { JSON.parse(response.body) }
+
+          it { expect(response).to have_http_status(200) }
+          it do
+            expect(response.content_type).to eq('application/json; charset=utf-8')
+          end
+
+          it { expect(json_body['data'][0]['id']).to_not eq(old_transmission.id) }
+        end
       end
 
       context 'with all records' do

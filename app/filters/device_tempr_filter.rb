@@ -8,9 +8,10 @@ class DeviceTemprFilter < BaseFilter
 
   require_one_of %w[device_id tempr_id]
 
+  sortable_attributes %w[id device_id tempr_id]
+
   def base_scope
     DeviceTempr
-      .order("#{table_name}.created_at desc")
   end
 
   def table_name

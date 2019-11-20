@@ -4,13 +4,19 @@
 class TransmissionFilter < BaseFilter
   filterable_attributes integer: %w[id device_tempr_id status],
                         string: %w[message_uuid transmission_uuid],
-                        boolean: %w[success]
+                        boolean: %w[success],
+                        datetime: %w[transmitted_at created_at updated_at]
+
+  sortable_attributes %w[
+    id device_tempr_id status message_uuid
+    transmission_uuid success transmitted_at
+    created_at updated_at
+  ]
 
   def base_scope
     Transmission
       .includes(:device)
       .where(devices: { id: scope.id })
-      .order("#{table_name}.created_at desc")
   end
 
   def table_name

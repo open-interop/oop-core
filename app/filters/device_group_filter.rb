@@ -6,11 +6,13 @@ class DeviceGroupFilter < BaseFilter
                         string: %w[name],
                         boolean: %w[]
 
+  default_sort field: 'name', direction: 'asc'
+  sortable_attributes %w[id name]
+
   def base_scope
     DeviceGroup
       .includes(:account)
       .where(accounts: { id: scope.id })
-      .order("#{table_name}.name asc")
   end
 
   def table_name
