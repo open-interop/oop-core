@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class TemprPresenter < BasePresenter
-  attributes :id, :device_group_id, :name,
+  attributes :id, :device_group_id, :tempr_id, :name,
              :description, :endpoint_type,
              :queue_request, :queue_response, :template,
+             :example_transmission, :notes,
              :created_at, :updated_at
 
   def self.record_for_microservice(device_id, record)
