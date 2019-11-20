@@ -53,11 +53,7 @@ module Api
 
         @renderer.render
 
-        if @renderer.empty_response?
-          render json: ''
-        else
-          render json: @renderer.json_response['rendered']['body']
-        end
+        render json: @renderer.json_response
       end
 
       # GET /api/v1/temprs/:id/history
@@ -85,6 +81,7 @@ module Api
           :queue_response,
           :queue_request,
           :example_transmission,
+          :notes,
           { template: {} }
         )
       end
