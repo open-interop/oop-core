@@ -8,7 +8,7 @@ class TransmissionFilter < BaseFilter
                         datetime: %w[transmitted_at created_at updated_at]
 
   sortable_attributes %w[
-    id device_tempr_id status message_uuid
+    id device_id device_tempr_id status message_uuid
     transmission_uuid success transmitted_at
     created_at updated_at
   ]

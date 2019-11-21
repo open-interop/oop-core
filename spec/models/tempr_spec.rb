@@ -18,6 +18,21 @@ RSpec.describe Tempr, type: :model do
       it { expect(tempr.valid?).to be(false) }
     end
 
+    context 'with an invalid host (whitespace)' do
+      before { tempr.template[:host] = ' example.com' }
+      it { expect(tempr.valid?).to be(false) }
+    end
+
+    context 'with an invalid host (trailing path)' do
+      before { tempr.template[:host] = 'example.com/asdasd' }
+      it { expect(tempr.valid?).to be(false) }
+    end
+
+    context 'with an invalid host (includes protocol)' do
+      before { tempr.template[:host] = 'http://example.com' }
+      it { expect(tempr.valid?).to be(false) }
+    end
+
     context 'with no port' do
       before { tempr.template[:port] = nil }
       it { expect(tempr.valid?).to be(false) }

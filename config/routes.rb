@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      get 'dashboards/transmissions', to: 'dashboards#transmissions'
+
       resources :users do
         member do
           get 'history', to: 'users#history'

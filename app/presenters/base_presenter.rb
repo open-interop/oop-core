@@ -33,7 +33,7 @@ class BasePresenter
       total_records: @records.total_count,
       number_of_pages: @records.total_pages,
       page: { number: @records.current_page, size: @records.limit_value },
-      data: data
+      data: @page_params[:count] ? nil : data
     }
   end
 
