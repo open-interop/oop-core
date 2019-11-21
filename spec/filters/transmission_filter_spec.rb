@@ -32,10 +32,27 @@ RSpec.describe TransmissionFilter do
       ]
     end
 
+    context 'permits the required parameters' do
+      it do
+        expect(described_class.new({}).all_filterable_fields).to(
+          eq(
+            [
+              'id', 'device_tempr_id', 'status', 'message_uuid',
+              'transmission_uuid', 'success',
+              { 'transmitted_at' => %w[gt gteq lt lteq] },
+              { 'created_at' => %w[gt gteq lt lteq] },
+              { 'updated_at' => %w[gt gteq lt lteq] },
+              { 'sort' => %w[field direction] }
+            ]
+          )
+        )
+      end
+    end
+
     context 'nothing filtered' do
       let(:records) do
         TransmissionFilter.records(
-          {},
+          { },
           scope: device
         )
       end

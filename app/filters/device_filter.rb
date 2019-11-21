@@ -6,11 +6,13 @@ class DeviceFilter < BaseFilter
                         string: %w[name time_zone],
                         boolean: %w[active]
 
+  default_sort field: 'name', direction: 'asc'
+  sortable_attributes %w[id device_group_id site_id name time_zone active]
+
   def base_scope
     Device
       .includes(:account)
       .where(accounts: { id: scope.id })
-      .order("#{table_name}.name asc")
   end
 
   def table_name

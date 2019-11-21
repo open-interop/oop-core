@@ -6,11 +6,12 @@ class UserFilter < BaseFilter
                         string: %w[email time_zone],
                         boolean: %w[]
 
+  sortable_attributes %w[id email time_zone]
+
   def base_scope
     User
       .includes(:account)
       .where(accounts: { id: scope.id })
-      .order("#{table_name}.created_at desc")
   end
 
   def table_name

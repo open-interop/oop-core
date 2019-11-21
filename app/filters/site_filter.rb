@@ -9,11 +9,17 @@ class SiteFilter < BaseFilter
                         ],
                         boolean: %w[]
 
+  default_sort field: 'full_name', direction: 'asc'
+  sortable_attributes %w[
+    id account_id site_id
+    name full_name description address city
+    state zip_code country region time_zone
+  ]
+
   def base_scope
     Site
       .includes(:account)
       .where(accounts: { id: scope.id })
-      .order("#{table_name}.full_name ASC")
   end
 
   def table_name

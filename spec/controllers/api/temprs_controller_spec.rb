@@ -133,7 +133,10 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
 
         it { expect(json_body['rendered']['body']['body']).to eq('asd of this thing some-value and also some-other-value') }
         it { expect(response).to be_successful }
-        it { expect(response.content_type).to eq('application/json; charset=utf-8') }
+
+        it do
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+        end
       end
     end
 
