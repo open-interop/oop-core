@@ -33,6 +33,16 @@ RSpec.describe Tempr, type: :model do
       it { expect(tempr.valid?).to be(false) }
     end
 
+    context 'with a valid host (ipv4)' do
+      before { tempr.template[:host] = '192.168.1.2' }
+      it { expect(tempr.valid?).to be(true) }
+    end
+
+    context 'with a valid host (ipv6)' do
+      before { tempr.template[:host] = '2001:0db8:85a3:0000:0000:8a2e:0370:7334' }
+      it { expect(tempr.valid?).to be(true) }
+    end
+
     context 'with no port' do
       before { tempr.template[:port] = nil }
       it { expect(tempr.valid?).to be(false) }

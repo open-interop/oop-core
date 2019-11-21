@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'resolv'
+
 class TemprTemplateValidator < ActiveModel::Validator
   VALID_HOSTNAME_REGEX =
     Regexp.new('(?=^.{1,253}$)(^(((?!-)[a-zA-Z0-9-]{1,63}(?<!-))|((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63})$)').freeze
@@ -12,24 +14,24 @@ class TemprTemplateValidator < ActiveModel::Validator
       )
     end
 
-    if incorrect_host_format?(record.template)
+    unless valid_host_format?(record.template)
       record.errors.add(
         :host,
-        'is not a valid format.'
+        'is not in the correct format'
       )
     end
 
-    if incorrect_header_format?(record.template)
+    unless valid_header_format?(record.template)
       record.errors.add(
         :headers,
-        'You must provide headers as an object.'
+        'is not an object'
       )
     end
 
-    if incorrect_body_format?(record.template)
+    unless valid_body_format?(record.template)
       record.errors.add(
         :body,
-        'Incorrect body format.'
+        'is not in the correct format'
       )
     end
   end
@@ -47,18 +49,26 @@ class TemprTemplateValidator < ActiveModel::Validator
     ].any?(&:blank?)
   end
 
-  def incorrect_host_format?(record_options)
+  def valid_host_format?(record_options)
     !record_options[:host].nil? &&
-      !record_options[:host].match(VALID_HOSTNAME_REGEX)
+      (
+        record_options[:host].match(VALID_HOSTNAME_REGEX).present? ||
+          record_options[:host].match(Resolv::IPv4::Regex).present? ||
+          record_options[:host].match(Resolv::IPv6::Regex).present?
+      )
   end
 
-  def incorrect_header_format?(record_options)
+  def valid_header_format?(record_options)
+    return true if record_options[:headers].nil?
+
     !record_options[:headers].nil? &&
-      !record_options[:headers].is_a?(Hash)
+      record_options[:headers].is_a?(Hash)
   end
 
-  def incorrect_body_format?(record_options)
+  def valid_body_format?(record_options)
+    return true if record_options[:body].nil?
+
     !record_options[:body].nil? &&
-      !record_options[:body].is_a?(Hash)
+      record_options[:body].is_a?(Hash)
   end
 end
