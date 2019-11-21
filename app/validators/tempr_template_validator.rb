@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 class TemprTemplateValidator < ActiveModel::Validator
+  VALID_HOSTNAME_REGEX =
+    Regexp.new('(?=^.{1,253}$)(^(((?!-)[a-zA-Z0-9-]{1,63}(?<!-))|((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63})$)').freeze
+
   def validate(record)
     if missing_options?(record.template)
       record.errors.add(
         :base,
         'You must provide a host, port, path, protocol, and request_method for #template.'
+      )
+    end
+
+    if incorrect_host_format?(record.template)
+      record.errors.add(
+        :host,
+        'is not a valid format.'
       )
     end
 
@@ -37,11 +47,18 @@ class TemprTemplateValidator < ActiveModel::Validator
     ].any?(&:blank?)
   end
 
+  def incorrect_host_format?(record_options)
+    !record_options[:host].nil? &&
+      !record_options[:host].match(VALID_HOSTNAME_REGEX)
+  end
+
   def incorrect_header_format?(record_options)
-    !record_options[:headers].nil? && !record_options[:headers].is_a?(Hash)
+    !record_options[:headers].nil? &&
+      !record_options[:headers].is_a?(Hash)
   end
 
   def incorrect_body_format?(record_options)
-    !record_options[:body].nil? && !record_options[:body].is_a?(Hash)
+    !record_options[:body].nil? &&
+      !record_options[:body].is_a?(Hash)
   end
 end

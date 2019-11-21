@@ -39,6 +39,33 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       end
     end
 
+    context 'with count param' do
+      let!(:transmissions) do
+        Array.new(21) do
+          FactoryBot.create(:transmission, device: device)
+        end
+      end
+
+      context 'with default filters' do
+        before do
+          get(api_v1_device_transmissions_path(device, page: { count: true }), headers: authorization_headers)
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        it { expect(response).to have_http_status(200) }
+        it do
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+        end
+
+        it { expect(json_body['total_records']).to eq(21) }
+        it { expect(json_body['number_of_pages']).to eq(2) }
+        it { expect(json_body['page']['number']).to eq(1) }
+        it { expect(json_body['page']['size']).to eq(20) }
+        it { expect(json_body['data']).to eq(nil) }
+      end
+    end
+
     context 'with filters' do
       let!(:transmissions) do
         Array.new(21) do
