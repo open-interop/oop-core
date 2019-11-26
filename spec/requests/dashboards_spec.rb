@@ -19,16 +19,36 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
 
   let!(:transmissions) do
     Array.new(3) do
-      FactoryBot.create(:transmission, device: device, success: true)
+      FactoryBot.create(
+        :transmission,
+        device: device,
+        success: true,
+        transmitted_at: '2019-11-24'
+      )
     end +
       Array.new(2) do
-        FactoryBot.create(:transmission, device: device, success: false)
+        FactoryBot.create(
+          :transmission,
+          device: device,
+          success: false,
+          transmitted_at: '2019-11-21'
+        )
       end +
       Array.new(2) do
-        FactoryBot.create(:transmission, device: device_two, success: true)
+        FactoryBot.create(
+          :transmission,
+          device: device_two,
+          success: true,
+          transmitted_at: '2019-11-24'
+        )
       end +
       Array.new(2) do
-        FactoryBot.create(:transmission, device: device_two, success: false)
+        FactoryBot.create(
+          :transmission,
+          device: device_two,
+          success: false,
+          transmitted_at: '2019-11-21'
+        )
       end
   end
 
@@ -38,7 +58,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
     context 'group by device_id' do
       before do
         get(
-          api_v1_dashboards_transmissions_path(device_id: device, group: 'device_id'),
+          api_v1_dashboards_transmissions_path,
+          params: { device_id: device.id, group: 'device_id' },
           headers: authorization_headers
         )
       end
@@ -54,7 +75,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
     context 'group by success' do
       before do
         get(
-          api_v1_dashboards_transmissions_path(device_id: device, group: 'success'),
+          api_v1_dashboards_transmissions_path,
+          params: { device_id: device.id, group: 'success' },
           headers: authorization_headers
         )
       end
@@ -71,7 +93,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
     context 'group by transmitted_at' do
       before do
         get(
-          api_v1_dashboards_transmissions_path(device_id: device, group: 'transmitted_at'),
+          api_v1_dashboards_transmissions_path,
+          params: { device_id: device.id, group: 'transmitted_at' },
           headers: authorization_headers
         )
       end
@@ -79,7 +102,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       let(:json_body) { JSON.parse(response.body) }
 
       context 'stats' do
-        it { expect(json_body['transmissions'][Time.now.to_date.to_s]).to eq(5) }
+        it { expect(json_body['transmissions']['2019-11-21']).to eq(2) }
         it { expect(json_body['group']).to eq('transmitted_at') }
       end
     end
@@ -88,7 +111,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       context 'group by device_id' do
         before do
           get(
-            api_v1_dashboards_transmissions_path(group: 'device_id'),
+            api_v1_dashboards_transmissions_path,
+            params: { group: 'device_id' },
             headers: authorization_headers
           )
         end
@@ -105,7 +129,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       context 'group by success' do
         before do
           get(
-            api_v1_dashboards_transmissions_path(group: 'success'),
+            api_v1_dashboards_transmissions_path,
+            params: { group: 'success' },
             headers: authorization_headers
           )
         end
@@ -122,7 +147,8 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       context 'group by transmitted_at' do
         before do
           get(
-            api_v1_dashboards_transmissions_path(group: 'transmitted_at'),
+            api_v1_dashboards_transmissions_path,
+            params: { group: 'transmitted_at' },
             headers: authorization_headers
           )
         end
@@ -130,7 +156,25 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
         let(:json_body) { JSON.parse(response.body) }
 
         context 'stats' do
-          it { expect(json_body['transmissions'][Time.now.to_date.to_s]).to eq(9) }
+          it { expect(json_body['transmissions']['2019-11-21']).to eq(4) }
+          it { expect(json_body['transmissions']['2019-11-24']).to eq(5) }
+          it { expect(json_body['group']).to eq('transmitted_at') }
+        end
+      end
+
+      context 'group by transmitted_at and filter by transmitted_at' do
+        before do
+          get(
+            api_v1_dashboards_transmissions_path,
+            params: { group: 'transmitted_at', filter: { transmitted_at: { lteq: '2019-11-22' } } },
+            headers: authorization_headers
+          )
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        context 'stats' do
+          it { expect(json_body['transmissions']['2019-11-21']).to eq(4) }
           it { expect(json_body['group']).to eq('transmitted_at') }
         end
       end
