@@ -32,7 +32,7 @@ RSpec.describe TemprPresenter do
                   end,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
-                tempr: nil
+                temprs: []
               }
             ]
           )
@@ -61,7 +61,7 @@ RSpec.describe TemprPresenter do
                   end,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
-                tempr: {
+                temprs: [
                   id: chained_tempr.id,
                   deviceId: device.id,
                   name: chained_tempr.name,
@@ -74,8 +74,8 @@ RSpec.describe TemprPresenter do
                     end,
                   createdAt: chained_tempr.created_at,
                   updatedAt: chained_tempr.updated_at,
-                  tempr: nil
-                }
+                  temprs: []
+                ]
               }
             ]
           )

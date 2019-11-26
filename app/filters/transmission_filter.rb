@@ -16,7 +16,7 @@ class TransmissionFilter < BaseFilter
   def base_scope
     Transmission
       .includes(:device)
-      .where(devices: { id: scope.id })
+      .where(devices: { id: scope })
   end
 
   def table_name

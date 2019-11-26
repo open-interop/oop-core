@@ -11,7 +11,7 @@ class UserFilter < BaseFilter
   def base_scope
     User
       .includes(:account)
-      .where(accounts: { id: scope.id })
+      .where(accounts: { id: scope })
   end
 
   def table_name

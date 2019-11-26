@@ -12,7 +12,7 @@ class TemprFilter < BaseFilter
   def base_scope
     Tempr
       .includes(:account)
-      .where(accounts: { id: scope.id })
+      .where(accounts: { id: scope })
   end
 
   def table_name

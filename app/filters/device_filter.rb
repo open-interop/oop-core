@@ -12,7 +12,7 @@ class DeviceFilter < BaseFilter
   def base_scope
     Device
       .includes(:account)
-      .where(accounts: { id: scope.id })
+      .where(accounts: { id: scope })
   end
 
   def table_name
