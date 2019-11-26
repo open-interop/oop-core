@@ -23,7 +23,9 @@ class TemprPresenter < BasePresenter
         end,
       createdAt: record.created_at,
       updatedAt: record.updated_at,
-      tempr: record_for_microservice(device_id, record.chained_tempr)
+      temprs: record.temprs.map do |tempr|
+        record_for_microservice(device_id, tempr)
+      end
     }
   end
 

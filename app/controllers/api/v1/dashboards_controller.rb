@@ -5,12 +5,16 @@ module Api
     class DashboardsController < ApplicationController
       # GET /api/v1/dashboards/transmissions?device_id&group
       def transmissions
-        @device = current_account.devices.find(params[:device_id])
+        if params[:device_id].present?
+          @scope = current_account.devices.find(params[:device_id]).id
+        else
+          @scope = current_account.devices.pluck(:id)
+        end
 
         @transmissions =
           TransmissionFilter.records(
             params,
-            scope: @device
+            scope: @scope
           )
 
         if !TransmissionFilter.sortable_fields.include?(params[:group])

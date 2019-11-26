@@ -19,7 +19,7 @@ class Tempr < ApplicationRecord
   has_many :device_temprs
   has_many :devices, through: :device_temprs
 
-  has_one :chained_tempr, class_name: 'Tempr', foreign_key: 'tempr_id'
+  has_many :temprs
 
   #
   # Serializations
