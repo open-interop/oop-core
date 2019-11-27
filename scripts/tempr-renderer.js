@@ -23,7 +23,7 @@ const main = () => {
         publish: (exchange, routeKey, response) => {
             stdout.write(
                 JSON.stringify({
-                    error: response.error,
+                    error: response.tempr.response && response.tempr.response.error,
                     rendered: response.tempr.rendered,
                     console: response.tempr.console,
                 })
