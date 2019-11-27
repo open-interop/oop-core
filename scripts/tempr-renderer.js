@@ -24,8 +24,8 @@ const main = () => {
             stdout.write(
                 JSON.stringify({
                     error: response.error,
-                    rendered: response.rendered,
-                    console: "" // TODO: Add console logging.
+                    rendered: response.tempr.rendered,
+                    console: response.tempr.console,
                 })
             );
         }
