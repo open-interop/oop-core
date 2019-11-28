@@ -7,6 +7,7 @@ FactoryBot.define do
     success { [true, false].sample }
     status { [200, 201, 400].sample }
     transmitted_at { Time.now }
-    body { { event: 'success' }.to_json }
+    request_body { { somedata: 'moredata' }.to_json }
+    response_body { { event: 'success' }.to_json }
   end
 end

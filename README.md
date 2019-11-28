@@ -1,31 +1,46 @@
 # oop-core README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This application serves the management API for the Open Interop platform. Individual micro-services consume authentication details, temprs, and device configuration via this application.
 
-Things you may want to cover:
+The application is tenanted and multiple accounts can be setup and configured on a single instance.
 
-* Ruby version
+The application will run in isolation and can be configured before setting up the micro-service architecture. However, certain elements will not work. For example, previewing temprs.
 
-* System dependencies
+The application is API only. If you would like to run the interface see the [interface repository](/open-interop/oop-core-interface).
 
-* Configuration
+## Installation
 
-* Database creation
+The application has been developed against Ruby 2.6.3 and PostgreSQL 10
 
-* Database initialization
+- Clone the application `git clone git@github.com:open-interop/oop-core.git`
+- In the app directory install dependencies `bundle install`
+- Ensure your database details are setup in `config/database.yml`
+- Create the database `bundle exec rails db:create`
+- Run the database migrations `bundle exec rails db:migrate`
 
-* How to run the test suite
+In order to communicate with the micro-service back-end we use RabbitMQ. Connection to this and the relevant queues is defined in the environment. In development you can define these in `.env` using the `dotenv-rails` gem.
 
-* Services (job queues, cache servers, search engines, etc.)
+### Configuration
 
-* Deployment instructions
+The application is configured using environment variables.
 
-* ...
+- For the microservices to authenticate with **oop-core** define `OOP_CORE_TOKEN=ELhq4oxCiAHzVmLRqvds6nqgNaAp`
+- The RabbitMQ location `OOP_AMQP_ADDRESS=amqp://localhost`
+- The name of the RabbitMQ transmissions queue for the micro-service layer to report back to core `OOP_CORE_RESPONSE_Q=oop.core.transmissions`
+- The name of the RabbitMQ exchange to update device authentication details in **oop-authenticator** `OOP_CORE_DEVICE_UPDATE_EXCHANGE=oop.core.devices`
+- Path to a copy of the renderer in order to handle Tempr previews `OOP_RENDERER_PATH=/Users/jack/Projects/OOO/oop-renderer`
 
-Read the CONTRIBUTING.md guide for
+### Testing
 
----
+The test suite uses rspec, you can run the suite using `bundle exec rspec`.
+
+Coverage reports are output in a readable format here `coverage/index.html`.
+
+## Contributing
+
+We welcome help from the community, please read the [Contributing guide](https://github.com/open-interop/oop-guidelines/blob/master/CONTRIBUTING.md) and [Community guidelines](https://github.com/open-interop/oop-guidelines/blob/master/CODE_OF_CONDUCT.md).
+
+## License
 
 Copyright (C) 2019 Blue Frontier IT Ltd
 

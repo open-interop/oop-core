@@ -35,6 +35,10 @@ class User < ApplicationRecord
     UserMailer.welcome(self).deliver_now
   end
 
+  def send_reset_password_email
+    UserMailer.reset_password(self).deliver_now
+  end
+
   def username
     email
   end
@@ -58,5 +62,31 @@ class User < ApplicationRecord
         exp: (Time.now + 24.hours.to_i).strftime('%m-%d-%Y %H:%M'),
         email: email
       }
+  end
+
+  def generate_password_reset_token!
+    update_columns(
+      password_reset_token: SecureRandom.hex(40),
+      password_reset_requested_at: Time.now
+    )
+  end
+
+  def valid_password_reset_token?
+    password_reset_requested_at <= Time.now + 1.hour
+  end
+
+  def clear_password_reset_token!
+    update_columns(
+      password_reset_token: nil,
+      password_reset_requested_at: nil
+    )
+  end
+
+  def reset_password!(password, password_confirmation)
+    self.password = password
+    self.password_confirmation = password_confirmation
+    self.password_reset_token = nil
+    self.password_reset_requested_at = nil
+    save
   end
 end

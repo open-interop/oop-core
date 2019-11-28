@@ -2,6 +2,18 @@ require 'rails_helper'
 
 RSpec.describe OpenInterop::TemprRenderer do
   describe '#preview' do
+    describe '#json_response' do
+      let(:renderer) do
+        described_class.new(nil, nil)
+      end
+
+      it do
+        expect(renderer.json_response).to(
+          eq('')
+        )
+      end
+    end
+
     context 'with no template' do
       let(:tempr) { FactoryBot.create(:tempr) }
 
@@ -62,10 +74,6 @@ RSpec.describe OpenInterop::TemprRenderer do
       end
 
       before { renderer.render }
-
-      it { expect(renderer.empty_response?).to eq(false) }
-
-      it { expect(renderer.advanced_response?).to eq(false) }
 
       it do
         expect(renderer.json_response['rendered']['path']).to(
@@ -131,10 +139,6 @@ RSpec.describe OpenInterop::TemprRenderer do
       before { renderer.render }
 
       let(:json_body) { JSON.parse(renderer.json_response['rendered']['body']) }
-
-      it { expect(renderer.empty_response?).to eq(false) }
-
-      it { expect(renderer.advanced_response?).to eq(true) }
 
       it do
         expect(renderer.json_response['rendered']['path']).to(
