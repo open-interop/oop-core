@@ -21,7 +21,7 @@ module Api
                          .where.not(password_reset_token: nil)
                          .find_by(password_reset_token: params[:token])
 
-        if request.post? && user&.valid_password_reset_token?
+        if user&.valid_password_reset_token?
           unless user.reset_password!(
               params[:password],
               params[:password_confirmation]

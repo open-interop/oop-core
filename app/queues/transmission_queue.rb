@@ -8,7 +8,7 @@ class TransmissionQueue
 
     queue =
       channel.queue(
-        ENV['OOP_CORE_RESPONSE_Q'],
+        Rails.configuration.oop[:rabbit][:response_queue],
         auto_delete: false,
         durable: true
       )

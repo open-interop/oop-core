@@ -29,18 +29,6 @@ RSpec.describe "Api::V1::Passwords", type: :request do
     end
   end
 
-  describe 'GET /api/v1/passwords/reset' do
-    context 'reset a user\'s password' do
-      before do
-        user.generate_password_reset_token!
-        get api_v1_passwords_reset_path(token: user.password_reset_token)
-        user.reload
-      end
-
-      it { expect(response).to have_http_status(200) }
-    end
-  end
-
   describe 'POST /api/v1/passwords/reset' do
     context 'reset a user\'s password' do
       before do
@@ -69,7 +57,7 @@ RSpec.describe "Api::V1::Passwords", type: :request do
         post(
           api_v1_passwords_reset_path(
             token: user.password_reset_token,
-            password: 'newpassworda',
+            password: 'newpasswordwrong',
             password_confirmation: 'newpassword'
           )
         )

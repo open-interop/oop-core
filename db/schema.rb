@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_28_011232) do
+ActiveRecord::Schema.define(version: 2019_11_28_104345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,9 @@ ActiveRecord::Schema.define(version: 2019_11_28_011232) do
     t.integer "owner_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "interface_scheme"
+    t.integer "interface_port"
+    t.string "interface_path"
   end
 
   create_table "audits", force: :cascade do |t|

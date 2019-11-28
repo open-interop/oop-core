@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       end
 
       post '/passwords', to: 'passwords#create'
-      match '/passwords/reset', to: 'passwords#reset', via: %i[get post]
+      post '/passwords/reset', to: 'passwords#reset'
 
       post '/auth/login', to: 'sessions#create'
       get '/me', to: 'sessions#me'

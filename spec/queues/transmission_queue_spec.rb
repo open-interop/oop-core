@@ -21,14 +21,14 @@ RSpec.describe TransmissionQueue do
           'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
           'accept-encoding': 'gzip,deflate',
           connection: 'close',
-          host: 'oop.bluefrontier.local:3000'
+          host: 'localhost'
         },
-        hostname: 'oop.bluefrontier.local',
+        hostname: 'localhost',
         protocol: 'http'
       },
       device: {
         id: device.id,
-        authentication: { hostname: 'oop.bluefrontier.local', path: '/' }
+        authentication: { hostname: 'localhost', path: '/' }
       },
       tempr: {
         id: tempr.id,
@@ -39,7 +39,7 @@ RSpec.describe TransmissionQueue do
         queueResponse: tempr.queue_response,
         template: {
           headers: {},
-          host: 'oop.bluefrontier.local',
+          host: 'localhost',
           path: '/',
           port: 3000,
           protocol: 'http',
@@ -50,7 +50,7 @@ RSpec.describe TransmissionQueue do
         updatedAt: '2019-11-26T12:33:10.836Z',
         rendered: {
           headers: {},
-          host: 'oop.bluefrontier.local',
+          host: 'localhost',
           path: '/',
           port: '3000',
           protocol: 'http',

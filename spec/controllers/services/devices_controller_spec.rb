@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Services::V1::DevicesController, type: :controller do
   before do
-    request.headers['X-Core-Token'] = ENV['OOP_CORE_TOKEN']
+    request.headers['X-Core-Token'] = Rails.configuration.oop[:services_token]
   end
 
   describe 'GET #auth' do

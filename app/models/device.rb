@@ -116,7 +116,7 @@ class Device < ApplicationRecord
     @bunny_exchange ||= begin
       bunny_connection.create_channel
                       .fanout(
-                        ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
+                        Rails.configuration.oop[:rabbit][:devices_exchange],
                         auto_delete: false,
                         durable: true
                       )

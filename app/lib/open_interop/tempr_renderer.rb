@@ -48,7 +48,7 @@ module OpenInterop
           },
           device: {}
         },
-        renderer: ENV['OOP_RENDERER_PATH']
+        renderer: Rails.configuration.oop[:renderer_path]
       }.to_json
     end
   end
