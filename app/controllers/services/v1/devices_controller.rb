@@ -17,7 +17,7 @@ module Services
         render json:
           TemprPresenter.collection_for_microservices(
             @device.id,
-            @device.temprs,
+            @device.temprs
           )
       end
 

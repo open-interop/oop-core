@@ -23,4 +23,14 @@ class Account < ApplicationRecord
   validates :hostname, uniqueness: true
 
   audited
+
+  def interface_path
+    [
+      ENV['OOP_CORE_INTERFACE_SCHEME'],
+      hostname,
+      ':',
+      ENV['OOP_CORE_INTERFACE_PORT'],
+      ENV['OOP_CORE_INTERFACE_PATH']
+    ].join
+  end
 end

@@ -99,7 +99,8 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
           it { expect(json_body['data'][0]['success']).to eq(transmissions.last.success) }
           it { expect(json_body['data'][0]['status']).to eq(transmissions.last.status) }
           it { expect(json_body['data'][0]['transmitted_at']).to eq(transmissions.last.transmitted_at.as_json) }
-          it { expect(json_body['data'][0]['body']).to eq(transmissions.last.body) }
+          it { expect(json_body['data'][0]['response_body']).to eq(transmissions.last.response_body) }
+          it { expect(json_body['data'][0]['request_body']).to eq(transmissions.last.request_body) }
         end
       end
 

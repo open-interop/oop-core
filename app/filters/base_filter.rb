@@ -151,11 +151,11 @@ class BaseFilter
   end
 
   def base_scope
-    raise 'Not implemented'
+    raise OpenInterop::Errors::NotImplemented
   end
 
   def table_name
-    raise 'Not implemented'
+    raise OpenInterop::Errors::NotImplemented
   end
 
   def all_filterable_fields

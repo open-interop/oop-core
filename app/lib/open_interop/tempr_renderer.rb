@@ -17,26 +17,12 @@ module OpenInterop
         Open3.capture3(@command, stdin_data: renderer_input)
     end
 
-    def empty_response?
-      return true if json_response['rendered'].blank?
-      return true if json_response['rendered']['body'].blank?
-
-      false
-    end
-
-    def advanced_response?
-      return false if empty_response?
-      return true if template['body'].present? && template['body']['script'].present?
-
-      false
-    end
-
     def json_transmission
       @json_transmission ||= begin
         JSON.parse(example_transmission || '""')
       rescue JSON::ParserError => e
         Rails.logger.error e
-        {}
+        { 'error' => '[oop-core] Could not parse example transmission JSON.' }
       end
     end
 
@@ -45,7 +31,7 @@ module OpenInterop
         JSON.parse(response || '""')
       rescue JSON::ParserError => e
         Rails.logger.error e
-        { 'rendered' => {} }
+        { 'rendered' => {}, 'error' => '[oop-core] Could not parse response JSON.' }
       end
     end
 

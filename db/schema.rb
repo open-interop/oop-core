@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_19_114743) do
+ActiveRecord::Schema.define(version: 2019_11_28_011232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,9 +126,10 @@ ActiveRecord::Schema.define(version: 2019_11_19_114743) do
     t.boolean "success"
     t.integer "status"
     t.datetime "transmitted_at"
-    t.text "body"
+    t.text "response_body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "request_body"
   end
 
   create_table "users", force: :cascade do |t|
@@ -138,6 +139,8 @@ ActiveRecord::Schema.define(version: 2019_11_19_114743) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "account_id"
     t.string "time_zone", default: "London"
+    t.string "password_reset_token"
+    t.datetime "password_reset_requested_at"
   end
 
 end

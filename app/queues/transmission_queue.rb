@@ -21,20 +21,32 @@ class TransmissionQueue
 
       transmission_body = JSON.parse(body)
 
-      Transmission.create(
-        device_id: transmission_body['deviceId'],
-        device_tempr_id: transmission_body['deviceTemprId'],
-        message_uuid: transmission_body['messageId'],
-        transmission_uuid: transmission_body['transmissionId'],
-        success: transmission_body['success'],
-        status: transmission_body['status'],
-        transmitted_at: transmission_body['datetime'],
-        body: transmission_body['body']
-      )
+      create_transmission_from_queue(transmission_body)
 
       channel.ack(delivery_info.delivery_tag)
     end
 
     conn.close
+  end
+
+  def self.create_transmission_from_queue(body)
+    return if body.blank?
+
+    data = {
+      device_id: body['device']['id'],
+      message_uuid: body['uuid'],
+      transmission_uuid: body['transmissionId'],
+      success: body['tempr']['response']['success'],
+      status: body['tempr']['response']['status'],
+      transmitted_at: body['datetime']
+    }
+
+    body['tempr']['queueRequest'] &&
+      data[:request_body] = body['tempr']['rendered']['body']
+
+    body['tempr']['queueResponse'] &&
+      data[:response_body] = body['tempr']['response']['body']
+
+    Transmission.create!(data)
   end
 end

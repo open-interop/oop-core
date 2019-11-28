@@ -19,21 +19,19 @@ RSpec.describe TemprPresenter do
           eq(
             ttl: 10_000,
             data: [
-              {
-                id: tempr.id,
-                deviceId: device.id,
-                name: tempr.name,
-                endpointType: tempr.endpoint_type,
-                queueRequest: tempr.queue_request,
-                queueResponse: tempr.queue_response,
-                template:
-                  tempr.template.transform_keys do |k|
-                    k.to_s.camelcase(:lower)
-                  end,
-                createdAt: tempr.created_at,
-                updatedAt: tempr.updated_at,
-                temprs: []
-              }
+              id: tempr.id,
+              deviceId: device.id,
+              name: tempr.name,
+              endpointType: tempr.endpoint_type,
+              queueRequest: tempr.queue_request,
+              queueResponse: tempr.queue_response,
+              template:
+                tempr.template.transform_keys do |k|
+                  k.to_s.camelcase(:lower)
+                end,
+              createdAt: tempr.created_at,
+              updatedAt: tempr.updated_at,
+              temprs: []
             ]
           )
         )
@@ -41,7 +39,7 @@ RSpec.describe TemprPresenter do
     end
 
     context 'tempr with children' do
-      let!(:chained_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
+      let!(:sub_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
 
       it do
         expect(collection).to(
@@ -61,21 +59,24 @@ RSpec.describe TemprPresenter do
                   end,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
-                temprs: [
-                  id: chained_tempr.id,
-                  deviceId: device.id,
-                  name: chained_tempr.name,
-                  endpointType: chained_tempr.endpoint_type,
-                  queueRequest: chained_tempr.queue_request,
-                  queueResponse: chained_tempr.queue_response,
-                  template:
-                    chained_tempr.template.transform_keys do |k|
-                      k.to_s.camelcase(:lower)
-                    end,
-                  createdAt: chained_tempr.created_at,
-                  updatedAt: chained_tempr.updated_at,
-                  temprs: []
-                ]
+                temprs:
+                  tempr.temprs.map do |t|
+                    {
+                      id: t.id,
+                      deviceId: device.id,
+                      name: t.name,
+                      endpointType: t.endpoint_type,
+                      queueRequest: t.queue_request,
+                      queueResponse: t.queue_response,
+                      template:
+                        t.template.transform_keys do |k|
+                          k.to_s.camelcase(:lower)
+                        end,
+                      createdAt: t.created_at,
+                      updatedAt: t.updated_at,
+                      temprs: []
+                    }
+                  end
               }
             ]
           )

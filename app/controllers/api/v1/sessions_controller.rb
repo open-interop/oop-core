@@ -15,6 +15,8 @@ module Api
           )
 
         if logged_in?
+          @current_user.clear_password_reset_token!
+
           render json: @current_user.authenticated_token, status: :ok
         else
           access_denied
@@ -24,7 +26,9 @@ module Api
       # GET /api/v1/me
       def me
         render json:
-          current_user.to_json(only: %i[id email time_zone created_at updated_at])
+          current_user.to_json(
+            only: %i[id email time_zone created_at updated_at]
+          )
       end
 
       private

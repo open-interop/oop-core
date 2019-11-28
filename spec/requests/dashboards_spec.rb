@@ -23,6 +23,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
         :transmission,
         device: device,
         success: true,
+        status: 200,
         transmitted_at: '2019-11-24'
       )
     end +
@@ -31,6 +32,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
           :transmission,
           device: device,
           success: false,
+          status: 400,
           transmitted_at: '2019-11-21'
         )
       end +
@@ -39,6 +41,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
           :transmission,
           device: device_two,
           success: true,
+          status: 201,
           transmitted_at: '2019-11-24'
         )
       end +
@@ -47,6 +50,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
           :transmission,
           device: device_two,
           success: false,
+          status: 401,
           transmitted_at: '2019-11-21'
         )
       end
@@ -176,6 +180,26 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
         context 'stats' do
           it { expect(json_body['transmissions']['2019-11-21']).to eq(4) }
           it { expect(json_body['group']).to eq('transmitted_at') }
+        end
+      end
+
+      context 'group by a non-permitted field' do
+        before do
+          get(
+            api_v1_dashboards_transmissions_path,
+            params: { group: 'some-other-field' },
+            headers: authorization_headers
+          )
+        end
+
+        let(:json_body) { JSON.parse(response.body) }
+
+        context 'stats' do
+          it { expect(json_body['transmissions']['200']).to eq(3) }
+          it { expect(json_body['transmissions']['201']).to eq(2) }
+          it { expect(json_body['transmissions']['400']).to eq(2) }
+          it { expect(json_body['transmissions']['401']).to eq(2) }
+          it { expect(json_body['group']).to eq('status') }
         end
       end
     end
