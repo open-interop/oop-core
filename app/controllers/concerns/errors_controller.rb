@@ -29,7 +29,7 @@ module ErrorsController
     render json: {
       message: 'internal_server_error',
       errors: Array.wrap(errors),
-      stacktrace: Array.wrap(errors.backtrace)
+      stacktrace: Rails.env.development? ? Array.wrap(errors.backtrace) : nil
     }, status: 500
   end
 end

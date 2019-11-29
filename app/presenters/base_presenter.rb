@@ -33,7 +33,8 @@ class BasePresenter
       total_records: @records.total_count,
       number_of_pages: @records.total_pages,
       page: { number: @records.current_page, size: @records.limit_value },
-      data: @page_params[:count] ? nil : data
+      data: @page_params[:count] ? nil : data,
+      core_version: Rails.application.config.version_name
     }
   end
 
