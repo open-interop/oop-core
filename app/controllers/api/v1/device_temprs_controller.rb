@@ -3,41 +3,41 @@
 module Api
   module V1
     class DeviceTemprsController < ApplicationController
+      before_action :find_device, except: %i[index]
+      before_action :find_tempr, except: %i[index]
       before_action :find_device_tempr
 
-      # GET /device_temprs
+      # GET /api/v1/devices_temprs
       def index
-        @device_temprs = @device.device_temprs.all
+        @device_temprs =
+          DeviceTemprFilter.records(
+            params
+          )
 
-        render json: @device_temprs
+        render json:
+          DeviceTemprPresenter.collection(
+            @device_temprs,
+            params[:page]
+          ), status: :ok
       end
 
-      # GET /device_temprs/:id
-      def show
-        render json: @device_tempr
-      end
-
-      # POST /device_temprs
+      # POST /api/v1/devices_temprs?device_id=:device_id&tempr_id=:tempr_id
       def create
-        @device_tempr = @device.device_temprs.new(device_tempr_params)
+        @device_tempr =
+          DeviceTempr.new(
+            device_id: @device.id,
+            tempr_id: @tempr.id
+          )
 
         if @device_tempr.save
-          render json: @device_tempr, status: :created, location: @device_tempr
+          render json: @device_tempr.to_json(only: %i[id device_id tempr_id]), status: :created
         else
           render json: @device_tempr.errors, status: :unprocessable_entity
         end
       end
 
-      # PATCH/PUT /device_temprs/:id
-      def update
-        if @device_tempr.update(device_tempr_params)
-          render json: @device_tempr
-        else
-          render json: @device_tempr.errors, status: :unprocessable_entity
-        end
-      end
-
-      # DELETE /device_temprs/:id
+      # DELETE /api/v1/devices_temprs/:id
+      # Must provide ?device_id and ?tempr_id
       def destroy
         @device_tempr.destroy
       end
@@ -48,22 +48,17 @@ module Api
         @device = current_account.devices.find(params[:device_id])
       end
 
-      def find_device_tempr
-        return if params[:id].blank?
-        @device_tempr = @device.device_temprs.find(params[:id])
+      def find_tempr
+        @tempr = current_account.temprs.find(params[:tempr_id])
       end
 
-      # Only allow a trusted parameter "white list" through.
-      def device_tempr_params
-        params.require(:device_tempr).permit(
-          :device_id,
-          :tempr_id,
-          :endpoint_type,
-          :queue_response,
-          :template
-        ).tap do |whitelist|
-          whitelist[:template] = params[:device_tempr][:template]
-        end
+      def find_device_tempr
+        return if params[:id].blank?
+
+        @device_tempr =
+          @device.device_temprs
+                 .where(tempr_id: @tempr.id)
+                 .find(params[:id])
       end
     end
   end

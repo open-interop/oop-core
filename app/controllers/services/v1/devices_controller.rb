@@ -5,18 +5,20 @@ module Services
     class DevicesController < ServicesController
       before_action :find_device
 
-      # GET /devices/auth
+      # GET /services/v1/devices/auth
       def auth
-        render json: Device.includes(:account).active.to_json(only: %i[id], methods: %i[hostname authentication])
+        render json:
+          Device.includes(:account, :site).active
+                .to_json(only: %i[id], methods: %i[authentication])
       end
 
-      # GET /devices/:id/temprs
+      # GET /services/v1/devices/:id/temprs
       def temprs
         render json:
-          {
-            ttl: 10_000,
-            data: @device.device_temprs.as_json
-          }
+          TemprPresenter.collection_for_microservices(
+            @device.id,
+            @device.temprs
+          )
       end
 
       private
@@ -24,7 +26,7 @@ module Services
       def find_device
         return if params[:id].blank?
 
-        @device = Device.find(params[:id])
+        @device = Device.active.find(params[:id])
       end
     end
   end

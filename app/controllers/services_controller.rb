@@ -7,7 +7,8 @@ class ServicesController < ApplicationController
   private
 
   def authenticate_as_microservice
-    return if request.headers['X-Core-Token'] == ENV['OOP_CORE_AUTH_TOKEN']
+    return if Rails.configuration.oop[:services_token].present? &&
+              request.headers['X-Core-Token'] == Rails.configuration.oop[:services_token]
 
     access_denied
   end

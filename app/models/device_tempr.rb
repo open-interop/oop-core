@@ -4,24 +4,31 @@
 # this is the join table between device and tempr
 class DeviceTempr < ApplicationRecord
   #
-  # Validations
-  #
-  validates :endpoint_type, presence: true
-  validates :queue_response, presence: true
-  validates :template, presence: true
-
-  #
   # Relationships
   #
   belongs_to :device
   belongs_to :tempr
 
   #
+  # Validations
+  #
+  validates :tempr_id, uniqueness: { scope: :device_id }
+
+  #
   # Serializations
   #
-  serialize :template, Hash
+  serialize :options, Hash
 
-  def as_json
-    ActiveModelSerializers::SerializableResource.new(self)
+  def template
+    @template ||=
+      {
+        host: options[:host],
+        port: options[:port],
+        path: options[:path],
+        request_method: options[:request_method] || options[:requestMethod],
+        protocol: options[:protocol],
+        headers: options[:headers],
+        body: tempr&.body
+      }
   end
 end

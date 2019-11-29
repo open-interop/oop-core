@@ -7,11 +7,9 @@ class ApplicationController < ActionController::API
 
   before_action :login_required
 
-  #before_action do
-  #  Time.zone = logged_in? ? current_user.time_zone : 'London'
-  #end
+  include ErrorsController
 
-  def not_found
-    render json: { error: 'not_found' }
+  before_action do
+    params[:page] ||= {}
   end
 end

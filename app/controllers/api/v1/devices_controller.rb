@@ -5,30 +5,31 @@ module Api
     class DevicesController < ApplicationController
       before_action :find_device
 
-      # GET /devices
+      # GET /api/v1/devices
       def index
-        @devices = current_account.devices.all
+        @devices = DeviceFilter.records(params, scope: current_account)
 
-        render json: @devices
+        render json:
+          DevicePresenter.collection(@devices, params[:page]), status: :ok
       end
 
-      # GET /devices/:id
+      # GET /api/v1/devices/:id
       def show
         render json: @device
       end
 
-      # POST /devices
+      # POST /api/v1/devices
       def create
         @device = current_account.devices.build(device_params)
 
         if @device.save
-          render json: @device, status: :created, location: @device
+          render json: @device, status: :created
         else
           render json: @device.errors, status: :unprocessable_entity
         end
       end
 
-      # PATCH/PUT /devices/:id
+      # PATCH/PUT /api/v1/devices/:id
       def update
         if @device.update(device_params)
           render json: @device
@@ -37,26 +38,31 @@ module Api
         end
       end
 
-      # DELETE /devices/:id
+      # DELETE /api/v1/devices/:id
       def destroy
         @device.destroy
       end
 
-      # POST /devices/:id/assign_tempr
+      # POST /api/v1/devices/:id/assign_tempr
       def assign_tempr
         @tempr = @device.device_group.temprs.find(params[:tempr_id])
 
-        if @device.assign_tempr(@tempr, device_tempr_params)
-          render nothing: true, status: :created
-        else
-          render nothing: true, status: :unprocessable_entity
-        end
+        @device_tempr = @device.device_temprs.create(tempr: @tempr)
+
+        render json: @device_tempr, status: :created
+      end
+
+      # GET /api/v1/devices/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@device.audits, params[:page]), status: :ok
       end
 
       private
 
       def find_device
         return if params[:id].blank?
+
         @device = current_account.devices.find(params[:id])
       end
 
@@ -71,21 +77,16 @@ module Api
           :longitude,
           :latitude,
           :time_zone,
+          :active,
           authentication_headers: [[]],
           authentication_query: [[]]
         ).tap do |whitelist|
-          whitelist[:authentication_headers] = params[:device][:authentication_headers]
-          whitelist[:authentication_query] = params[:device][:authentication_query]
-        end
-      end
+          whitelist[:authentication_headers] =
+            params[:device][:authentication_headers]
 
-      def device_tempr_params
-        params.require(:device_tempr).permit(
-          :endpoint_type,
-          :queue_response,
-          :template,
-          template: [:host, :port, :path, :requestMethod, :protocol, :headers]
-        )
+          whitelist[:authentication_query] =
+            params[:device][:authentication_query]
+        end
       end
     end
   end

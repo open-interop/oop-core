@@ -5,16 +5,13 @@ require_relative 'boot'
 require 'rails'
 # Pick the frameworks you want:
 require 'active_model/railtie'
-require 'active_job/railtie'
 require 'active_record/railtie'
-require 'active_storage/engine'
 require 'action_controller/railtie'
 require 'action_mailer/railtie'
 require 'action_mailbox/engine'
 require 'action_text/engine'
 require 'action_view/railtie'
 require 'action_cable/engine'
-# require "sprockets/railtie"
 require 'rails/test_unit/railtie'
 
 # Require the gems listed in Gemfile, including any gems
@@ -37,5 +34,19 @@ module OopCore
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    Rails.configuration.oop = {
+      services_token: ENV['OOP_CORE_TOKEN'],
+      renderer_path: ENV['OOP_RENDERER_PATH'],
+      interface: {
+        scheme: ENV['OOP_CORE_INTERFACE_SCHEME'],
+        port: ENV['OOP_CORE_INTERFACE_PORT'],
+        path: ENV['OOP_CORE_INTERFACE_PATH']
+      },
+      rabbit: {
+        devices_exchange: ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
+        response_queue: ENV['OOP_CORE_RESPONSE_Q']
+      }
+    }
   end
 end

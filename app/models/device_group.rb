@@ -6,13 +6,14 @@ class DeviceGroup < ApplicationRecord
   # Validations
   #
   validates :name, presence: true
-  validates :account_id, presence: true
 
   #
   # Relationships
   #
   belongs_to :account
 
-  has_many :devices
-  has_many :temprs
+  has_many :devices, dependent: :restrict_with_error
+  has_many :temprs, dependent: :restrict_with_error
+
+  audited
 end

@@ -3,33 +3,33 @@
 module Api
   module V1
     class TemprsController < ApplicationController
-      before_action :find_device_group
       before_action :find_tempr
 
-      # GET /device_groups/:device_group_id/temprs
+      # GET /api/v1/temprs
       def index
-        @temprs = @device_group.temprs.all
+        @temprs = TemprFilter.records(params, scope: current_account)
 
-        render json: @temprs
+        render json:
+          TemprPresenter.collection(@temprs, params[:page]), status: :ok
       end
 
-      # GET /device_groups/:device_group_id/temprs/:id
+      # GET /api/v1/temprs/:id
       def show
         render json: @tempr
       end
 
-      # POST /device_groups/:device_group_id/temprs
+      # POST /api/v1/temprs
       def create
-        @tempr = @device_group.temprs.build(tempr_params)
+        @tempr = current_account.temprs.build(tempr_params)
 
         if @tempr.save
-          render json: @tempr, status: :created, location: @tempr
+          render json: @tempr, status: :created
         else
           render json: @tempr.errors, status: :unprocessable_entity
         end
       end
 
-      # PATCH/PUT /device_groups/:device_group_id/temprs/:id
+      # PATCH/PUT /api/v1/temprs/:id
       def update
         if @tempr.update(tempr_params)
           render json: @tempr
@@ -38,31 +38,52 @@ module Api
         end
       end
 
-      # DELETE /device_groups/:device_group_id/temprs/:id
+      # DELETE /api/v1/temprs/:id
       def destroy
         @tempr.destroy
+        render nothing: true, status: 200
+      end
+
+      # POST /api/v1/temprs/preview
+      def preview
+        @renderer = OpenInterop::TemprRenderer.new(
+          tempr_params[:example_transmission] || '',
+          tempr_params[:template]
+        )
+
+        @renderer.render
+
+        render json: @renderer.json_response
+      end
+
+      # GET /api/v1/temprs/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@tempr.audits, params[:page]), status: :ok
       end
 
       private
 
-      def find_device_group
-        @device_group =
-          current_account.device_groups.find(params[:device_group_id])
-      end
-
       def find_tempr
         return if params[:id].blank?
-        @tempr = @device_group.temprs.find(params[:id])
+
+        @tempr = current_account.temprs.find(params[:id])
       end
 
       def tempr_params
         params.require(:tempr).permit(
           :name,
           :description,
-          :body
-        ).tap do |whitelist|
-          whitelist[:body] = params[:tempr][:body]
-        end
+          :device_group_id,
+          :device_id,
+          :tempr_id,
+          :endpoint_type,
+          :queue_response,
+          :queue_request,
+          :example_transmission,
+          :notes,
+          { template: {} }
+        )
       end
     end
   end

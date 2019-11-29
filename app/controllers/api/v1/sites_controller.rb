@@ -5,30 +5,31 @@ module Api
     class SitesController < ApplicationController
       before_action :find_site
 
-      # GET /sites
+      # GET /api/v1/sites
       def index
-        @sites = current_account.sites.all
+        @sites = SiteFilter.records(params, scope: current_account)
 
-        render json: @sites
+        render json:
+          SitePresenter.collection(@sites, params[:page]), status: :ok
       end
 
-      # GET /sites/:id
+      # GET /api/v1/sites/:id
       def show
         render json: @site
       end
 
-      # POST /sites
+      # POST /api/v1/sites
       def create
         @site = current_account.sites.build(site_params)
 
         if @site.save
-          render json: @site, status: :created, location: @site
+          render json: @site, status: :created
         else
           render json: @site.errors, status: :unprocessable_entity
         end
       end
 
-      # PATCH/PUT /sites/:id
+      # PATCH/PUT /api/v1/sites/:id
       def update
         if @site.update(site_params)
           render json: @site
@@ -37,20 +38,27 @@ module Api
         end
       end
 
-      # DELETE /sites/:id
+      # DELETE /api/v1/sites/:id
       def destroy
         @site.destroy
+      end
+
+      # GET /api/v1/sites/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@site.audits, params[:page]), status: :ok
       end
 
       private
 
       def find_site
-        return if params[:id]
+        return if params[:id].blank?
+
         @site = current_account.sites.find(params[:id])
       end
 
       def site_params
-        params.fetch(:site).permit(
+        params.require(:site).permit(
           :site_id,
           :name,
           :description,
@@ -63,10 +71,8 @@ module Api
           :latitude,
           :longitude,
           :time_zone,
-          :external_uuids
-        ).tap do |whitelist|
-          whitelist[:external_uuids] = params[:site][:external_uuids]
-        end
+          { external_uuids: {} }
+        )
       end
     end
   end

@@ -5,42 +5,51 @@ module Api
     class UsersController < ApplicationController
       before_action :find_user
 
-      # GET /users
+      # GET /api/v1/users
       def index
-        @users = current_account.users.all
-        render json: @users, status: :ok
+        @users = UserFilter.records(params, scope: current_account)
+
+        render json:
+          UserPresenter.collection(@users, params[:page]), status: :ok
       end
 
-      # GET /users/:id
+      # GET /api/v1/users/:id
       def show
-        render json: @user.to_json(only: [:id, :email, :time_zone]), status: :ok
+        render json: @user.to_json(only: %i[id email time_zone created_at updated_at]), status: :ok
       end
 
-      # POST /users
+      # POST /api/v1/users
       def create
         @user = current_account.users.build(user_params)
 
         if @user.save
-          render json: @user.to_json(only: [:id, :email, :time_zone]), status: :created
+          render json:
+            @user.to_json(only: %i[id email time_zone created_at updated_at]), status: :created
         else
           render json: @user.errors,
                  status: :unprocessable_entity
         end
       end
 
-      # PUT /users/:id
+      # PUT /api/v1/users/:id
       def update
         if @user.update(user_params)
           render json: @user, status: :ok
         else
-          render json: @user.errors.full_messages,
+          render json: @user.errors,
                  status: :unprocessable_entity
         end
       end
 
-      # DELETE /users/:id
+      # DELETE /api/v1/users/:id
       def destroy
         @user.destroy
+      end
+
+      # GET /api/v1/users/:id/history
+      def history
+        render json:
+          AuditablePresenter.collection(@user.audits, params[:page]), status: :ok
       end
 
       private
@@ -49,8 +58,6 @@ module Api
         return if params[:id].blank?
 
         @user = current_account.users.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        render json: { errors: 'User not found' }, status: :not_found
       end
 
       def user_params
