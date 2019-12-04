@@ -38,7 +38,7 @@ class TransmissionQueue
       transmission_uuid: body['transmissionId'],
       success: body['tempr']['response']['success'],
       status: body['tempr']['response']['status'],
-      transmitted_at: body['datetime']
+      transmitted_at: body['tempr']['response']['datetime']
     }
 
     body['tempr']['queueRequest'] &&
