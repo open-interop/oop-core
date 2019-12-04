@@ -35,7 +35,8 @@ module OopCore
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    Rails.configuration.oop = {
+    config.oop = {
+      from_email: ENV['OOP_FROM_EMAIL'],
       services_token: ENV['OOP_CORE_TOKEN'],
       renderer_path: ENV['OOP_RENDERER_PATH'],
       interface: {

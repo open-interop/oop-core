@@ -7,7 +7,8 @@ class Device < ApplicationRecord
   #
   validates :name, presence: true
   validates_with DeviceAuthenticationValidator
-  validates :authentication_path, uniqueness: { scope: :account_id }
+  validates :authentication_path, uniqueness:
+    { scope: :account_id, allow_nil: true }
   validates_with AccountValidator, fields: %i[site device_group]
 
   #

@@ -59,6 +59,32 @@ RSpec.describe Device, type: :model do
     it { expect(device.valid?).to be(false) }
   end
 
+  context 'with duplicate authentication_path' do
+    let(:device_two) { FactoryBot.build(:device, authentication_path: '/') }
+
+    it { expect(device_two).to_not be_valid }
+
+    context 'on another account' do
+      let(:account_two) do
+        FactoryBot.create(:account, hostname: 'test-two.host')
+      end
+
+      let(:site) { FactoryBot.create(:site, account: account_two) }
+
+      let(:device_group) do
+        FactoryBot.create(:device_group, account: account_two)
+      end
+
+      before do
+        device_two.device_group = device_group
+        device_two.site = site
+        device_two.account = account_two
+      end
+
+      it { expect(device_two).to be_valid }
+    end
+  end
+
   context 'with children' do
     let!(:transmissions) do
       Array.new(2) do

@@ -10,7 +10,8 @@ class User < ApplicationRecord
   # Validations
   #
   validates :account_id, presence: true
-  validates :email, presence: true, uniqueness: { case_sensitive: false }
+  validates :email, presence: true, uniqueness:
+    { case_sensitive: false, scope: :account_id }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password,
             length: { minimum: 6 },

@@ -43,7 +43,11 @@ module Api
 
       # DELETE /api/v1/users/:id
       def destroy
-        @user.destroy
+        if @user.destroy
+          render nothing: true, status: :ok
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # GET /api/v1/users/:id/history

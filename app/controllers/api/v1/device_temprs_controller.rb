@@ -39,7 +39,11 @@ module Api
       # DELETE /api/v1/devices_temprs/:id
       # Must provide ?device_id and ?tempr_id
       def destroy
-        @device_tempr.destroy
+        if @device_tempr.destroy
+          render nothing: true, status: :ok
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       private

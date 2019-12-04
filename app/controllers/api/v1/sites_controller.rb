@@ -40,7 +40,11 @@ module Api
 
       # DELETE /api/v1/sites/:id
       def destroy
-        @site.destroy
+        if @site.destroy
+          render nothing: true, status: :ok
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # GET /api/v1/sites/:id/history
