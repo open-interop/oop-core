@@ -40,8 +40,11 @@ module Api
 
       # DELETE /api/v1/temprs/:id
       def destroy
-        @tempr.destroy
-        render nothing: true, status: 200
+        if @tempr.destroy
+          render nothing: true, status: 200
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # POST /api/v1/temprs/preview
