@@ -31,3 +31,4 @@ coverage
 .DS_Store
 
 /config/database.yml
+/config/storage.yml
