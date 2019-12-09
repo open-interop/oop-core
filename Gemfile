@@ -10,7 +10,7 @@ gem 'bunny', '>= 2.14.1'
 gem 'jwt'
 gem 'kaminari'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'rails', '~> 6.0.0.rc2'
 gem 'rswag'
 
