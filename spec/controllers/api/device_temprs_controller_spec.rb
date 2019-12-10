@@ -65,9 +65,9 @@ RSpec.describe Api::V1::DeviceTemprsController, type: :controller do
 
   describe 'DELETE #destroy' do
     it 'destroys the requested device_tempr' do
-      expect {
+      expect do
         delete :destroy, params: { id: device_tempr.to_param, device_id: device.id, tempr_id: tempr.id }
-      }.to change(DeviceTempr, :count).by(-1)
+      end.to change(DeviceTempr, :count).by(-1)
     end
 
     context 'renders nothing' do
@@ -84,6 +84,14 @@ RSpec.describe Api::V1::DeviceTemprsController, type: :controller do
       end
 
       it { expect(response).to have_http_status(:not_found) }
+    end
+
+    context 'responds' do
+      before do
+        delete :destroy, params: { id: device_tempr.to_param, device_id: device.id, tempr_id: tempr.id }
+      end
+
+      it { expect(response.status).to eq(204) }
     end
   end
 end

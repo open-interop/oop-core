@@ -41,7 +41,7 @@ module Api
       # DELETE /api/v1/devices/:id
       def destroy
         if @device.destroy
-          render nothing: true
+          render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
         end

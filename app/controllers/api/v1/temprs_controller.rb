@@ -41,7 +41,7 @@ module Api
       # DELETE /api/v1/temprs/:id
       def destroy
         if @tempr.destroy
-          render nothing: true, status: 200
+          render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
         end
