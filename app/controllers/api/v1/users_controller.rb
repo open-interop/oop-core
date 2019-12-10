@@ -44,7 +44,7 @@ module Api
       # DELETE /api/v1/users/:id
       def destroy
         if @user.destroy
-          render nothing: true
+          render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
         end

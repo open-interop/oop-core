@@ -111,11 +111,18 @@ RSpec.describe Api::V1::SitesController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'destroys the requested site' do
-      expect {
-        delete :destroy, params: { id: site.to_param }
-      }.to change(Site, :count).by(-1)
+    context 'destroys the requested site' do
+      it do
+        expect {
+          delete :destroy, params: { id: site.to_param }
+        }.to change(Site, :count).by(-1)
+      end
+    end
+
+    context 'responds' do
+      before { delete :destroy, params: { id: site.to_param } }
+
+      it { expect(response.status).to eq(204) }
     end
   end
-
 end

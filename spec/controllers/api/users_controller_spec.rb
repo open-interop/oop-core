@@ -107,10 +107,18 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'destroys the requested user' do
-      expect {
-        delete :destroy, params: { id: user.to_param }
-      }.to change(User, :count).by(-1)
+    context 'destroys the requested user' do
+      it do
+        expect do
+          delete :destroy, params: { id: user.to_param }
+        end.to change(User, :count).by(-1)
+      end
+    end
+
+    context 'responds' do
+      before { delete :destroy, params: { id: user.to_param } }
+
+      it { expect(response.status).to eq(204) }
     end
   end
 end

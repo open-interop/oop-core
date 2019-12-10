@@ -41,7 +41,7 @@ module Api
       # DELETE /api/v1/sites/:id
       def destroy
         if @site.destroy
-          render nothing: true
+          render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
         end

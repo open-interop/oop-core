@@ -40,7 +40,7 @@ module Api
       # Must provide ?device_id and ?tempr_id
       def destroy
         if @device_tempr.destroy
-          render nothing: true
+          render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
         end
