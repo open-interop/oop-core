@@ -17,8 +17,6 @@ class TransmissionQueue
       block: true,
       manual_ack: true
     ) do |delivery_info, _properties, body|
-      puts "#{Time.now.to_s(:db)}: Received: #{body}"
-
       transmission_body = JSON.parse(body)
 
       create_transmission_from_queue(transmission_body)
@@ -31,6 +29,8 @@ class TransmissionQueue
 
   def self.create_transmission_from_queue(body)
     return if body.blank?
+
+    puts "info:[#{Time.now.iso8601}] oop-core consumed #{body['uuid']}"
 
     data = {
       device_id: body['device']['id'],
