@@ -45,7 +45,7 @@ RSpec.describe OpenInterop::TemprRenderer do
       end
     end
 
-    context 'with a moustache object' do
+    context 'with a mustache object' do
       let(:tempr) { FactoryBot.create(:tempr) }
 
       before do

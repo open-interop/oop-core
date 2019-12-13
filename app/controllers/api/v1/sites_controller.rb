@@ -53,6 +53,14 @@ module Api
           AuditablePresenter.collection(@site.audits, params[:page]), status: :ok
       end
 
+      # GET /api/v1/sites/sidebar
+      def sidebar
+        @site = current_account.sites.find_by(id: params[:site_id])
+
+        render json:
+          SitePresenter.sidebar(current_account, @site), status: :ok
+      end
+
       private
 
       def find_site
