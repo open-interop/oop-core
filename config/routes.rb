@@ -38,6 +38,10 @@ Rails.application.routes.draw do
       end
 
       resources :sites do
+        collection do
+          get 'sidebar', to: 'sites#sidebar'
+        end
+
         member do
           get 'history', to: 'sites#history'
         end

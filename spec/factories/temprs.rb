@@ -22,7 +22,7 @@ FactoryBot.define do
           'Content-Type': 'application/json'
         },
         body: {
-          language: 'moustache',
+          language: 'mustache',
           body:
             'asd of this thing {{message.body.key1}} and also {{message.body.key2}}'
         }

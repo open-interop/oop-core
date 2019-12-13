@@ -19,6 +19,7 @@ class TransmissionQueue
     ) do |delivery_info, _properties, body|
       transmission_body = JSON.parse(body)
 
+      puts "info:[#{Time.now.iso8601}] oop-core consumed #{transmission_body['uuid']}"
       create_transmission_from_queue(transmission_body)
 
       channel.ack(delivery_info.delivery_tag)
@@ -29,8 +30,6 @@ class TransmissionQueue
 
   def self.create_transmission_from_queue(body)
     return if body.blank?
-
-    puts "info:[#{Time.now.iso8601}] oop-core consumed #{body['uuid']}"
 
     data = {
       device_id: body['device']['id'],
