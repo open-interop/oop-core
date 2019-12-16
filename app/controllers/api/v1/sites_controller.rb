@@ -40,13 +40,25 @@ module Api
 
       # DELETE /api/v1/sites/:id
       def destroy
-        @site.destroy
+        if @site.destroy
+          render nothing: true, status: :no_content
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # GET /api/v1/sites/:id/history
       def history
         render json:
           AuditablePresenter.collection(@site.audits, params[:page]), status: :ok
+      end
+
+      # GET /api/v1/sites/sidebar
+      def sidebar
+        @site = current_account.sites.find_by(id: params[:site_id])
+
+        render json:
+          SitePresenter.sidebar(current_account, @site), status: :ok
       end
 
       private

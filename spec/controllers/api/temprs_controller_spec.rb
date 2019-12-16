@@ -164,10 +164,18 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'destroys the requested tempr' do
-      expect {
-        delete :destroy, params: {id: tempr.to_param}
-      }.to change(Tempr, :count).by(-1)
+    context 'destroys the requested tempr' do
+      it do
+        expect do
+          delete :destroy, params: {id: tempr.to_param}
+        end.to change(Tempr, :count).by(-1)
+      end
+    end
+
+    context 'responds' do
+      before { delete :destroy, params: { id: tempr.to_param } }
+
+      it { expect(response.status).to eq(204) }
     end
   end
 end

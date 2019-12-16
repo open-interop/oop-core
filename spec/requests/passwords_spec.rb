@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Passwords", type: :request do
+RSpec.describe 'Api::V1::Passwords', type: :request do
   let!(:user) { FactoryBot.create(:user) }
 
   before { ActionMailer::Base.deliveries.clear }
@@ -23,7 +23,7 @@ RSpec.describe "Api::V1::Passwords", type: :request do
         user.reload
       end
 
-      it { expect(response).to have_http_status(200) }
+      it { expect(response).to have_http_status(204) }
       it { expect(user.password_reset_requested_at).to_not eq(nil) }
       it { expect(user.password_reset_token).to_not eq(nil) }
     end
@@ -45,7 +45,7 @@ RSpec.describe "Api::V1::Passwords", type: :request do
         user.reload
       end
 
-      it { expect(response).to have_http_status(200) }
+      it { expect(response).to have_http_status(204) }
       it { expect(user.password_reset_requested_at).to eq(nil) }
       it { expect(user.password_reset_token).to eq(nil) }
     end

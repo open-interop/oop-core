@@ -12,7 +12,7 @@ module Api
           user.send_reset_password_email
         end
 
-        render nothing: true, status: :ok
+        render nothing: true, status: :no_content
       end
 
       def reset
@@ -32,7 +32,7 @@ module Api
           end
         end
 
-        render nothing: true, status: :ok
+        render nothing: true, status: :no_content
       end
     end
   end

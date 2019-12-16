@@ -46,7 +46,11 @@ module Api
 
       # DELETE /api/v1/device_groups/:id
       def destroy
-        @device_group.destroy
+        if @device_group.destroy
+          render nothing: true, status: :no_content
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # GET /api/v1/device_groups/:id/history

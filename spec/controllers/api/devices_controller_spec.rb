@@ -143,10 +143,18 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'destroys the requested device' do
-      expect do
-        delete :destroy, params: { id: device.to_param }
-      end.to change(Device, :count).by(-1)
+    context 'destroys the requested device' do
+      it do
+        expect do
+          delete :destroy, params: { id: device.to_param }
+        end.to change(Device, :count).by(-1)
+      end
+    end
+
+    context 'responds' do
+      before { delete :destroy, params: { id: device.to_param } }
+
+      it { expect(response.status).to eq(204) }
     end
   end
 end

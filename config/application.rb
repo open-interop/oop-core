@@ -35,7 +35,7 @@ module OopCore
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    Rails.configuration.oop = {
+    config.oop = {
       services_token: ENV['OOP_CORE_TOKEN'],
       renderer_path: ENV['OOP_RENDERER_PATH'],
       interface: {
@@ -46,6 +46,16 @@ module OopCore
       rabbit: {
         devices_exchange: ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
         response_queue: ENV['OOP_CORE_RESPONSE_Q']
+      },
+      from_email: ENV['OOP_CORE_FROM_ADDRESS'],
+      smtp: {
+        address:  ENV['OOP_CORE_SMTP_ADDRESS'],
+        port: ENV['OOP_CORE_SMTP_PORT'],
+        domain: ENV['OOP_CORE_SMTP_DOMAIN'],
+        user_name: ENV['OOP_CORE_SMTP_USER_NAME'],
+        password: ENV['OOP_CORE_SMTP_PASSWORD'],
+        authentication: ENV['OOP_CORE_SMTP_AUTHENTICATION'],
+        enable_starttls_auto: ENV['OOP_CORE_SMTP_ENABLE_STARTTLS_AUTO']
       }
     }
   end

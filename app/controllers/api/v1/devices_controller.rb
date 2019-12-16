@@ -40,7 +40,11 @@ module Api
 
       # DELETE /api/v1/devices/:id
       def destroy
-        @device.destroy
+        if @device.destroy
+          render nothing: true, status: :no_content
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       # POST /api/v1/devices/:id/assign_tempr
