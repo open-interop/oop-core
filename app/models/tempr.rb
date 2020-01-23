@@ -6,6 +6,7 @@ class Tempr < ApplicationRecord
   #
   validates :name, presence: true
   validates :endpoint_type, presence: true
+
   validates_with TemprTemplateValidator
   validates_with AccountValidator, fields: %i[device_group]
 
@@ -18,6 +19,9 @@ class Tempr < ApplicationRecord
 
   has_many :device_temprs
   has_many :devices, through: :device_temprs
+
+  has_many :schedule_temprs
+  has_many :schedules, through: :schedule_temprs
 
   has_many :temprs
 

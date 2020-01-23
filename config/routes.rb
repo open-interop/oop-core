@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'devices/auth', to: 'devices#auth'
       get 'devices/:id/temprs', to: 'devices#temprs'
+
+      get 'schedules', to: 'schedules#index'
+      get 'schedules/:id/temprs', to: 'schedules#temprs'
     end
   end
 
@@ -55,6 +58,13 @@ Rails.application.routes.draw do
 
         get 'transmissions', to: 'transmissions#index'
         get 'transmissions/:id', to: 'transmissions#show'
+      end
+
+      resources :schedules do
+        member do
+          post 'assign_tempr', to: 'schedules#assign_tempr'
+          get 'history', to: 'schedules#history'
+        end
       end
 
       post '/passwords', to: 'passwords#create'

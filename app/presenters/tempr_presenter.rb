@@ -7,12 +7,21 @@ class TemprPresenter < BasePresenter
              :example_transmission, :notes,
              :created_at, :updated_at
 
-  def self.record_for_microservice(device_id, record)
+  def self.record_for_microservice(parent_id, record, parent_type)
     return if record.blank?
+
+    device_id = parent_id
+    schedule_id = nil
+
+    if parent_type == :schedule
+      device_id = nil
+      schedule_id = parent_id
+    end
 
     {
       id: record.id,
       deviceId: device_id,
+      scheduleId: schedule_id,
       name: record.name,
       endpointType: record.endpoint_type,
       queueRequest: record.queue_request,
@@ -24,16 +33,16 @@ class TemprPresenter < BasePresenter
       createdAt: record.created_at,
       updatedAt: record.updated_at,
       temprs: record.temprs.map do |tempr|
-        record_for_microservice(device_id, tempr)
+        record_for_microservice(parent_id, tempr, parent_type)
       end
     }
   end
 
-  def self.collection_for_microservices(device_id, records)
+  def self.collection_for_microservices(parent_id, records, parent_type = :device)
     {
       ttl: 10_000,
       data: records.map do |record|
-        record_for_microservice(device_id, record)
+        record_for_microservice(parent_id, record, parent_type)
       end
     }
   end

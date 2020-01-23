@@ -50,6 +50,9 @@ Rails.application.configure do
     from_email: 'no-reply@example.com',
     services_token: 'a-test-token',
     renderer_path: 'some/renderer/path',
+    scheme: 'http://',
+    port: 80,
+    path: '/',
     interface: {
       scheme: 'http://',
       port: 80,
