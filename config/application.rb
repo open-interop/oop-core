@@ -38,6 +38,9 @@ module OopCore
     config.oop = {
       services_token: ENV['OOP_CORE_TOKEN'],
       renderer_path: ENV['OOP_RENDERER_PATH'],
+      scheme: ENV['OOP_CORE_SCHEME'],
+      port: ENV['OOP_CORE_PORT'],
+      path: ENV['OOP_CORE_PATH'],
       interface: {
         scheme: ENV['OOP_CORE_INTERFACE_SCHEME'],
         port: ENV['OOP_CORE_INTERFACE_PORT'],

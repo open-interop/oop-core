@@ -129,4 +129,19 @@ class Device < ApplicationRecord
     @bunny_connection = nil
     @bunny_exchange = nil
   end
+
+  def tempr_url
+    [].tap do |a|
+      a << Rails.configuration.oop[:scheme]
+      a << account.hostname
+
+      if Rails.configuration.oop[:port].present? && ![80, 443].include?(Rails.configuration.oop[:port].to_i)
+        a << ':'
+        a << Rails.configuration.oop[:port]
+      end
+
+      a << Rails.configuration.oop[:path] || '/'
+      a << "services/v1/devices/#{id}/temprs"
+    end.join
+  end
 end
