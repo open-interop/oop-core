@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_28_104345) do
+ActiveRecord::Schema.define(version: 2020_01_20_141047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,27 @@ ActiveRecord::Schema.define(version: 2019_11_28_104345) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "active", default: true
+  end
+
+  create_table "schedule_temprs", force: :cascade do |t|
+    t.integer "tempr_id"
+    t.integer "schedule_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.integer "account_id"
+    t.string "name"
+    t.boolean "active", default: true
+    t.string "minute", default: "*"
+    t.string "hour", default: "*"
+    t.string "day_of_week", default: "*"
+    t.string "day_of_month", default: "*"
+    t.string "month_of_year", default: "*"
+    t.string "year", default: "*"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "sites", force: :cascade do |t|

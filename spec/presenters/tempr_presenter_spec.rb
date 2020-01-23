@@ -2,53 +2,27 @@ require 'rails_helper'
 
 RSpec.describe TemprPresenter do
   describe '::collection_for_microservices' do
-    let!(:device_tempr) { FactoryBot.create(:device_tempr) }
-    let(:device) { device_tempr.device }
-    let(:tempr) { device_tempr.tempr }
+    context 'Device' do
+      let!(:device_tempr) { FactoryBot.create(:device_tempr) }
+      let(:device) { device_tempr.device }
+      let(:tempr) { device_tempr.tempr }
 
-    let(:collection) do
-      described_class.collection_for_microservices(
-        device.id,
-        [tempr]
-      )
-    end
-
-    context 'tempr with no children' do
-      it do
-        expect(collection).to(
-          eq(
-            ttl: 10_000,
-            data: [
-              id: tempr.id,
-              deviceId: device.id,
-              name: tempr.name,
-              endpointType: tempr.endpoint_type,
-              queueRequest: tempr.queue_request,
-              queueResponse: tempr.queue_response,
-              template:
-                tempr.template.transform_keys do |k|
-                  k.to_s.camelcase(:lower)
-                end,
-              createdAt: tempr.created_at,
-              updatedAt: tempr.updated_at,
-              temprs: []
-            ]
-          )
+      let(:collection) do
+        described_class.collection_for_microservices(
+          device.id,
+          [tempr]
         )
       end
-    end
 
-    context 'tempr with children' do
-      let!(:sub_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
-
-      it do
-        expect(collection).to(
-          eq(
-            ttl: 10_000,
-            data: [
-              {
+      context 'tempr with no children' do
+        it do
+          expect(collection).to(
+            eq(
+              ttl: 10_000,
+              data: [
                 id: tempr.id,
                 deviceId: device.id,
+                scheduleId: nil,
                 name: tempr.name,
                 endpointType: tempr.endpoint_type,
                 queueRequest: tempr.queue_request,
@@ -59,28 +33,147 @@ RSpec.describe TemprPresenter do
                   end,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
-                temprs:
-                  tempr.temprs.map do |t|
-                    {
-                      id: t.id,
-                      deviceId: device.id,
-                      name: t.name,
-                      endpointType: t.endpoint_type,
-                      queueRequest: t.queue_request,
-                      queueResponse: t.queue_response,
-                      template:
-                        t.template.transform_keys do |k|
-                          k.to_s.camelcase(:lower)
-                        end,
-                      createdAt: t.created_at,
-                      updatedAt: t.updated_at,
-                      temprs: []
-                    }
-                  end
-              }
-            ]
+                temprs: []
+              ]
+            )
           )
+        end
+      end
+
+      context 'tempr with children' do
+        let!(:sub_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
+
+        it do
+          expect(collection).to(
+            eq(
+              ttl: 10_000,
+              data: [
+                {
+                  id: tempr.id,
+                  deviceId: device.id,
+                  scheduleId: nil,
+                  name: tempr.name,
+                  endpointType: tempr.endpoint_type,
+                  queueRequest: tempr.queue_request,
+                  queueResponse: tempr.queue_response,
+                  template:
+                    tempr.template.transform_keys do |k|
+                      k.to_s.camelcase(:lower)
+                    end,
+                  createdAt: tempr.created_at,
+                  updatedAt: tempr.updated_at,
+                  temprs:
+                    tempr.temprs.map do |t|
+                      {
+                        id: t.id,
+                        deviceId: device.id,
+                        scheduleId: nil,
+                        name: t.name,
+                        endpointType: t.endpoint_type,
+                        queueRequest: t.queue_request,
+                        queueResponse: t.queue_response,
+                        template:
+                          t.template.transform_keys do |k|
+                            k.to_s.camelcase(:lower)
+                          end,
+                        createdAt: t.created_at,
+                        updatedAt: t.updated_at,
+                        temprs: []
+                      }
+                    end
+                }
+              ]
+            )
+          )
+        end
+      end
+    end
+
+    context 'Schedule' do
+      let!(:schedule_tempr) { FactoryBot.create(:schedule_tempr) }
+      let(:schedule) { schedule_tempr.schedule }
+      let(:tempr) { schedule_tempr.tempr }
+
+      let(:collection) do
+        described_class.collection_for_microservices(
+          schedule.id,
+          [tempr],
+          :schedule
         )
+      end
+
+      context 'tempr with no children' do
+        it do
+          expect(collection).to(
+            eq(
+              ttl: 10_000,
+              data: [
+                id: tempr.id,
+                deviceId: nil,
+                scheduleId: schedule.id,
+                name: tempr.name,
+                endpointType: tempr.endpoint_type,
+                queueRequest: tempr.queue_request,
+                queueResponse: tempr.queue_response,
+                template:
+                  tempr.template.transform_keys do |k|
+                    k.to_s.camelcase(:lower)
+                  end,
+                createdAt: tempr.created_at,
+                updatedAt: tempr.updated_at,
+                temprs: []
+              ]
+            )
+          )
+        end
+      end
+
+      context 'tempr with children' do
+        let!(:sub_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
+
+        it do
+          expect(collection).to(
+            eq(
+              ttl: 10_000,
+              data: [
+                {
+                  id: tempr.id,
+                  deviceId: nil,
+                  scheduleId: schedule.id,
+                  name: tempr.name,
+                  endpointType: tempr.endpoint_type,
+                  queueRequest: tempr.queue_request,
+                  queueResponse: tempr.queue_response,
+                  template:
+                    tempr.template.transform_keys do |k|
+                      k.to_s.camelcase(:lower)
+                    end,
+                  createdAt: tempr.created_at,
+                  updatedAt: tempr.updated_at,
+                  temprs:
+                    tempr.temprs.map do |t|
+                      {
+                        id: t.id,
+                        deviceId: nil,
+                        scheduleId: schedule.id,
+                        name: t.name,
+                        endpointType: t.endpoint_type,
+                        queueRequest: t.queue_request,
+                        queueResponse: t.queue_response,
+                        template:
+                          t.template.transform_keys do |k|
+                            k.to_s.camelcase(:lower)
+                          end,
+                        createdAt: t.created_at,
+                        updatedAt: t.updated_at,
+                        temprs: []
+                      }
+                    end
+                }
+              ]
+            )
+          )
+        end
       end
     end
   end
