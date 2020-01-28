@@ -8,7 +8,7 @@ module Services
       # GET /services/v1/schedules
       def index
         render json:
-          Schedule.includes(:account, :site).active
+          Schedule.includes(:account).active
                   .to_json(only: %i[id name], methods: %i[schedule tempr_url])
       end
 
