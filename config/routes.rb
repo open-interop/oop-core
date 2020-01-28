@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       end
 
       resources :device_temprs, only: %i[index create destroy]
+      resources :schedule_temprs, only: %i[index create destroy]
 
       resources :device_groups do
         member do
