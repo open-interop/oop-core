@@ -93,7 +93,6 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
 
         describe 'matches the latest transmission' do
           it { expect(json_body['data'][0]['id']).to eq(transmissions.last.id) }
-          it { expect(json_body['data'][0]['device_tempr_id']).to eq(transmissions.last.device_tempr_id) }
           it { expect(json_body['data'][0]['message_uuid']).to eq(transmissions.last.message_uuid) }
           it { expect(json_body['data'][0]['transmission_uuid']).to eq(transmissions.last.transmission_uuid) }
           it { expect(json_body['data'][0]['success']).to eq(transmissions.last.success) }
