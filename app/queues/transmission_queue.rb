@@ -44,8 +44,13 @@ class TransmissionQueue
     body['tempr']['queueRequest'] && body['tempr']['rendered'] &&
       data[:request_body] = body['tempr']['rendered']['body']
 
-    body['tempr']['queueResponse'] && body['tempr']['response'] &&
-      data[:response_body] = body['tempr']['response']['body']
+    if body['tempr']['response'].present?
+      body['tempr']['queueResponse'] &&
+        data[:response_body] = body['tempr']['response']['body']
+
+      body['tempr']['response']['error'] &&
+        data[:response_body] = body['tempr']['response']['error']
+    end
 
     Transmission.create!(data)
   end
