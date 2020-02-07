@@ -34,10 +34,7 @@ class TransmissionQueue
 
     data = {
       message_uuid: body['uuid'],
-      transmission_uuid: body['transmissionId'],
-      success: body['tempr']['response']['success'],
-      status: body['tempr']['response']['status'],
-      transmitted_at: body['tempr']['response']['datetime']
+      transmission_uuid: body['transmissionId']
     }
 
     body['device'].present? &&
@@ -50,6 +47,10 @@ class TransmissionQueue
       data[:request_body] = body['tempr']['rendered']['body']
 
     if body['tempr']['response'].present?
+      data[:success] = body['tempr']['response']['success']
+      data[:status] = body['tempr']['response']['status']
+      data[:transmitted_at] = body['tempr']['response']['datetime']
+
       body['tempr']['queueResponse'] &&
         data[:response_body] = body['tempr']['response']['body']
 
