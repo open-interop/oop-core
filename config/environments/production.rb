@@ -77,6 +77,8 @@ Rails.application.configure do
       config.action_mailer.smtp_settings[:user_name] = config.oop[:smtp][:user_name]
       config.action_mailer.smtp_settings[:password] = config.oop[:smtp][:password]
     end
+  else
+    config.action_mailer.perform_deliveries = false
   end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
