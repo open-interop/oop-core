@@ -33,19 +33,30 @@ class TransmissionQueue
     return if body.blank?
 
     data = {
-      device_id: body['device']['id'],
       message_uuid: body['uuid'],
-      transmission_uuid: body['transmissionId'],
-      success: body['tempr']['response']['success'],
-      status: body['tempr']['response']['status'],
-      transmitted_at: body['tempr']['response']['datetime']
+      transmission_uuid: body['transmissionId']
     }
+
+    body['device'].present? &&
+      data[:device_id] = body['device']['id']
+
+    body['schedule'].present? &&
+      data[:schedule_id] = body['schedule']['id']
 
     body['tempr']['queueRequest'] && body['tempr']['rendered'] &&
       data[:request_body] = body['tempr']['rendered']['body']
 
-    body['tempr']['queueResponse'] && body['tempr']['response'] &&
-      data[:response_body] = body['tempr']['response']['body']
+    if body['tempr']['response'].present?
+      data[:success] = body['tempr']['response']['success']
+      data[:status] = body['tempr']['response']['status']
+      data[:transmitted_at] = body['tempr']['response']['datetime']
+
+      body['tempr']['queueResponse'] &&
+        data[:response_body] = body['tempr']['response']['body']
+
+      body['tempr']['response']['error'] &&
+        data[:response_body] = body['tempr']['response']['error']
+    end
 
     Transmission.create!(data)
   end

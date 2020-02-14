@@ -13,22 +13,22 @@ RSpec.describe TransmissionFilter do
       [
         FactoryBot.create(
           :transmission,
-          device_tempr: device_tempr,
+          device: device,
           message_uuid: 'a-specific-message-12345678910'
         ),
         FactoryBot.create(
           :transmission,
-          device_tempr: device_tempr,
+          device: device,
           transmission_uuid: 'a-specific-transmission-12345678910'
         ),
-        FactoryBot.create(:transmission, device_tempr: device_tempr),
-        FactoryBot.create(:transmission, device_tempr: device_tempr),
-        FactoryBot.create(:transmission, device_tempr: device_tempr),
-        FactoryBot.create(:transmission, device_tempr: device_tempr2),
-        FactoryBot.create(:transmission, device_tempr: device_tempr2),
-        FactoryBot.create(:transmission, device_tempr: device_tempr2),
-        FactoryBot.create(:transmission, device_tempr: device_tempr2),
-        FactoryBot.create(:transmission, device_tempr: device_tempr2)
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device),
+        FactoryBot.create(:transmission, device: device)
       ]
     end
 
@@ -37,7 +37,7 @@ RSpec.describe TransmissionFilter do
         expect(described_class.new({}).all_filterable_fields).to(
           eq(
             [
-              'id', 'device_tempr_id', 'status', 'message_uuid',
+              'id', 'status', 'message_uuid',
               'transmission_uuid', 'success',
               { 'transmitted_at' => %w[gt gteq lt lteq] },
               { 'created_at' => %w[gt gteq lt lteq] },
@@ -59,23 +59,6 @@ RSpec.describe TransmissionFilter do
 
       it { expect(device.transmissions.size).to eq(10) }
       it { expect(records.size).to eq(10) }
-    end
-
-    context 'filter by device_tempr_id' do
-      let(:params) do
-        ActionController::Parameters.new(
-          filter: { device_tempr_id: device_tempr2.id }
-        )
-      end
-
-      let(:records) do
-        TransmissionFilter.records(
-          params,
-          scope: device
-        )
-      end
-
-      it { expect(records.size).to eq(5) }
     end
 
     context 'filter by message_uuid' do
