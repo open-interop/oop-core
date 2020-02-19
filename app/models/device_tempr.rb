@@ -19,6 +19,17 @@ class DeviceTempr < ApplicationRecord
   #
   serialize :options, Hash
 
+  #
+  # Callbacks
+  #
+  after_save do
+    Rails.cache.delete([device, 'temprs'])
+  end
+
+  after_destroy do
+    Rails.cache.delete([device, 'temprs'])
+  end
+
   def template
     @template ||=
       {

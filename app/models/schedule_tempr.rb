@@ -13,4 +13,15 @@ class ScheduleTempr < ApplicationRecord
   # Validations
   #
   validates :tempr_id, uniqueness: { scope: :schedule_id }
+
+  #
+  # Callbacks
+  #
+  after_save do
+    Rails.cache.delete([schedule, 'temprs'])
+  end
+
+  after_destroy do
+    Rails.cache.delete([schedule, 'temprs'])
+  end
 end
