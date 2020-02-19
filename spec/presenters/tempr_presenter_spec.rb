@@ -18,7 +18,7 @@ RSpec.describe TemprPresenter do
         it do
           expect(collection).to(
             eq(
-              ttl: 10_000,
+              ttl: Rails.configuration.oop[:tempr_cache_ttl],
               data: [
                 id: tempr.id,
                 deviceId: device.id,
@@ -46,7 +46,7 @@ RSpec.describe TemprPresenter do
         it do
           expect(collection).to(
             eq(
-              ttl: 10_000,
+              ttl: Rails.configuration.oop[:tempr_cache_ttl],
               data: [
                 {
                   id: tempr.id,
@@ -106,7 +106,7 @@ RSpec.describe TemprPresenter do
         it do
           expect(collection).to(
             eq(
-              ttl: 10_000,
+              ttl: Rails.configuration.oop[:tempr_cache_ttl],
               data: [
                 id: tempr.id,
                 deviceId: nil,
@@ -134,7 +134,7 @@ RSpec.describe TemprPresenter do
         it do
           expect(collection).to(
             eq(
-              ttl: 10_000,
+              ttl: Rails.configuration.oop[:tempr_cache_ttl],
               data: [
                 {
                   id: tempr.id,
