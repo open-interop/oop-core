@@ -42,7 +42,89 @@ RSpec.describe Services::V1::DevicesController, type: :controller do
         get(:temprs, params: { id: device.id })
       end
 
-      it { expect(response).to be_successful }
+      let(:json_response) { JSON.parse(response.body) }
+
+      it do
+        expect(response).to be_successful
+      end
+
+      it do
+        expect(json_response['ttl']).to eq(Rails.configuration.oop[:tempr_cache_ttl])
+      end
+
+      it do
+        expect(json_response['data'][0]['id']).to eq(device_tempr.tempr.id)
+      end
+
+      it do
+        expect(json_response['data'][0]['deviceId']).to eq(device.id)
+      end
+
+      it do
+        expect(json_response['data'][0]['scheduleId']).to eq(nil)
+      end
+
+      it do
+        expect(json_response['data'][0]['name']).to eq('Some tempr')
+      end
+
+      it do
+        expect(json_response['data'][0]['endpointType']).to eq('http')
+      end
+
+      it do
+        expect(json_response['data'][0]['queueRequest']).to eq(false)
+      end
+
+      it do
+        expect(json_response['data'][0]['queueResponse']).to eq(false)
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['host']).to(
+          eq('example.com')
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['port']).to eq(80)
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['path']).to(
+          eq('/test/{{message.body.key1}}/{{message.body.key2}}')
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['requestMethod']).to(
+          eq('POST')
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['protocol']).to(
+          eq('http')
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['headers']).to(
+          eq({"Content-Type"=>"application/json"})
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['body']['language']).to(
+          eq('mustache')
+        )
+      end
+
+      it do
+        expect(json_response['data'][0]['template']['body']['body']).to(
+          eq('asd of this thing {{message.body.key1}} and also {{message.body.key2}}')
+        )
+      end
     end
 
     context 'return not found' do
