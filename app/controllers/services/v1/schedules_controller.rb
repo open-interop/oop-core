@@ -15,11 +15,13 @@ module Services
       # GET /services/v1/schedules/:id/temprs
       def temprs
         render json:
-          TemprPresenter.collection_for_microservices(
-            @schedule.id,
-            @schedule.temprs,
-            :schedule
-          )
+          Rails.cache.fetch([@schedule, 'temprs'], expires_at: 1.hour) do
+            TemprPresenter.collection_for_microservices(
+              @schedule.id,
+              @schedule.temprs,
+              :schedule
+            ).to_json
+          end
       end
 
       private

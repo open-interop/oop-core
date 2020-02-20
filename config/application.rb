@@ -38,6 +38,7 @@ module OopCore
     config.oop = {
       services_token: ENV['OOP_CORE_TOKEN'],
       renderer_path: ENV['OOP_RENDERER_PATH'],
+      tempr_cache_ttl: ENV['OOP_CORE_TEMPR_CACHE_TTL'] || 1000 * 300,
       scheme: ENV['OOP_CORE_SCHEME'],
       port: ENV['OOP_CORE_PORT'],
       path: ENV['OOP_CORE_PATH'],

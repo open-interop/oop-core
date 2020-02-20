@@ -40,6 +40,9 @@ class TransmissionQueue
     body['device'].present? &&
       data[:device_id] = body['device']['id']
 
+    body['tempr'].present? &&
+      data[:tempr_id] = body['tempr']['id']
+
     body['schedule'].present? &&
       data[:schedule_id] = body['schedule']['id']
 

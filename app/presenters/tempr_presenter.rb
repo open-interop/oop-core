@@ -40,7 +40,7 @@ class TemprPresenter < BasePresenter
 
   def self.collection_for_microservices(parent_id, records, parent_type = :device)
     {
-      ttl: 10_000,
+      ttl: Rails.configuration.oop[:tempr_cache_ttl],
       data: records.map do |record|
         record_for_microservice(parent_id, record, parent_type)
       end

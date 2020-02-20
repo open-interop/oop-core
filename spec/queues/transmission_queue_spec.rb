@@ -165,6 +165,10 @@ RSpec.describe TransmissionQueue do
     end
 
     it do
+      expect(transmission.tempr_id).to eq(tempr.id)
+    end
+
+    it do
       expect(transmission.status).to eq(202)
     end
 
