@@ -22,6 +22,12 @@ class Schedule < ApplicationRecord
   # Scopes
   #
   scope :active, -> { where(active: true) }
+  #
+  # Callbacks
+  #
+  after_save do
+    Rails.cache.delete([id, 'services/schedules'])
+  end
 
   audited
 

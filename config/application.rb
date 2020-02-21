@@ -48,8 +48,10 @@ module OopCore
         path: ENV['OOP_CORE_INTERFACE_PATH']
       },
       rabbit: {
+        address: ENV['OOP_AMQP_ADDRESS'],
         devices_exchange: ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
-        response_queue: ENV['OOP_CORE_RESPONSE_Q']
+        response_queue: ENV['OOP_CORE_RESPONSE_Q'],
+        prefetch_limit: ENV['OOP_CORE_QUEUE_PREFETCH_LIMIT']
       },
       from_email: ENV['OOP_CORE_FROM_ADDRESS'],
       smtp: {

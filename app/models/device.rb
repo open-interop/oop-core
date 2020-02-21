@@ -39,6 +39,9 @@ class Device < ApplicationRecord
   after_create :queue_from_create
   after_update :queue_from_update, if: :authentication_details_changed?
   after_destroy :queue_from_destroy
+  after_save do
+    Rails.cache.delete([id, 'services/devices'])
+  end
 
   audited
 

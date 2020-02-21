@@ -15,13 +15,17 @@ module Services
       # GET /services/v1/schedules/:id/temprs
       def temprs
         render json:
-          Rails.cache.fetch([@schedule, 'temprs'], expires_at: 1.hour) do
+          Rails.cache.fetch(
+            [@schedule, 'services/temprs'],
+            expires_in: 1.hour,
+            race_condition_ttl: 5.seconds
+          ) {
             TemprPresenter.collection_for_microservices(
               @schedule.id,
               @schedule.temprs,
               :schedule
             ).to_json
-          end
+          }
       end
 
       private
@@ -29,7 +33,14 @@ module Services
       def find_schedule
         return if params[:id].blank?
 
-        @schedule = Schedule.active.find(params[:id])
+        @schedule =
+          Rails.cache.fetch(
+            [params[:id], 'services/schedules'],
+            expires_in: 1.hour,
+            race_condition_ttl: 5.seconds
+          ) {
+            Schedule.active.find(params[:id])
+          }
       end
     end
   end
