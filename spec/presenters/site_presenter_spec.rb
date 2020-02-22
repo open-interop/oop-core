@@ -58,7 +58,7 @@ RSpec.describe SitePresenter do
         described_class.sidebar(account)
       end
 
-      it do
+      xit do
         expect(sidebar).to(
           eq(
             sites:
