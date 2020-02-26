@@ -15,12 +15,16 @@ module Services
       # GET /services/v1/devices/:id/temprs
       def temprs
         render json:
-          Rails.cache.fetch([@device, 'temprs'], expires_at: 1.hour) do
+          Rails.cache.fetch(
+            [@device, 'services/temprs'],
+            expires_in: 1.hour,
+            race_condition_ttl: 5.seconds
+          ) {
             TemprPresenter.collection_for_microservices(
               @device.id,
               @device.temprs
             ).to_json
-          end
+          }
       end
 
       private
@@ -28,7 +32,14 @@ module Services
       def find_device
         return if params[:id].blank?
 
-        @device = Device.active.find(params[:id])
+        @device =
+          Rails.cache.fetch(
+            [params[:id], 'services/devices'],
+            expires_in: 1.hour,
+            race_condition_ttl: 5.seconds
+          ) {
+            Device.active.find(params[:id])
+          }
       end
     end
   end
