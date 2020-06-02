@@ -1,4 +1,4 @@
-FROM ruby:2.7 AS oop-core
+FROM ruby:2.7.1 AS oop-core
 
 LABEL maintainer="jack.regnart@bluefrontier.co.uk"
 

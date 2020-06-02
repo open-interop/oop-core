@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.0'
+ruby '2.7.1'
 
 gem 'audited', '~> 4.9'
 gem 'bcrypt', '3.1.12'
@@ -11,7 +11,7 @@ gem 'jwt'
 gem 'kaminari'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 6.0', '>= 6.0.2.1'
+gem 'rails', '~> 6.0', '>= 6.0.3.1'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS)
 # making cross-origin AJAX possible
