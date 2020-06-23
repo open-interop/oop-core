@@ -26,6 +26,7 @@ class TemprPresenter < BasePresenter
       endpointType: record.endpoint_type,
       queueRequest: record.queue_request,
       queueResponse: record.queue_response,
+      layers: LayerPresenter.record_for_microservice(record.layers),
       template:
         record.template.transform_keys do |k|
           k.to_s.camelcase(:lower)

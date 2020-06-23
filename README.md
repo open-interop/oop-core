@@ -6,7 +6,7 @@ The application is tenanted and multiple accounts can be setup and configured on
 
 The application will run in isolation and can be configured before setting up the micro-service architecture. However, certain elements will not work. For example, previewing temprs.
 
-The application is API only. If you would like to run the interface see the [interface repository](/open-interop/oop-core-interface).
+The application is API only. If you would like to run the interface see the [interface repository](https://github.com/open-interop/oop-core-interface).
 
 ## Installation
 
@@ -24,11 +24,13 @@ In order to communicate with the micro-service back-end we use RabbitMQ. Connect
 
 The application is configured using environment variables.
 
-- For the microservices to authenticate with **oop-core** define `OOP_CORE_TOKEN=ELhq4oxCiAHzVmLRqvds6nqgNaAp`
-- The RabbitMQ location `OOP_AMQP_ADDRESS=amqp://localhost`
-- The name of the RabbitMQ transmissions queue for the micro-service layer to report back to core `OOP_CORE_RESPONSE_Q=oop.core.transmissions`
-- The name of the RabbitMQ exchange to update device authentication details in **oop-authenticator** `OOP_CORE_DEVICE_UPDATE_EXCHANGE=oop.core.devices`
-- Path to a copy of the renderer in order to handle Tempr previews `OOP_RENDERER_PATH=/Users/jack/Projects/OOO/oop-renderer`
+| Variable                        | Example Value                           | Description                                                                        |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------- |
+| OOP_CORE_TOKEN                  | `=ELhq4oxCiAHzVmLRqvds6nqgNaAp`         | For the microservices to authenticate with **oop-core**                                    |
+| OOP_AMQP_ADDRESS                | `amqp://localhost`                      | The RabbitMQ location                                                                           |
+| OOP_CORE_RESPONSE_Q             | `oop.core.transmissions`                | The name of the RabbitMQ transmissions queue for the micro-service layer to report back to core    |
+| OOP_CORE_DEVICE_UPDATE_EXCHANGE | `oop.core.devices`                      | The name of the RabbitMQ exchange to update device authentication details in **oop-authenticator** |
+| OOP_RENDERER_PATH               | `/Users/jack/Projects/OOO/oop-renderer` | Path to a copy of the renderer in order to handle Tempr previews                                     |
 
 ### Testing
 

@@ -47,20 +47,32 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.oop = {
-    from_email: 'no-reply@example.com',
     services_token: 'a-test-token',
     renderer_path: 'some/renderer/path',
+    tempr_cache_ttl: 1000 * 300,
     scheme: 'http://',
-    port: 80,
+    port: 8888,
     path: '/',
     interface: {
       scheme: 'http://',
-      port: 80,
+      port: 8888,
       path: '/'
     },
     rabbit: {
+      address: 'some.host',
       devices_exchange: 'oop.core.devices',
-      response_queue: 'oop.core.transmissions'
+      response_queue: 'oop.core.transmissions',
+      prefetch_limit: 100
+    },
+    from_email: 'no-reply@example.com',
+    smtp: {
+      address: nil,
+      port: nil,
+      domain: nil,
+      user_name: nil,
+      password: nil,
+      authentication: nil,
+      enable_starttls_auto: nil
     }
   }
 end

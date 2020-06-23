@@ -12,6 +12,7 @@ class Account < ApplicationRecord
   has_many :sites, dependent: :restrict_with_error
   has_many :temprs, dependent: :restrict_with_error
   has_many :schedules, dependent: :restrict_with_error
+  has_many :layers, dependent: :restrict_with_error
 
   #
   # Scopes

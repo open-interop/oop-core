@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_17_124444) do
+ActiveRecord::Schema.define(version: 2020_06_02_114419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,16 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.boolean "active", default: true
   end
 
+  create_table "layers", force: :cascade do |t|
+    t.integer "account_id"
+    t.string "name"
+    t.string "reference"
+    t.text "script"
+    t.boolean "archived", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "schedule_temprs", force: :cascade do |t|
     t.integer "tempr_id"
     t.integer "schedule_id"
@@ -123,6 +133,13 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "full_name"
+  end
+
+  create_table "tempr_layers", force: :cascade do |t|
+    t.integer "tempr_id"
+    t.integer "layer_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "temprs", force: :cascade do |t|
