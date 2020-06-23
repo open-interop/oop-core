@@ -1,5 +1,34 @@
-<h1>Welcome <%= @user.email %></h1>
-
-<p>You have been added to an Open Interop account.</p>
-
-<p><a href="<%= @account.interface_address %>/login">Click here</a> to login.</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td style="color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 35px;">
+            <h1>Hello <%= @user.email %>,</h1>
+        </td>
+    </tr>
+    <tr>
+    <td style="color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 23px; line-height: 26px;">
+        <h2>Welcome to Open Interop, the world's open-source interoperability middleware data collection software.</h2>
+    </td>
+    </tr>
+    <tr>
+        <td style="color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 17px; line-height: 22px;">
+            <hr>
+            <p>You have been added to an existing Open Interop account and can now join in with the data collaboration.</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 17px; line-height: 22px;">
+            <p>Please click on the link below to access your account and reset your password.</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 20px 0 20px 0; color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 17px; line-height: 22px;">
+            <a href="<%= @account.interface_address %>/login" class="btn">ACCOUNT LOGIN</a>
+        </td>
+    </tr>
+    <tr>
+        <td style="color: #001c37; font-family: Proxima Nova, Arial, sans-serif; font-size: 17px; line-height: 22px;">
+            <hr>
+            <p>Got this email by mistake? Please let us know by emailing us at <a href="mailto:info@openinterop.org">info@openinterop.org</a></p>
+        </td>
+    </tr>
+</table>
