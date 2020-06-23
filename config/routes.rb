@@ -22,6 +22,8 @@ Rails.application.routes.draw do
       resources :device_temprs, only: %i[index create destroy]
       resources :schedule_temprs, only: %i[index create destroy]
 
+      resources :tempr_layers, only: %i[index create destroy]
+
       resources :device_groups do
         member do
           get 'history', to: 'device_groups#history'
@@ -45,6 +47,13 @@ Rails.application.routes.draw do
 
         member do
           get 'history', to: 'sites#history'
+        end
+      end
+
+      resources :layers do
+        member do
+          post 'assign_tempr', to: 'layers#assign_tempr'
+          get 'history', to: 'layers#history'
         end
       end
 

@@ -5,7 +5,7 @@ RSpec.describe Account, type: :model do
     context 'with a standard http port' do
       let(:account) { FactoryBot.create(:account) }
 
-      it { expect(account.interface_address).to eq("http://test.host/") }
+      it { expect(account.interface_address).to eq("http://test.host:8888/") }
     end
 
     context 'with a non-standard port (int)' do
@@ -23,7 +23,7 @@ RSpec.describe Account, type: :model do
     context 'with a non-standard path' do
       let(:account) { FactoryBot.create(:account, interface_path: '/oop') }
 
-      it { expect(account.interface_address).to eq("http://test.host/oop") }
+      it { expect(account.interface_address).to eq("http://test.host:8888/oop") }
     end
   end
 end

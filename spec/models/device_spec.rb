@@ -120,6 +120,6 @@ RSpec.describe Device, type: :model do
   end
 
   describe '#tempr_url' do
-    it { expect(device.tempr_url).to eq("http://test.host/services/v1/devices/#{device.id}/temprs") }
+    it { expect(device.tempr_url).to eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs") }
   end
 end

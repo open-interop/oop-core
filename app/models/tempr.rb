@@ -25,6 +25,9 @@ class Tempr < ApplicationRecord
 
   has_many :temprs
 
+  has_many :tempr_layers
+  has_many :layers, through: :tempr_layers
+
   #
   # Serializations
   #
