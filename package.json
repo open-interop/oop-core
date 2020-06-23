@@ -4,7 +4,7 @@
   "description": "OpenInterop core",
   "main": "index.js",
   "author": "Jack Regnart <Jack.Regnart@bluefrontier.co.uk>",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
