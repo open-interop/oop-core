@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :transmission do
-    device { Device.first || create(:device)}
+    account { Account.first || create(:account) }
+    device { Device.first || create(:device, account: account) }
     message_uuid { Faker::Internet.uuid }
     transmission_uuid { Faker::Internet.uuid }
     success { [true, false].sample }

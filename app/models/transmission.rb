@@ -4,6 +4,7 @@ class Transmission < ApplicationRecord
   #
   # Relationships
   #
+  belongs_to :account
   belongs_to :device, optional: true
   belongs_to :tempr, optional: true
   belongs_to :schedule, optional: true
