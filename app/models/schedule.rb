@@ -19,18 +19,53 @@ class Schedule < ApplicationRecord
   has_many :transmissions
   has_many :schedule_temprs
   has_many :temprs, through: :schedule_temprs
+
   #
   # Scopes
   #
   scope :active, -> { where(active: true) }
+
   #
   # Callbacks
   #
+  after_create :queue_from_create
+  after_update :queue_from_update, if: :schedule_changed?
+  after_destroy :queue_from_destroy
   after_save do
     Rails.cache.delete([id, 'services/schedules'])
   end
 
   audited
+
+  def update_queue
+    UpdateQueue.new(
+      :schedule,
+      Rails.configuration.oop[:rabbit][:schedules_exchange]
+    )
+  end
+
+  def queue_from_create
+    update_queue.publish(
+      'add',
+      { id: id }.merge(schedule)
+    )
+  end
+
+  def queue_from_update
+    @authentication = nil
+
+    update_queue.publish(
+      'update',
+      { id: id }.merge(schedule)
+    )
+  end
+
+  def queue_from_destroy
+    update_queue.publish(
+      'delete',
+      { id: id }.merge(schedule)
+    )
+  end
 
   def tempr_url
     [].tap do |a|
@@ -56,5 +91,14 @@ class Schedule < ApplicationRecord
       monthOfYear: month_of_year,
       year: year
     }
+  end
+
+  def schedule_changed?
+    saved_change_to_minute? ||
+    saved_change_to_hour? ||
+    saved_change_to_day_of_week? ||
+    saved_change_to_day_of_month? ||
+    saved_change_to_month_of_year? ||
+    saved_change_to_year?
   end
 end

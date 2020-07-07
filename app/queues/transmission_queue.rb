@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TransmissionQueue
   def self.retrieve_transmissions
     # Start a communication session with RabbitMQ

@@ -28,12 +28,6 @@ RSpec.describe Services::V1::DevicesController, type: :controller do
   end
 
   describe 'GET #temprs' do
-    before do
-      allow_any_instance_of(Device).to(
-        receive(:bunny_connection).and_return(BunnyMock.new.start)
-      )
-    end
-
     let(:device_tempr) { FactoryBot.create(:device_tempr) }
     let(:device) { device_tempr.device }
 

@@ -52,7 +52,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    allow_any_instance_of(Device).to(
+    allow_any_instance_of(UpdateQueue).to(
       receive(:bunny_connection).and_return(BunnyMock.new.start)
     )
   end

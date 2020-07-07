@@ -68,69 +68,36 @@ class Device < ApplicationRecord
       saved_change_to_authentication_path?
   end
 
-  def queue_from_create
-    bunny_exchange.publish(
-      {
-        action: 'add',
-        device: {
-          id: id,
-          authentication: authentication
-        }
-      }.to_json
+  def update_queue
+    UpdateQueue.new(
+      :device,
+      Rails.configuration.oop[:rabbit][:devices_exchange]
     )
+  end
 
-    bunny_connection_close
+  def queue_from_create
+    update_queue.publish(
+      'add',
+      id: id,
+      authentication: authentication
+    )
   end
 
   def queue_from_update
     @authentication = nil
 
-    bunny_exchange.publish(
-      {
-        action: 'update',
-        device: {
-          id: id,
-          authentication: authentication
-        }
-      }.to_json
+    update_queue.publish(
+      'update',
+      id: id,
+      authentication: authentication
     )
-
-    bunny_connection_close
   end
 
   def queue_from_destroy
-    bunny_exchange.publish(
-      {
-        action: 'delete',
-        device: {
-          id: id
-        }
-      }.to_json
+    update_queue.publish(
+      'delete',
+      id: id
     )
-
-    bunny_connection_close
-  end
-
-  def bunny_connection
-    @bunny_connection ||=
-      Bunny.new.start
-  end
-
-  def bunny_exchange
-    @bunny_exchange ||= begin
-      bunny_connection.create_channel
-                      .fanout(
-                        Rails.configuration.oop[:rabbit][:devices_exchange],
-                        auto_delete: false,
-                        durable: true
-                      )
-    end
-  end
-
-  def bunny_connection_close
-    bunny_connection.close
-    @bunny_connection = nil
-    @bunny_exchange = nil
   end
 
   def tempr_url

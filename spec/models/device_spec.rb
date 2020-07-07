@@ -1,12 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Device, type: :model do
-  before do
-    allow_any_instance_of(Device).to(
-      receive(:bunny_connection).and_return(BunnyMock.new.start)
-    )
-  end
-
   let!(:device) { FactoryBot.create(:device) }
 
   context 'with authentication_path set' do
