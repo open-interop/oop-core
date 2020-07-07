@@ -17,7 +17,7 @@ module Services
         render json:
           Rails.cache.fetch(
             [@device, 'services/temprs'],
-            expires_in: 1.hour,
+            expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
           ) {
             TemprPresenter.collection_for_microservices(
@@ -35,7 +35,7 @@ module Services
         @device =
           Rails.cache.fetch(
             [params[:id], 'services/devices'],
-            expires_in: 1.hour,
+            expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
           ) {
             Device.active.find(params[:id])

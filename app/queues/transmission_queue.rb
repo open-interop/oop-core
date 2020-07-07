@@ -48,6 +48,10 @@ class TransmissionQueue
     body['schedule'].present? &&
       data[:schedule_id] = body['schedule']['id']
 
+    tempr = Tempr.find(data[:tempr_id])
+
+    data[:account_id] = tempr.account_id
+
     body['tempr']['queueRequest'] && body['tempr']['rendered'] &&
       data[:request_body] = body['tempr']['rendered']['body']
 

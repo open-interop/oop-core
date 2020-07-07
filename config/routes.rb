@@ -74,6 +74,9 @@ Rails.application.routes.draw do
         end
       end
 
+      get 'transmissions', to: 'transmissions#index'
+      get 'transmissions/:id', to: 'transmissions#show'
+
       post '/passwords', to: 'passwords#create'
       post '/passwords/reset', to: 'passwords#reset'
 
