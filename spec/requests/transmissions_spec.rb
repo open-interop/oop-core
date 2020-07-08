@@ -13,12 +13,6 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       }
     end
 
-    before do
-      allow_any_instance_of(Device).to(
-        receive(:bunny_connection).and_return(BunnyMock.new.start)
-      )
-    end
-
     context 'with filters with no records' do
       context 'with all records' do
         before do

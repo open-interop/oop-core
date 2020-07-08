@@ -61,6 +61,7 @@ Rails.application.configure do
     rabbit: {
       address: 'some.host',
       devices_exchange: 'oop.core.devices',
+      schedules_exchange: 'oop.core.schedules',
       response_queue: 'oop.core.transmissions',
       prefetch_limit: 100
     },
