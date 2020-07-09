@@ -28,10 +28,7 @@ RSpec.describe TemprPresenter do
                 queueRequest: tempr.queue_request,
                 queueResponse: tempr.queue_response,
                 layers: [],
-                template:
-                  tempr.template.transform_keys do |k|
-                    k.to_s.camelcase(:lower)
-                  end,
+                template: tempr.template,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
                 temprs: []
@@ -58,10 +55,7 @@ RSpec.describe TemprPresenter do
                   queueRequest: tempr.queue_request,
                   queueResponse: tempr.queue_response,
                   layers: [],
-                  template:
-                    tempr.template.transform_keys do |k|
-                      k.to_s.camelcase(:lower)
-                    end,
+                  template: tempr.template,
                   createdAt: tempr.created_at,
                   updatedAt: tempr.updated_at,
                   temprs:
@@ -75,10 +69,7 @@ RSpec.describe TemprPresenter do
                         queueRequest: t.queue_request,
                         queueResponse: t.queue_response,
                         layers: [],
-                        template:
-                          t.template.transform_keys do |k|
-                            k.to_s.camelcase(:lower)
-                          end,
+                        template: t.template,
                         createdAt: t.created_at,
                         updatedAt: t.updated_at,
                         temprs: []
@@ -129,10 +120,7 @@ RSpec.describe TemprPresenter do
                       script: layer2.script
                     }
                   ],
-                  template:
-                    tempr.template.transform_keys do |k|
-                      k.to_s.camelcase(:lower)
-                    end,
+                  template: tempr.template,
                   createdAt: tempr.created_at,
                   updatedAt: tempr.updated_at,
                   temprs: []
@@ -158,7 +146,7 @@ RSpec.describe TemprPresenter do
                     endpointType: tempr.endpoint_type,
                     queueRequest: tempr.queue_request,
                     queueResponse: tempr.queue_response,
-                    layers:  [
+                    layers: [
                       {
                         id: layer1.id,
                         reference: layer1.reference,
@@ -170,10 +158,7 @@ RSpec.describe TemprPresenter do
                         script: layer2.script
                       }
                     ],
-                    template:
-                      tempr.template.transform_keys do |k|
-                        k.to_s.camelcase(:lower)
-                      end,
+                    template: tempr.template,
                     createdAt: tempr.created_at,
                     updatedAt: tempr.updated_at,
                     temprs:
@@ -187,10 +172,7 @@ RSpec.describe TemprPresenter do
                           queueRequest: t.queue_request,
                           queueResponse: t.queue_response,
                           layers: [],
-                          template:
-                            t.template.transform_keys do |k|
-                              k.to_s.camelcase(:lower)
-                            end,
+                          template: t.template,
                           createdAt: t.created_at,
                           updatedAt: t.updated_at,
                           temprs: []
@@ -232,10 +214,7 @@ RSpec.describe TemprPresenter do
                 queueRequest: tempr.queue_request,
                 queueResponse: tempr.queue_response,
                 layers: [],
-                template:
-                  tempr.template.transform_keys do |k|
-                    k.to_s.camelcase(:lower)
-                  end,
+                template: tempr.template,
                 createdAt: tempr.created_at,
                 updatedAt: tempr.updated_at,
                 temprs: []
@@ -262,10 +241,7 @@ RSpec.describe TemprPresenter do
                   queueRequest: tempr.queue_request,
                   queueResponse: tempr.queue_response,
                   layers: [],
-                  template:
-                    tempr.template.transform_keys do |k|
-                      k.to_s.camelcase(:lower)
-                    end,
+                  template: tempr.template,
                   createdAt: tempr.created_at,
                   updatedAt: tempr.updated_at,
                   temprs:
@@ -279,10 +255,7 @@ RSpec.describe TemprPresenter do
                         queueRequest: t.queue_request,
                         queueResponse: t.queue_response,
                         layers: [],
-                        template:
-                          t.template.transform_keys do |k|
-                            k.to_s.camelcase(:lower)
-                          end,
+                        template: t.template,
                         createdAt: t.created_at,
                         updatedAt: t.updated_at,
                         temprs: []

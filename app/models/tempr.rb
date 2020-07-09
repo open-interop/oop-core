@@ -2,12 +2,16 @@
 
 class Tempr < ApplicationRecord
   #
+  # Constants
+  #
+  ENDPOINT_TYPES = %w[http tempr].freeze
+
+  #
   # Validations
   #
   validates :name, presence: true
-  validates :endpoint_type, presence: true
+  validates :endpoint_type, presence: true, inclusion: { in: ENDPOINT_TYPES }
 
-  validates_with TemprTemplateValidator
   validates_with AccountValidator, fields: %i[device_group]
 
   #
@@ -28,11 +32,29 @@ class Tempr < ApplicationRecord
   has_many :tempr_layers
   has_many :layers, through: :tempr_layers
 
+  belongs_to :templateable, polymorphic: true, optional: true
+
   #
   # Serializations
   #
-  serialize :body, Hash
-  serialize :template, Hash
+  serialize :body, Hash # Method now deprecated
+  serialize :template, Hash # Method now deprecated
+
+  def template
+    templateable.render
+  end
+
+  def template=(h)
+    return if endpoint_type.blank?
+
+    self.templateable =
+      case endpoint_type
+      when 'http'
+        HttpTemplate.new(h)
+      when 'tempr'
+        TemprTemplate.new(h)
+      end
+  end
 
   audited
 end
