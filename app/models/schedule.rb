@@ -47,7 +47,7 @@ class Schedule < ApplicationRecord
   def queue_from_create
     update_queue.publish(
       'add',
-      { id: id }.merge(schedule)
+      SchedulePresenter.record_for_microservices(self)
     )
   end
 
@@ -56,14 +56,14 @@ class Schedule < ApplicationRecord
 
     update_queue.publish(
       'update',
-      { id: id }.merge(schedule)
+      SchedulePresenter.record_for_microservices(self)
     )
   end
 
   def queue_from_destroy
     update_queue.publish(
       'delete',
-      { id: id }.merge(schedule)
+      SchedulePresenter.record_for_microservices(self)
     )
   end
 
@@ -82,23 +82,12 @@ class Schedule < ApplicationRecord
     end.join
   end
 
-  def schedule
-    {
-      minute: minute,
-      hour: hour,
-      dayOfWeek: day_of_week,
-      dayOfMonth: day_of_month,
-      monthOfYear: month_of_year,
-      year: year
-    }
-  end
-
   def schedule_changed?
     saved_change_to_minute? ||
-    saved_change_to_hour? ||
-    saved_change_to_day_of_week? ||
-    saved_change_to_day_of_month? ||
-    saved_change_to_month_of_year? ||
-    saved_change_to_year?
+      saved_change_to_hour? ||
+      saved_change_to_day_of_week? ||
+      saved_change_to_day_of_month? ||
+      saved_change_to_month_of_year? ||
+      saved_change_to_year?
   end
 end
