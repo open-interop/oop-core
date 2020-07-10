@@ -26,6 +26,10 @@ class HttpTemplate < ApplicationRecord
   serialize :headers, Hash
   serialize :body, Hash
 
+  def requestMethod=(request_method_hash)
+    self.request_method = request_method_hash
+  end
+
   def render
     {
       host: host,

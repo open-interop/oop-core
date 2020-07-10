@@ -4,13 +4,36 @@ class ConvertTemplateToHttpTemplate < ActiveRecord::Migration[6.0]
       next if tempr[:template].blank?
 
       http_template = HttpTemplate.create!(
-        host: tempr[:template][:host],
-        port: tempr[:template][:port],
-        path: tempr[:template][:path],
-        request_method:
-          tempr[:template][:request_method] || tempr[:template][:requestMethod],
-        protocol: tempr[:template][:protocol],
-        headers: tempr[:template][:headers],
+        host: {
+          language: 'text',
+          script: tempr[:template][:host]
+        },
+        port: {
+          language: 'text',
+          script: tempr[:template][:port]
+        },
+        path: {
+          language: 'text',
+          script: tempr[:template][:path]
+        },
+        request_method: {
+          language: 'text',
+          script:
+            tempr[:template][:request_method] || tempr[:template][:requestMethod]
+        },
+        protocol: {
+          language: 'text',
+          script:tempr[:template][:protocol]
+        },
+        headers:
+          (
+            tempr[:template][:headers].present? &&
+              {
+                language: 'js',
+                script: "module.exports = #{tempr[:template][:headers].to_json};"
+              } ||
+              {}
+          ),
         body: tempr[:template][:body]
       )
 

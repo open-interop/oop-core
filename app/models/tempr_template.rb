@@ -14,7 +14,7 @@ class TemprTemplate < ApplicationRecord
   #
   # Serializations
   #
-  serialize :temprs, Array
+  serialize :temprs, Hash
 
   def render
     {

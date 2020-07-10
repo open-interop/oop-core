@@ -1,91 +1,91 @@
 require 'rails_helper'
 
 RSpec.describe Tempr, type: :model do
-  let (:tempr) { FactoryBot.create(:tempr) }
+  let!(:tempr) { FactoryBot.create(:tempr) }
+  let!(:http_template) { tempr.templateable }
 
   describe '#template' do
-    context 'with a full template' do
+    context 'with an http template' do
       it { expect(tempr.valid?).to be(true) }
     end
 
+    context 'update the host' do
+      let(:template) { tempr.template }
+
+      before do
+        template[:host] = {
+          language: 'text',
+          script: 'newhost.host'
+        }
+
+        tempr.update_attribute(:template, template)
+
+        tempr.reload
+      end
+
+      it do
+        expect(tempr.templateable.host).to(
+          eq(
+            language: 'text',
+            script: 'newhost.host'
+          )
+        )
+      end
+
+      it { expect(http_template.id).to eq(tempr.templateable_id) }
+    end
+
     context 'with no template' do
-      before { tempr.template = {} }
-      xit { expect(tempr.valid?).to be(false) }
+      before do
+        tempr.endpoint_type = 'tempr'
+        tempr.save
+        tempr.reload
+      end
+
+      it { expect(tempr.endpoint_type).to eq('http') }
+    end
+  end
+
+  describe '#template' do
+    context 'with a tempr template' do
+      let!(:tempr) do
+        FactoryBot.create(
+          :tempr,
+          endpoint_type: 'tempr',
+          template: {
+            temprs: {
+              language: 'js',
+              script:
+                'const http = require("http");
+                const ret = [];
+                for (const res of message.body) {
+                    ret.push(http(
+                        "POST",
+                        "https",
+                        "test.co.uk",
+                        "/post/path"
+                        { id: result.id, value: result.val }
+                    ));
+                }
+                module.exports = ret;'
+            }
+          }
+        )
+      end
+
+      let!(:tempr_template) { tempr.templateable }
+
+      it { expect(tempr_template.temprs[:language]).to eq('js') }
     end
 
-    context 'with no host' do
-      before { tempr.template[:host] = nil }
-      xit { expect(tempr.valid?).to be(false) }
-    end
+    context 'with no template' do
+      before do
+        tempr.endpoint_type = 'tempr'
+        tempr.save
+        tempr.reload
+      end
 
-    context 'with an invalid host (whitespace)' do
-      before { tempr.template[:host] = ' example.com' }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with an invalid host (trailing path)' do
-      before { tempr.template[:host] = 'example.com/asdasd' }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with an invalid host (includes protocol)' do
-      before { tempr.template[:host] = 'http://example.com' }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with a valid host (ipv4)' do
-      before { tempr.template[:host] = '192.168.1.2' }
-      xit { expect(tempr.valid?).to be(true) }
-    end
-
-    context 'with a valid host (ipv6)' do
-      before { tempr.template[:host] = '2001:0db8:85a3:0000:0000:8a2e:0370:7334' }
-      xit { expect(tempr.valid?).to be(true) }
-    end
-
-    context 'with no port' do
-      before { tempr.template[:port] = nil }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with no path' do
-      before { tempr.template[:path] = nil }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with no request_method' do
-      before { tempr.template[:request_method] = nil }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with no protocol' do
-      before { tempr.template[:protocol] = nil }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with headers as an array' do
-      before { tempr.template[:headers] = [] }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with empty headers' do
-      before { tempr.template[:headers] = nil }
-      xit { expect(tempr.valid?).to be(true) }
-    end
-
-    context 'with body as an array' do
-      before { tempr.template[:body] = [] }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with body as a string' do
-      before { tempr.template[:body] = 'asdasdasd' }
-      xit { expect(tempr.valid?).to be(false) }
-    end
-
-    context 'with empty body' do
-      before { tempr.template[:body] = nil }
-      xit { expect(tempr.valid?).to be(true) }
+      it { expect(tempr.endpoint_type).to eq('http') }
     end
   end
 end
