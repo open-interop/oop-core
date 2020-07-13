@@ -16,7 +16,8 @@ class SchedulePresenter < BasePresenter
       monthOfYear: schedule.month_of_year,
       year: schedule.year,
       createdAt: schedule.created_at,
-      updatedAt: schedule.updated_at
+      updatedAt: schedule.updated_at,
+      temprUrl: schedule.tempr_url
     }
   end
 

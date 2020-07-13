@@ -32,6 +32,7 @@ class Device < ApplicationRecord
   # Scopes
   #
   scope :active, -> { where(active: true) }
+  scope :by_name, -> { order('devices.name asc') }
 
   #
   # Callbacks

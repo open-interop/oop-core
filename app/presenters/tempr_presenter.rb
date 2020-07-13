@@ -27,10 +27,7 @@ class TemprPresenter < BasePresenter
       queueRequest: record.queue_request,
       queueResponse: record.queue_response,
       layers: LayerPresenter.record_for_microservices(record.layers),
-      template:
-        record.template.transform_keys do |k|
-          k.to_s.camelcase(:lower)
-        end,
+      template: record.template,
       createdAt: record.created_at,
       updatedAt: record.updated_at,
       temprs: record.temprs.map do |tempr|

@@ -76,35 +76,55 @@ RSpec.describe Services::V1::DevicesController, type: :controller do
 
       it do
         expect(json_response['data'][0]['template']['host']).to(
-          eq('example.com')
+          eq(
+            "language" => 'text',
+            "script" => 'example.com'
+          )
         )
       end
 
       it do
-        expect(json_response['data'][0]['template']['port']).to eq(80)
+        expect(json_response['data'][0]['template']['port']).to(
+          eq(
+            "language" => 'text',
+            "script" => '80'
+          )
+        )
       end
 
       it do
         expect(json_response['data'][0]['template']['path']).to(
-          eq('/test/{{message.body.key1}}/{{message.body.key2}}')
+          eq(
+            "language" => 'text',
+            "script" => '/test/{{message.body.key1}}/{{message.body.key2}}'
+          )
         )
       end
 
       it do
         expect(json_response['data'][0]['template']['requestMethod']).to(
-          eq('POST')
+          eq(
+            "language" => 'text',
+            "script" => 'POST'
+          )
         )
       end
 
       it do
         expect(json_response['data'][0]['template']['protocol']).to(
-          eq('http')
+          eq(
+            "language" => 'text',
+            "script" => 'http'
+          )
         )
       end
 
       it do
         expect(json_response['data'][0]['template']['headers']).to(
-          eq({"Content-Type"=>"application/json"})
+          eq(
+            "language" => 'js',
+            "script" => 'module.exports = { "Content-Type" : "application/json" }'
+          )
         )
       end
 

@@ -22,9 +22,17 @@ class Site < ApplicationRecord
   #
   serialize :external_uuids, Hash
 
-  audited
-
+  #
+  # Callbacks
+  #
   after_save :set_full_name, if: :update_full_name?
+
+  #
+  # Scopes
+  #
+  scope :by_name, -> { order('sites.name asc') }
+
+  audited
 
   def update_full_name?
     full_name.blank? || saved_change_to_name? || saved_change_to_site_id?
