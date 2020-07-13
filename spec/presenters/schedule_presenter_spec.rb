@@ -27,7 +27,7 @@ RSpec.describe SchedulePresenter do
               year: schedule.year,
               createdAt: schedule.created_at,
               updatedAt: schedule.updated_at,
-              tempr_url: schedule.tempr_url
+              temprUrl: schedule.tempr_url
             )
           )
         end

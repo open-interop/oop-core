@@ -7,9 +7,10 @@ module Services
 
       # GET /services/v1/devices/auth
       def auth
+        @devices = Device.includes(:account, :site).active
+
         render json:
-          Device.includes(:account, :site).active
-                .to_json(only: %i[id], methods: %i[authentication tempr_url])
+          DevicePresenter.collection_for_microservices(@devices)
       end
 
       # GET /services/v1/devices/:id/temprs
@@ -19,7 +20,7 @@ module Services
             [@device, 'services/temprs'],
             expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
-          ) {
+          ) { # Used due to a bug with do/end block
             TemprPresenter.collection_for_microservices(
               @device.id,
               @device.temprs
@@ -37,7 +38,7 @@ module Services
             [params[:id], 'services/devices'],
             expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
-          ) {
+          ) { # Used due to a bug with do/end block
             Device.active.find(params[:id])
           }
       end
