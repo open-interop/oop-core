@@ -6,7 +6,7 @@ module OpenInterop
   class TemprRenderer
     attr_reader :example_transmission, :template, :command, :response, :status, :err
 
-    def initialize(example_transmission, template)
+    def initialize(example_transmission, template, tempr_id = nil)
       @example_transmission = example_transmission
       @template = template
       @command = "node #{Rails.root.join('scripts', 'tempr-renderer.js')}"
@@ -46,6 +46,7 @@ module OpenInterop
           tempr: {
             template: template || {}
           },
+          layers: @layers,
           device: {}
         },
         renderer: Rails.configuration.oop[:renderer_path]
