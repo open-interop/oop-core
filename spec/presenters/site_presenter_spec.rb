@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe SitePresenter do
   describe '::sidebar' do
     let!(:account) { FactoryBot.create(:account) }
-    let!(:site) { FactoryBot.create(:site, account: account) }
-    let!(:device_group) { FactoryBot.create(:device_group, account: account) }
-    let!(:device) { FactoryBot.create(:device, device_group: device_group) }
+    let!(:site) { FactoryBot.create(:site, name: 'A site', account: account) }
+    let!(:device_group) { FactoryBot.create(:device_group, name: 'A device group', account: account) }
+    let!(:device) { FactoryBot.create(:device, name: 'A device', device_group: device_group) }
 
     context 'single site with no children' do
       let(:sidebar) do
@@ -43,15 +43,15 @@ RSpec.describe SitePresenter do
 
     context 'all sites' do
       let!(:site_two) do
-        FactoryBot.create(:site, account: account)
+        FactoryBot.create(:site, name: 'B site', account: account)
       end
 
       let!(:device_group_two) do
-        FactoryBot.create(:device_group, account: account)
+        FactoryBot.create(:device_group, name: 'B device group', account: account)
       end
 
       let!(:device_two) do
-        FactoryBot.create(:device, site: site_two, device_group: device_group_two, authentication_path: '/a')
+        FactoryBot.create(:device, name: 'B device', site: site_two, device_group: device_group_two, authentication_path: '/a')
       end
 
       let(:sidebar) do

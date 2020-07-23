@@ -7,7 +7,7 @@ class TemprPresenter < BasePresenter
              :example_transmission, :notes,
              :created_at, :updated_at
 
-  def self.record_for_microservice(parent_id, record, parent_type)
+  def self.record_for_microservices(parent_id, record, parent_type)
     return if record.blank?
 
     device_id = parent_id
@@ -26,14 +26,12 @@ class TemprPresenter < BasePresenter
       endpointType: record.endpoint_type,
       queueRequest: record.queue_request,
       queueResponse: record.queue_response,
-      template:
-        record.template.transform_keys do |k|
-          k.to_s.camelcase(:lower)
-        end,
+      layers: LayerPresenter.record_for_microservices(record.layers),
+      template: record.template,
       createdAt: record.created_at,
       updatedAt: record.updated_at,
       temprs: record.temprs.map do |tempr|
-        record_for_microservice(parent_id, tempr, parent_type)
+        record_for_microservices(parent_id, tempr, parent_type)
       end
     }
   end
@@ -42,7 +40,7 @@ class TemprPresenter < BasePresenter
     {
       ttl: Rails.configuration.oop[:tempr_cache_ttl],
       data: records.map do |record|
-        record_for_microservice(parent_id, record, parent_type)
+        record_for_microservices(parent_id, record, parent_type)
       end
     }
   end

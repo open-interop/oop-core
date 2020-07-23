@@ -50,10 +50,11 @@ module OopCore
       rabbit: {
         address: ENV['OOP_AMQP_ADDRESS'],
         devices_exchange: ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
+        schedules_exchange: ENV['OOP_CORE_SCHEDULE_UPDATE_EXCHANGE'],
         response_queue: ENV['OOP_CORE_RESPONSE_Q'],
         prefetch_limit: ENV['OOP_CORE_QUEUE_PREFETCH_LIMIT']
       },
-      from_email: ENV['OOP_CORE_FROM_ADDRESS'],
+      from_email: ENV['OOP_CORE_FROM_ADDRESS'] || 'noreply@openinterop.org',
       smtp: {
         address:  ENV['OOP_CORE_SMTP_ADDRESS'],
         port: ENV['OOP_CORE_SMTP_PORT'],

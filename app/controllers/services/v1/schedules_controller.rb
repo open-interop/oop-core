@@ -8,8 +8,9 @@ module Services
       # GET /services/v1/schedules
       def index
         render json:
-          Schedule.includes(:account).active
-                  .to_json(only: %i[id name], methods: %i[schedule tempr_url])
+          SchedulePresenter.collection_for_microservices(
+            Schedule.includes(:account).active
+          )
       end
 
       # GET /services/v1/schedules/:id/temprs

@@ -13,13 +13,14 @@ FactoryBot.define do
     end
     template do
       {
-        host: 'example.com',
-        port: 80,
-        path: '/test/{{message.body.key1}}/{{message.body.key2}}',
-        request_method: 'POST',
-        protocol: 'http',
+        host: { language: 'text', script: 'example.com' } ,
+        port: { language: 'text', script: '80' },
+        path: { language: 'text', script: '/test/{{message.body.key1}}/{{message.body.key2}}' },
+        request_method: { language: 'text', script: 'POST' },
+        protocol: { language: 'text', script: 'http' },
         headers: {
-          'Content-Type': 'application/json'
+          language: 'js',
+          script: 'module.exports = { "Content-Type" : "application/json" }'
         },
         body: {
           language: 'mustache',

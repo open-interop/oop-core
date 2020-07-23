@@ -1,12 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Device, type: :model do
-  before do
-    allow_any_instance_of(Device).to(
-      receive(:bunny_connection).and_return(BunnyMock.new.start)
-    )
-  end
-
   let!(:device) { FactoryBot.create(:device) }
 
   context 'with authentication_path set' do
@@ -120,6 +114,6 @@ RSpec.describe Device, type: :model do
   end
 
   describe '#tempr_url' do
-    it { expect(device.tempr_url).to eq("http://test.host/services/v1/devices/#{device.id}/temprs") }
+    it { expect(device.tempr_url).to eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs") }
   end
 end

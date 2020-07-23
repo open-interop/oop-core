@@ -8,14 +8,18 @@ class SitePresenter < BasePresenter
 
   def self.sidebar_sites(account, site)
     if site
-      [site] + site.sites
+      [site] + site.sites.by_name
     else
-      account.sites
+      account.sites.by_name
     end
   end
 
   def self.sidebar(account, filtered_site = nil)
-    sites = sidebar_sites(account, filtered_site)
+    sites =
+      sidebar_sites(account, filtered_site)
+
+    device_groups =
+      account.device_groups.by_name
 
     {
       sites:
@@ -24,13 +28,15 @@ class SitePresenter < BasePresenter
             id: site.id,
             name: site.name,
             device_groups:
-              account.device_groups.map do |device_group|
+              device_groups.map do |device_group|
                 {
                   id: device_group.id,
                   name: device_group.name,
                   devices:
-                    device_group.devices.where(site_id: site.id)
-                           .map do |device|
+                    device_group.devices
+                                .where(site_id: site.id)
+                                .by_name
+                                .map do |device|
                       {
                         id: device.id,
                         name: device.name

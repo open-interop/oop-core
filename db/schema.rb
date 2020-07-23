@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_17_124444) do
+ActiveRecord::Schema.define(version: 2020_07_09_163443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,28 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.boolean "active", default: true
   end
 
+  create_table "http_templates", force: :cascade do |t|
+    t.text "host"
+    t.text "port"
+    t.text "path"
+    t.text "protocol"
+    t.text "request_method"
+    t.text "headers"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "layers", force: :cascade do |t|
+    t.integer "account_id"
+    t.string "name"
+    t.string "reference"
+    t.text "script"
+    t.boolean "archived", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "schedule_temprs", force: :cascade do |t|
     t.integer "tempr_id"
     t.integer "schedule_id"
@@ -125,6 +147,19 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.string "full_name"
   end
 
+  create_table "tempr_layers", force: :cascade do |t|
+    t.integer "tempr_id"
+    t.integer "layer_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "tempr_templates", force: :cascade do |t|
+    t.text "temprs"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "temprs", force: :cascade do |t|
     t.integer "device_group_id"
     t.string "name"
@@ -140,6 +175,9 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.text "example_transmission"
     t.integer "tempr_id"
     t.text "notes"
+    t.string "templateable_type"
+    t.bigint "templateable_id"
+    t.index ["templateable_type", "templateable_id"], name: "index_temprs_on_templateable_type_and_templateable_id"
   end
 
   create_table "transmissions", force: :cascade do |t|
@@ -155,6 +193,7 @@ ActiveRecord::Schema.define(version: 2020_02_17_124444) do
     t.text "request_body"
     t.integer "schedule_id"
     t.integer "tempr_id"
+    t.integer "account_id"
   end
 
   create_table "users", force: :cascade do |t|

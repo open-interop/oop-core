@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe TransmissionFilter do
   describe '#records' do
     let(:device) { FactoryBot.create(:device) }
+    let(:account) { device.account }
 
     let(:device_tempr) { FactoryBot.create(:device_tempr, device: device, tempr: FactoryBot.create(:tempr)) }
     let(:device_tempr2) { FactoryBot.create(:device_tempr, device: device, tempr: FactoryBot.create(:tempr)) }
@@ -37,7 +38,7 @@ RSpec.describe TransmissionFilter do
         expect(described_class.new({}).all_filterable_fields).to(
           eq(
             [
-              'id', 'status', 'tempr_id', 'schedule_id', 'message_uuid',
+              'id', 'status', 'tempr_id', 'device_id', 'schedule_id', 'message_uuid',
               'transmission_uuid', 'success',
               { 'transmitted_at' => %w[gt gteq lt lteq] },
               { 'created_at' => %w[gt gteq lt lteq] },
@@ -53,7 +54,7 @@ RSpec.describe TransmissionFilter do
       let(:records) do
         TransmissionFilter.records(
           { },
-          scope: device
+          scope: account
         )
       end
 
@@ -71,7 +72,7 @@ RSpec.describe TransmissionFilter do
       let(:records) do
         TransmissionFilter.records(
           params,
-          scope: device
+          scope: account
         )
       end
 
@@ -88,7 +89,7 @@ RSpec.describe TransmissionFilter do
       let(:records) do
         TransmissionFilter.records(
           params,
-          scope: device
+          scope: account
         )
       end
 

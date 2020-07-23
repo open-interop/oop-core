@@ -3,13 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Dashboards', type: :request do
-  let(:device) { FactoryBot.create(:device) }
+  let!(:account) { Account.first }
+
+  let(:device) { FactoryBot.create(:device, account: account) }
 
   let(:device_two) do
-    FactoryBot.create(:device, authentication_path: '/path-2')
+    FactoryBot.create(:device, account: account, authentication_path: '/path-2')
   end
 
-  let(:account) { Account.first }
   let(:api_user) { FactoryBot.create(:user, account: account) }
   let(:authorization_headers) do
     {
@@ -21,6 +22,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
     Array.new(3) do
       FactoryBot.create(
         :transmission,
+        account: account,
         device: device,
         success: true,
         status: 200,
@@ -30,6 +32,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       Array.new(2) do
         FactoryBot.create(
           :transmission,
+          account: account,
           device: device,
           success: false,
           status: 400,
@@ -39,6 +42,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       Array.new(2) do
         FactoryBot.create(
           :transmission,
+          account: account,
           device: device_two,
           success: true,
           status: 201,
@@ -48,6 +52,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       Array.new(2) do
         FactoryBot.create(
           :transmission,
+          account: account,
           device: device_two,
           success: false,
           status: 401,
@@ -57,13 +62,11 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
   end
 
   describe 'GET /api/v1/dashboards/transmissions' do
-    let(:device) { FactoryBot.create(:device) }
-
     context 'group by device_id' do
       before do
         get(
           api_v1_dashboards_transmissions_path,
-          params: { device_id: device.id, group: 'device_id' },
+          params: { filter: { device_id: device.id }, group: 'device_id' },
           headers: authorization_headers
         )
       end
@@ -80,7 +83,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       before do
         get(
           api_v1_dashboards_transmissions_path,
-          params: { device_id: device.id, group: 'success' },
+          params: { filter: { device_id: device.id }, group: 'success' },
           headers: authorization_headers
         )
       end
@@ -98,7 +101,7 @@ RSpec.describe 'Api::V1::Dashboards', type: :request do
       before do
         get(
           api_v1_dashboards_transmissions_path,
-          params: { device_id: device.id, group: 'transmitted_at' },
+          params: { filter: { device_id: device.id }, group: 'transmitted_at' },
           headers: authorization_headers
         )
       end

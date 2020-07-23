@@ -3,7 +3,7 @@
 module Api
   module V1
     class TransmissionsController < ApplicationController
-      before_action :find_device
+      before_action :set_device_id_filter
       before_action :find_transmission
 
       # GET /api/v1/transmissions
@@ -11,7 +11,7 @@ module Api
         @transmissions =
           TransmissionFilter.records(
             params,
-            scope: @device
+            scope: current_account
           )
 
         render json:
@@ -25,14 +25,18 @@ module Api
 
       private
 
-      def find_device
-        @device = current_account.devices.find(params[:device_id])
+      def set_device_id_filter
+        if params[:device_id].present? && params[:filter].present?
+          params[:filter][:device_id] = params[:device_id]
+        else
+          params[:filter] = { device_id: params[:device_id] }
+        end
       end
 
       def find_transmission
         return if params[:id].blank?
 
-        @transmission = @device.transmissions.find(params[:id])
+        @transmission = current_account.transmissions.find(params[:id])
       end
     end
   end
