@@ -13,6 +13,7 @@ class BlacklistEntry < ApplicationRecord
 
   # Scopes
   scope :archived, -> { where(archived: true) }
+  scope :active, -> { where(archived: false) }
 
   audited
 end

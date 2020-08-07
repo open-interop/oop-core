@@ -2,11 +2,11 @@
 
 class BlacklistEntryValidator < ActiveModel::Validator
   def validate(record)
-    return if (record.ip_literal.present? && record.ip_literal != "") ||
-      (record.ip_range.present? && record.ip_range != "") ||
-      (record.path_literal.present? && record.path_literal != "") ||
-      (record.path_regex.present? && record.path_regex != "") ||
-      (record.headers.present? && record.headers != "")
+    return if record.ip_literal.present? ||
+      record.ip_range.present? ||
+      record.path_literal.present? ||
+      record.path_regex.present? ||
+      record.headers.present?
 
     record.errors.add(
       :base,
