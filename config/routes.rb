@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
       get 'schedules', to: 'schedules#index'
       get 'schedules/:id/temprs', to: 'schedules#temprs'
+
+      get 'blacklist_entries', to: 'blacklist_entries#index'
     end
   end
 
@@ -54,6 +56,12 @@ Rails.application.routes.draw do
         member do
           post 'assign_tempr', to: 'layers#assign_tempr'
           get 'history', to: 'layers#history'
+        end
+      end
+
+      resources :blacklist_entries do
+        member do
+          get 'history', to: 'blacklist_entries#history'
         end
       end
 
