@@ -2,7 +2,7 @@
 
 # Filter the temprs table using the provided fields
 class TemprFilter < BaseFilter
-  filterable_attributes integer: %w[id device_group_id],
+  filterable_attributes integer: %w[id device_group_id tempr_id],
                         string: %w[name description],
                         boolean: %w[]
 
