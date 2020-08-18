@@ -2,7 +2,8 @@
 
 class BlacklistEntryPresenter < BasePresenter
   attributes :id, :ip_literal, :ip_range,
-             :path_literal, :path_regex, :headers
+             :path_literal, :path_regex, :headers,
+             :created_at, :updated_at
 
   def self.collection_for_microservices(records)
     records.map do |record|
