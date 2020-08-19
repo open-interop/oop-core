@@ -14,7 +14,52 @@ class BlacklistEntry < ApplicationRecord
   # Scopes
   scope :archived, -> { where(archived: true) }
   scope :active, -> { where(archived: false) }
+  #
+  # Callbacks
+  #
+  after_create :queue_from_create
+  after_update :queue_from_update, if: :blacklist_entry_changed?
+  after_destroy :queue_from_destroy
+  after_save do
+    Rails.cache.delete([id, 'services/blacklist_entries'])
+  end
 
   audited
-end
 
+  def update_queue
+    UpdateQueue.new(
+      :blacklist_entry,
+      Rails.configuration.oop[:rabbit][:blacklist_entries_exchange]
+    )
+  end
+
+  def queue_from_create
+    update_queue.publish(
+      'add',
+      BlacklistEntryPresenter.record_for_microservices(self)
+    )
+  end
+
+  def queue_from_update
+    @authentication = nil
+
+    update_queue.publish(
+      'update',
+      BlacklistEntryPresenter.record_for_microservices(self)
+    )
+  end
+
+  def queue_from_destroy
+    update_queue.publish(
+      'delete',
+      BlacklistEntryPresenter.record_for_microservices(self)
+    )
+  end
+
+  def blacklist_entry_changed?
+    saved_change_to_ip_literal? ||
+      saved_change_to_ip_range? ||
+      saved_change_to_path_literal? ||
+      saved_change_to_path_regex?
+  end
+end

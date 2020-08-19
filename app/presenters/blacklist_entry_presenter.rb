@@ -5,6 +5,17 @@ class BlacklistEntryPresenter < BasePresenter
              :path_literal, :path_regex, :headers,
              :created_at, :updated_at
 
+  def self.record_for_microservices(record)
+    {
+        id: record.id,
+        ip_literal: record.ip_literal,
+        ip_range: record.ip_range,
+        path_literal: record.path_literal,
+        path_regex: record.path_regex,
+        headers: record.headers
+    }
+  end
+
   def self.collection_for_microservices(records)
     records.map do |record|
       {
