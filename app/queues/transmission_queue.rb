@@ -54,16 +54,28 @@ class TransmissionQueue
 
     data[:account_id] = tempr.account_id
 
-    body['tempr']['queueRequest'] && body['tempr']['rendered'] &&
-      data[:request_body] = body['tempr']['rendered']['body']
+    if body['tempr']['queueRequest'] && body['tempr']['rendered']
+      data[:request_body] =
+        if body['tempr']['rendered']['body'].is_a?(Hash)
+          JSON.stringify(body['tempr']['rendered']['body'])
+        else
+          body['tempr']['rendered']['body']
+        end
+    end
 
     if body['tempr']['response'].present?
       data[:success] = body['tempr']['response']['success']
       data[:status] = body['tempr']['response']['status']
       data[:transmitted_at] = body['tempr']['response']['datetime']
 
-      body['tempr']['queueResponse'] &&
-        data[:response_body] = body['tempr']['response']['body']
+      if body['tempr']['queueResponse']
+        data[:response_body] =
+          if body['tempr']['response']['body'].is_a?(Hash)
+            JSON.stringify(body['tempr']['response']['body'])
+          else
+            body['tempr']['response']['body']
+          end
+      end
 
       body['tempr']['response']['error'] &&
         data[:response_body] = body['tempr']['response']['error']
