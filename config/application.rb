@@ -57,7 +57,7 @@ module OopCore
       },
       from_email: ENV['OOP_CORE_FROM_ADDRESS'] || 'noreply@openinterop.org',
       smtp: {
-        address:  ENV['OOP_CORE_SMTP_ADDRESS'],
+        address: ENV['OOP_CORE_SMTP_ADDRESS'],
         port: ENV['OOP_CORE_SMTP_PORT'],
         domain: ENV['OOP_CORE_SMTP_DOMAIN'],
         user_name: ENV['OOP_CORE_SMTP_USER_NAME'],
