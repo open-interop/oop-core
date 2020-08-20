@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_163443) do
+ActiveRecord::Schema.define(version: 2020_08_07_105827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,18 @@ ActiveRecord::Schema.define(version: 2020_07_09_163443) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "blacklist_entries", force: :cascade do |t|
+    t.integer "account_id"
+    t.string "ip_literal"
+    t.string "ip_range"
+    t.string "path_literal"
+    t.string "path_regex"
+    t.string "headers"
+    t.boolean "archived", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "device_groups", force: :cascade do |t|

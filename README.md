@@ -24,13 +24,15 @@ In order to communicate with the micro-service back-end we use RabbitMQ. Connect
 
 The application is configured using environment variables.
 
-| Variable                        | Example Value                           | Description                                                                        |
-| ------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------- |
-| OOP_CORE_TOKEN                  | `=ELhq4oxCiAHzVmLRqvds6nqgNaAp`         | For the microservices to authenticate with **oop-core**                                    |
-| OOP_AMQP_ADDRESS                | `amqp://localhost`                      | The RabbitMQ location                                                                           |
-| OOP_CORE_RESPONSE_Q             | `oop.core.transmissions`                | The name of the RabbitMQ transmissions queue for the micro-service layer to report back to core    |
-| OOP_CORE_DEVICE_UPDATE_EXCHANGE | `oop.core.devices`                      | The name of the RabbitMQ exchange to update device authentication details in **oop-authenticator** |
-| OOP_RENDERER_PATH               | `/Users/jack/Projects/OOO/oop-renderer` | Path to a copy of the renderer in order to handle Tempr previews                                     |
+| Variable                                 | Example Value                           | Description                                                                                        |
+| -----------------------------------------| --------------------------------------- | ---------------------------------------------------------------------------------------------------|
+| OOP_CORE_TOKEN                           | `=ELhq4oxCiAHzVmLRqvds6nqgNaAp`         | For the microservices to authenticate with **oop-core**                                            |
+| OOP_AMQP_ADDRESS                         | `amqp://localhost`                      | The RabbitMQ location                                                                              |
+| OOP_CORE_RESPONSE_Q                      | `oop.core.transmissions`                | The name of the RabbitMQ transmissions queue for the micro-service layer to report back to core    |
+| OOP_CORE_DEVICE_UPDATE_EXCHANGE          | `oop.core.devices`                      | The name of the RabbitMQ exchange to update device authentication details in **oop-authenticator** |
+| OOP_CORE_SCHEDULE_UPDATE_EXCHANGE        | `oop.core.schedules`                    | The name of the RabbitMQ exchange to update schedule details in **oop-scheduler**                  |
+| OOP_CORE_BLACKLIST_ENTRY_UPDATE_EXCHANGE | `oop.core.blacklist`                    | The name of the RabbitMQ exchange to update blacklist details in **oop-blacklist**                 |
+| OOP_RENDERER_PATH                        | `/Users/jack/Projects/OOO/oop-renderer` | Path to a copy of the renderer in order to handle Tempr previews                                   |
 
 ### Testing
 

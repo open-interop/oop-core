@@ -28,8 +28,8 @@ RSpec.describe TransmissionFilter do
         FactoryBot.create(:transmission, device: device),
         FactoryBot.create(:transmission, device: device),
         FactoryBot.create(:transmission, device: device),
-        FactoryBot.create(:transmission, device: device),
-        FactoryBot.create(:transmission, device: device)
+        FactoryBot.create(:transmission, device: device, status: ''),
+        FactoryBot.create(:transmission, device: device, status: nil)
       ]
     end
 
@@ -94,6 +94,42 @@ RSpec.describe TransmissionFilter do
       end
 
       it { expect(records.size).to eq(1) }
+    end
+
+    context 'filter by status' do
+      context 'is null' do
+         let(:params) do
+          ActionController::Parameters.new(
+            filter: { status: nil }
+          )
+        end
+
+        let(:records) do
+          TransmissionFilter.records(
+            params,
+            scope: account
+          )
+        end
+
+        it { expect(records.size).to eq(2) }
+      end
+
+      context 'is empty string' do
+        let(:params) do
+          ActionController::Parameters.new(
+            filter: { status: '' }
+          )
+        end
+
+        let(:records) do
+          TransmissionFilter.records(
+            params,
+            scope: account
+          )
+        end
+
+        it { expect(records.size).to eq(2) }
+      end
     end
   end
 end

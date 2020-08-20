@@ -51,12 +51,13 @@ module OopCore
         address: ENV['OOP_AMQP_ADDRESS'],
         devices_exchange: ENV['OOP_CORE_DEVICE_UPDATE_EXCHANGE'],
         schedules_exchange: ENV['OOP_CORE_SCHEDULE_UPDATE_EXCHANGE'],
+        blacklist_entries_exchange: ENV['OOP_CORE_BLACKLIST_ENTRY_UPDATE_EXCHANGE'],
         response_queue: ENV['OOP_CORE_RESPONSE_Q'],
         prefetch_limit: ENV['OOP_CORE_QUEUE_PREFETCH_LIMIT']
       },
       from_email: ENV['OOP_CORE_FROM_ADDRESS'] || 'noreply@openinterop.org',
       smtp: {
-        address:  ENV['OOP_CORE_SMTP_ADDRESS'],
+        address: ENV['OOP_CORE_SMTP_ADDRESS'],
         port: ENV['OOP_CORE_SMTP_PORT'],
         domain: ENV['OOP_CORE_SMTP_DOMAIN'],
         user_name: ENV['OOP_CORE_SMTP_USER_NAME'],

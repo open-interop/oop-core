@@ -87,22 +87,34 @@ class BaseFilter
 
   def filter_integer_fields
     self.class.filterable_fields[:integer]&.each do |field|
-      filter_params[field].present? &&
+      if filter_params[field].present?
         @filtered_records =
           @filtered_records.where(
             field => filter_params[field]
           )
+      elsif filter_params.keys.include?(field)
+        @filtered_records =
+          @filtered_records.where(
+            "\"#{table_name}\".\"#{field}\" is null"
+          )
+      end
     end
   end
 
   def filter_string_fields
     self.class.filterable_fields[:string]&.each do |field|
-      filter_params[field].present? &&
+      if filter_params[field].present?
         @filtered_records =
           @filtered_records.where(
             "\"#{table_name}\".\"#{field}\" ILIKE ?",
             "%#{filter_params[field]}%"
           )
+      elsif filter_params.keys.include?(field)
+        @filtered_records =
+          @filtered_records.where(
+            "\"#{table_name}\".\"#{field}\" is null"
+          )
+      end
     end
   end
 
