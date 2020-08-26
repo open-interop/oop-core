@@ -57,7 +57,7 @@ class TransmissionQueue
     if body['tempr']['queueRequest'] && body['tempr']['rendered']
       data[:request_body] =
         if body['tempr']['rendered']['body'].is_a?(Hash)
-          JSON.stringify(body['tempr']['rendered']['body'])
+          body['tempr']['rendered']['body'].to_json
         else
           body['tempr']['rendered']['body']
         end
@@ -71,7 +71,7 @@ class TransmissionQueue
       if body['tempr']['queueResponse']
         data[:response_body] =
           if body['tempr']['response']['body'].is_a?(Hash)
-            JSON.stringify(body['tempr']['response']['body'])
+            body['tempr']['response']['body'].to_json
           else
             body['tempr']['response']['body']
           end
