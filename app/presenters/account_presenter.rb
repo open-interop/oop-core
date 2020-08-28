@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AccountPresenter < BasePresenter
-  attributes :id
-
   def self.record_for_microservices(record)
     {
         id: record.id,
