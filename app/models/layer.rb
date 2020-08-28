@@ -20,3 +20,17 @@ class Layer < ApplicationRecord
 
   audited
 end
+
+# == Schema Information
+#
+# Table name: layers
+#
+#  id         :bigint           not null, primary key
+#  archived   :boolean          default(FALSE)
+#  name       :string
+#  reference  :string
+#  script     :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  account_id :integer
+#
