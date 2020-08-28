@@ -117,3 +117,23 @@ RSpec.describe Device, type: :model do
     it { expect(device.tempr_url).to eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs") }
   end
 end
+
+# == Schema Information
+#
+# Table name: devices
+#
+#  id                     :bigint           not null, primary key
+#  active                 :boolean          default(TRUE)
+#  authentication_headers :text
+#  authentication_path    :string
+#  authentication_query   :text
+#  latitude               :decimal(10, 6)
+#  longitude              :decimal(10, 6)
+#  name                   :string
+#  time_zone              :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  account_id             :integer
+#  device_group_id        :integer
+#  site_id                :integer
+#
