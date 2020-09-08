@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       get 'schedules/:id/temprs', to: 'schedules#temprs'
 
       get 'blacklist_entries', to: 'blacklist_entries#index'
+
+      get 'accounts', to: 'accounts#index'
     end
   end
 
