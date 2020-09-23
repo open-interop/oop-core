@@ -39,7 +39,8 @@ RSpec.describe TransmissionFilter do
           eq(
             [
               'id', 'status', 'tempr_id', 'device_id', 'schedule_id',
-              'message_id', 'message_uuid', 'transmission_uuid', 'success',
+              'message_id', 'message_uuid', 'transmission_uuid',
+              'state', 'success', 'discarded',
               { 'transmitted_at' => %w[gt gteq lt lteq] },
               { 'created_at' => %w[gt gteq lt lteq] },
               { 'updated_at' => %w[gt gteq lt lteq] },

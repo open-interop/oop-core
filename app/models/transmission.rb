@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Transmission < ApplicationRecord
+  STATES = %w[
+    successful
+    failed
+    discarded
+  ].freeze
+
   #
   # Relationships
   #
@@ -9,6 +15,11 @@ class Transmission < ApplicationRecord
   belongs_to :device, optional: true
   belongs_to :tempr, optional: true
   belongs_to :schedule, optional: true
+
+  #
+  # Validations
+  #
+  validates :state, inclusion: { in: STATES }
 
   def self.create_from_queue(message, body)
     data = {
@@ -40,7 +51,19 @@ class Transmission < ApplicationRecord
     end
 
     if body['tempr']['response'].present?
-      data[:success] = body['tempr']['response']['success']
+      if body['tempr']['response']['success'] &&
+         body['tempr']['response']['discarded']
+        data[:discarded] = true
+        data[:success] = true
+        data[:state] = 'discarded'
+      elsif body['tempr']['response']['success']
+        data[:success] = true
+        data[:state] = 'successful'
+      else
+        data[:success] = false
+        data[:state] = 'failed'
+      end
+
       data[:status] = body['tempr']['response']['status']
       data[:transmitted_at] = body['tempr']['response']['datetime']
 
@@ -66,9 +89,11 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text
 #  response_body     :text
+#  state             :string
 #  status            :integer
 #  success           :boolean
 #  transmission_uuid :string

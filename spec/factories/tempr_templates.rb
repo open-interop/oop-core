@@ -22,3 +22,13 @@ FactoryBot.define do
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: tempr_templates
+#
+#  id         :bigint           not null, primary key
+#  temprs     :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#

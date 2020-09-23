@@ -162,12 +162,6 @@ RSpec.describe Message, type: :model do
           eq({})
         )
       end
-
-      xit do
-        expect(message.received_at).to(
-          eq(Time.zone.parse('2019-11-27T14:54:01.610Z'))
-        )
-      end
     end
 
     let(:message_body_with_object_response) do
@@ -258,12 +252,6 @@ RSpec.describe Message, type: :model do
       it do
         expect(message.body).to(
           eq(message_body_with_object_response['message'])
-        )
-      end
-
-      xit do
-        expect(message.transmitted_at).to(
-          eq(Time.zone.parse('2019-11-27T14:54:01.610Z'))
         )
       end
     end

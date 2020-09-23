@@ -9,6 +9,8 @@ FactoryBot.define do
     transmission_uuid { Faker::Internet.uuid }
     success { [true, false].sample }
     status { [200, 201, 400].sample }
+    discarded { [true, false].sample }
+    state { 'successful' }
     transmitted_at { Time.now }
     request_body { { somedata: 'moredata' }.to_json }
     response_body { { event: 'success' }.to_json }
@@ -20,9 +22,11 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text
 #  response_body     :text
+#  state             :string
 #  status            :integer
 #  success           :boolean
 #  transmission_uuid :string
