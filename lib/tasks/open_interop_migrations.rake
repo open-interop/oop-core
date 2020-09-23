@@ -1,7 +1,7 @@
-# frozen_string_literal: true
 
-class CreateLegacyMessagesFromTransmissions < ActiveRecord::Migration[6.0]
-  def up
+namespace :open_interop do
+  desc 'Migrate legacy transmisions'
+  task migrate_legacy_transmissions: :environment do
     messages = {}
 
     Transmission.all
@@ -29,6 +29,4 @@ class CreateLegacyMessagesFromTransmissions < ActiveRecord::Migration[6.0]
                   .update(message_id: messages[message_uuid])
     end
   end
-
-  def down; end
 end
