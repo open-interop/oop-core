@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_07_105827) do
+ActiveRecord::Schema.define(version: 2020_09_21_130714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_105827) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "active", default: true
+    t.boolean "queue_messages", default: false
   end
 
   create_table "http_templates", force: :cascade do |t|
@@ -118,6 +119,17 @@ ActiveRecord::Schema.define(version: 2020_08_07_105827) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "account_id"
+    t.integer "device_id"
+    t.integer "schedule_id"
+    t.string "uuid"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_messages_on_account_id"
+  end
+
   create_table "schedule_temprs", force: :cascade do |t|
     t.integer "tempr_id"
     t.integer "schedule_id"
@@ -137,6 +149,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_105827) do
     t.string "year", default: "*"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "queue_messages", default: false
   end
 
   create_table "sites", force: :cascade do |t|
@@ -206,6 +219,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_105827) do
     t.integer "schedule_id"
     t.integer "tempr_id"
     t.integer "account_id"
+    t.integer "message_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -219,4 +233,5 @@ ActiveRecord::Schema.define(version: 2020_08_07_105827) do
     t.datetime "password_reset_requested_at"
   end
 
+  add_foreign_key "messages", "accounts"
 end

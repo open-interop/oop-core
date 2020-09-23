@@ -38,8 +38,8 @@ RSpec.describe TransmissionFilter do
         expect(described_class.new({}).all_filterable_fields).to(
           eq(
             [
-              'id', 'status', 'tempr_id', 'device_id', 'schedule_id', 'message_uuid',
-              'transmission_uuid', 'success',
+              'id', 'status', 'tempr_id', 'device_id', 'schedule_id',
+              'message_id', 'message_uuid', 'transmission_uuid', 'success',
               { 'transmitted_at' => %w[gt gteq lt lteq] },
               { 'created_at' => %w[gt gteq lt lteq] },
               { 'updated_at' => %w[gt gteq lt lteq] },

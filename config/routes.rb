@@ -75,6 +75,9 @@ Rails.application.routes.draw do
 
         get 'transmissions', to: 'transmissions#index'
         get 'transmissions/:id', to: 'transmissions#show'
+
+        get 'messages', to: 'messages#index'
+        get 'messages/:id', to: 'messages#show'
       end
 
       resources :schedules do
@@ -84,14 +87,11 @@ Rails.application.routes.draw do
         end
       end
 
-      get 'transmissions', to: 'transmissions#index'
-      get 'transmissions/:id', to: 'transmissions#show'
+      post 'passwords', to: 'passwords#create'
+      post 'passwords/reset', to: 'passwords#reset'
 
-      post '/passwords', to: 'passwords#create'
-      post '/passwords/reset', to: 'passwords#reset'
-
-      post '/auth/login', to: 'sessions#create'
-      get '/me', to: 'sessions#me'
+      post 'auth/login', to: 'sessions#create'
+      get 'me', to: 'sessions#me'
     end
   end
 

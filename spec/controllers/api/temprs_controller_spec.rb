@@ -5,7 +5,11 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
   let!(:tempr) { FactoryBot.create(:tempr, device_group: device_group) }
 
   let(:valid_attributes) do
-    FactoryBot.attributes_for(:tempr, device_group_id: device_group.id)
+    FactoryBot.attributes_for(
+      :tempr,
+      device_group_id: device_group.id,
+      template: FactoryBot.attributes_for(:http_template)
+    )
   end
 
   let(:invalid_attributes) { { name: nil } }

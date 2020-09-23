@@ -50,7 +50,7 @@ RSpec.describe Tempr, type: :model do
     context 'with a tempr template' do
       let!(:tempr) do
         FactoryBot.create(
-          :tempr,
+          :tempr_tempr,
           endpoint_type: 'tempr',
           template: {
             temprs: {

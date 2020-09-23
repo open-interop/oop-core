@@ -25,62 +25,11 @@ class TransmissionQueue
 
       puts "info:[#{Time.now.iso8601}] oop-core consumed #{transmission_body['uuid']}"
 
-      create_transmission_from_queue(transmission_body)
+      Message.create_from_queue(transmission_body)
 
       channel.ack(delivery_info.delivery_tag)
     end
 
     conn.close
-  end
-
-  def self.create_transmission_from_queue(body)
-    return if body.blank?
-
-    data = {
-      message_uuid: body['uuid'],
-      transmission_uuid: body['transmissionId']
-    }
-
-    body['device'].present? &&
-      data[:device_id] = body['device']['id']
-
-    body['tempr'].present? &&
-      data[:tempr_id] = body['tempr']['id']
-
-    body['schedule'].present? &&
-      data[:schedule_id] = body['schedule']['id']
-
-    tempr = Tempr.find(data[:tempr_id])
-
-    data[:account_id] = tempr.account_id
-
-    if body['tempr']['queueRequest'] && body['tempr']['rendered']
-      data[:request_body] =
-        if body['tempr']['rendered']['body'].is_a?(Hash)
-          body['tempr']['rendered']['body'].to_json
-        else
-          body['tempr']['rendered']['body']
-        end
-    end
-
-    if body['tempr']['response'].present?
-      data[:success] = body['tempr']['response']['success']
-      data[:status] = body['tempr']['response']['status']
-      data[:transmitted_at] = body['tempr']['response']['datetime']
-
-      if body['tempr']['queueResponse']
-        data[:response_body] =
-          if body['tempr']['response']['body'].is_a?(Hash)
-            body['tempr']['response']['body'].to_json
-          else
-            body['tempr']['response']['body']
-          end
-      end
-
-      body['tempr']['response']['error'] &&
-        data[:response_body] = body['tempr']['response']['error']
-    end
-
-    Transmission.create!(data)
   end
 end

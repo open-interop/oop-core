@@ -15,6 +15,7 @@ class Account < ApplicationRecord
   has_many :layers, dependent: :restrict_with_error
   has_many :transmissions, dependent: :restrict_with_error
   has_many :blacklist_entries, dependent: :restrict_with_error
+  has_many :messages, dependent: :restrict_with_error
 
   #
   # Scopes

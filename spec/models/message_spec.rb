@@ -1,10 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe Transmission, type: :model do
+RSpec.describe Message, type: :model do
   let(:device) { FactoryBot.create(:device) }
   let(:tempr) { FactoryBot.create(:tempr, queue_request: true, queue_response: true ) }
   let(:device_tempr) { FactoryBot.create(:device_tempr, device: device, tempr: tempr) }
-  let(:message) { FactoryBot.create(:message, device: device) }
 
   let(:message_body) do
     {
@@ -14,20 +13,20 @@ RSpec.describe Transmission, type: :model do
         query: {},
         method: 'GET',
         ip: '::ffff:127.0.0.1',
-        body: {},
+        body: { 'test-body' => 'something' },
         headers: {
           accept: 'application/json',
           'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
           'accept-encoding': 'gzip,deflate',
           connection: 'close',
-          host: 'localhost'
+          host: 'test.host'
         },
-        hostname: 'localhost',
+        hostname: 'test.host',
         protocol: 'http'
       },
       device: {
         id: device.id,
-        authentication: { hostname: 'localhost', path: '/' }
+        authentication: { hostname: 'test.host', path: '/' }
       },
       tempr: {
         id: tempr.id,
@@ -38,7 +37,7 @@ RSpec.describe Transmission, type: :model do
         queueResponse: tempr.queue_response,
         template: {
           headers: {},
-          host: 'localhost',
+          host: 'test.host',
           path: '/',
           port: 3000,
           protocol: 'http',
@@ -49,7 +48,7 @@ RSpec.describe Transmission, type: :model do
         updatedAt: '2019-11-26T12:33:10.836Z',
         rendered: {
           headers: {},
-          host: 'localhost',
+          host: 'test.host',
           path: '/',
           port: '3000',
           protocol: 'http',
@@ -76,7 +75,7 @@ RSpec.describe Transmission, type: :model do
         query: {},
         method: 'POST',
         ip: '::ffff:127.0.0.1',
-        body: {},
+        body: { 'test-body' => 'something' },
         headers: {
           accept: 'application/fhir+json',
           'user-agent': 'Ruby FHIR Client',
@@ -87,13 +86,13 @@ RSpec.describe Transmission, type: :model do
           'accept-encoding': 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
           host: 'localhost:3000'
         },
-        hostname: 'localhost',
+        hostname: 'test.host',
         protocol: 'http'
       },
       device: {
         id: device.id,
         authentication: {
-          hostname: 'localhost',
+          hostname: 'test.host',
           path: '/gateway/fhir-test/'
         }
       },
@@ -106,7 +105,7 @@ RSpec.describe Transmission, type: :model do
         queueResponse: tempr.queue_response,
         template: {
           headers: {},
-          host: 'localhost',
+          host: 'test.host',
           path: '/',
           port: 443,
           protocol: 'http',
@@ -121,7 +120,7 @@ RSpec.describe Transmission, type: :model do
         temprs: [],
         rendered: {
           headers: {},
-          host: 'localhost',
+          host: 'test.host',
           path: '/',
           port: '443',
           protocol: 'http',
@@ -143,170 +142,127 @@ RSpec.describe Transmission, type: :model do
   describe '::create_from_queue' do
     context 'response is a string' do
       before do
-        described_class.create_from_queue(message, message_body)
+        described_class.create_from_queue(message_body)
       end
 
-      let(:transmission) { message.transmissions.last }
+      let(:message) { Message.last }
 
       it do
         expect(message.uuid).to(
-          eq(transmission.message_uuid)
+          eq('de7931c7-1151-46a6-bfe7-a1c779791bb6')
         )
       end
 
       it do
-        expect(transmission.transmission_uuid).to(
-          eq('f12ae1c6-5ae0-4c5e-a02b-5257928c8a89')
+        expect(message.device_id).to eq(device.id)
+      end
+
+      it do
+        expect(message.body).to(
+          eq({})
         )
       end
 
-      it do
-        expect(transmission.device_id).to eq(device.id)
-      end
-
-      it do
-        expect(transmission.tempr_id).to eq(tempr.id)
-      end
-
-      it do
-        expect(transmission.status).to eq(202)
-      end
-
-      it do
-        expect(transmission.success).to eq(true)
-      end
-
-      it do
-        expect(transmission.response_body).to(
-          eq('{"messageUuid":"61932680-9d20-4c66-871b-3c7a70c292ad","status":"success"}')
-        )
-      end
-
-      it do
-        expect(transmission.request_body).to eq('{"some":"message"}')
-      end
-
-      it do
-        expect(transmission.transmitted_at).to(
+      xit do
+        expect(message.received_at).to(
           eq(Time.zone.parse('2019-11-27T14:54:01.610Z'))
         )
       end
     end
 
-  let(:message_body_with_object_response) do
-    {
-      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
-      message: {
-        path: '/',
-        query: {},
-        method: 'GET',
-        ip: '::ffff:127.0.0.1',
-        body: {},
-        headers: {
-          accept: 'application/json',
-          'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
-          'accept-encoding': 'gzip,deflate',
-          connection: 'close',
-          host: 'localhost'
-        },
-        hostname: 'localhost',
-        protocol: 'http'
-      },
-      device: {
-        id: device.id,
-        authentication: { hostname: 'localhost', path: '/' }
-      },
-      tempr: {
-        id: tempr.id,
-        deviceId: device.id,
-        name: tempr.name,
-        endpointType: tempr.endpoint_type,
-        queueRequest: tempr.queue_request,
-        queueResponse: tempr.queue_response,
-        template: {
-          headers: {},
-          host: 'localhost',
+    let(:message_body_with_object_response) do
+      {
+        uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+        message: {
           path: '/',
-          port: 3000,
-          protocol: 'http',
-          requestMethod: 'GET',
-          body: {}
+          query: {},
+          method: 'GET',
+          ip: '::ffff:127.0.0.1',
+          body: { 'test-body' => 'something' },
+          headers: {
+            accept: 'application/json',
+            'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
+            'accept-encoding': 'gzip,deflate',
+            connection: 'close',
+            host: 'test.host'
+          },
+          hostname: 'test.host',
+          protocol: 'http'
         },
-        createdAt: '2019-11-22T16:23:05.422Z',
-        updatedAt: '2019-11-26T12:33:10.836Z',
-        rendered: {
-          headers: {},
-          host: 'localhost',
-          path: '/',
-          port: '3000',
-          protocol: 'http',
-          requestMethod: 'GET',
-          body: {
-            some: 'message'
+        device: {
+          id: device.id,
+          authentication: { hostname: 'test.host', path: '/' }
+        },
+        tempr: {
+          id: tempr.id,
+          deviceId: device.id,
+          name: tempr.name,
+          endpointType: tempr.endpoint_type,
+          queueRequest: tempr.queue_request,
+          queueResponse: tempr.queue_response,
+          template: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: 3000,
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {}
+          },
+          createdAt: '2019-11-22T16:23:05.422Z',
+          updatedAt: '2019-11-26T12:33:10.836Z',
+          rendered: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: '3000',
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {
+              some: 'message'
+            }
+          },
+          response: {
+            datetime: '2019-11-27T14:54:01.610Z',
+            success: true,
+            body: {
+              messageUuid: '61932680-9d20-4c66-871b-3c7a70c292ad',
+              status: 'success'
+            },
+            status: 202,
+            headers: {}
           }
         },
-        response: {
-          datetime: '2019-11-27T14:54:01.610Z',
-          success: true,
-          body: {
-            messageUuid: '61932680-9d20-4c66-871b-3c7a70c292ad',
-            status: 'success'
-          },
-          status: 202,
-          headers: {}
-        }
-      },
-      transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
-    }.with_indifferent_access
-  end
+        transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
+      }.with_indifferent_access
+    end
 
     context 'response is an object' do
       before do
-        described_class.create_from_queue(message, message_body_with_object_response)
+        device.update_attribute(:queue_messages, true)
+        described_class.create_from_queue(message_body_with_object_response)
       end
 
-      let(:transmission) { message.transmissions.last }
+      let(:message) { Message.last }
 
       it do
         expect(message.uuid).to(
-          eq(transmission.message_uuid)
+          eq('de7931c7-1151-46a6-bfe7-a1c779791bb6')
         )
       end
 
       it do
-        expect(transmission.transmission_uuid).to(
-          eq('f12ae1c6-5ae0-4c5e-a02b-5257928c8a89')
+        expect(message.device_id).to eq(device.id)
+      end
+
+      it do
+        expect(message.body).to(
+          eq(message_body_with_object_response['message'])
         )
       end
 
-      it do
-        expect(transmission.device_id).to eq(device.id)
-      end
-
-      it do
-        expect(transmission.tempr_id).to eq(tempr.id)
-      end
-
-      it do
-        expect(transmission.status).to eq(202)
-      end
-
-      it do
-        expect(transmission.success).to eq(true)
-      end
-
-      it do
-        expect(transmission.response_body).to(
-          eq('{"messageUuid":"61932680-9d20-4c66-871b-3c7a70c292ad","status":"success"}')
-        )
-      end
-
-      it do
-        expect(transmission.request_body).to eq('{"some":"message"}')
-      end
-
-      it do
-        expect(transmission.transmitted_at).to(
+      xit do
+        expect(message.transmitted_at).to(
           eq(Time.zone.parse('2019-11-27T14:54:01.610Z'))
         )
       end
@@ -316,21 +272,22 @@ end
 
 # == Schema Information
 #
-# Table name: transmissions
+# Table name: messages
 #
-#  id                :bigint           not null, primary key
-#  message_uuid      :string
-#  request_body      :text
-#  response_body     :text
-#  status            :integer
-#  success           :boolean
-#  transmission_uuid :string
-#  transmitted_at    :datetime
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  account_id        :integer
-#  device_id         :integer
-#  message_id        :integer
-#  schedule_id       :integer
-#  tempr_id          :integer
+#  id          :bigint           not null, primary key
+#  body        :text
+#  uuid        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  account_id  :bigint
+#  device_id   :integer
+#  schedule_id :integer
+#
+# Indexes
+#
+#  index_messages_on_account_id  (account_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
 #
