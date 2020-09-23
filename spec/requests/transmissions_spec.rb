@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Transmissions', type: :request do
-  describe 'GET /api/v1/devices/:id/transmissions' do
+  describe 'GET /api/v1/transmissions' do
     let(:device) { FactoryBot.create(:device) }
     let(:account) { Account.first }
     let(:api_user) { FactoryBot.create(:user, account: account) }
@@ -17,7 +17,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       context 'with all records' do
         before do
           get(
-            api_v1_device_transmissions_path(device),
+            api_v1_transmissions_path,
             params: { page: { size: -1 } },
             headers: authorization_headers
           )
@@ -42,7 +42,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
 
       context 'with default filters' do
         before do
-          get(api_v1_device_transmissions_path(device, page: { count: true }), headers: authorization_headers)
+          get(api_v1_transmissions_path(page: { count: true }), headers: authorization_headers)
         end
 
         let(:json_body) { JSON.parse(response.body) }
@@ -69,7 +69,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
 
       context 'with default filters' do
         before do
-          get(api_v1_device_transmissions_path(device), headers: authorization_headers)
+          get(api_v1_transmissions_path, headers: authorization_headers)
         end
 
         let(:json_body) { JSON.parse(response.body) }
@@ -100,7 +100,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       context 'with status filter' do
         before do
           get(
-            api_v1_device_transmissions_path(device),
+            api_v1_transmissions_path,
             params: { filter: { status: 200 } },
             headers: authorization_headers
           )
@@ -120,7 +120,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       context 'with success filter' do
         before do
           get(
-            api_v1_device_transmissions_path(device),
+            api_v1_transmissions_path,
             params: { filter: { success: false } },
             headers: authorization_headers
           )
@@ -144,7 +144,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
           FactoryBot.create(:transmission, transmitted_at: Time.now - 2.days)
 
           get(
-            api_v1_device_transmissions_path(device),
+            api_v1_transmissions_path,
             params: { filter: { transmitted_at: { lt: filtered_datetime } } },
             headers: authorization_headers
           )
@@ -167,7 +167,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
         context 'ascending' do
           before do
             get(
-              api_v1_device_transmissions_path(device),
+              api_v1_transmissions_path,
               params: { filter: { sort: { field: 'transmitted_at', direction: 'asc' } } },
               headers: authorization_headers
             )
@@ -186,7 +186,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
         context 'descending' do
           before do
             get(
-              api_v1_device_transmissions_path(device),
+              api_v1_transmissions_path,
               params: { filter: { sort: { field: 'transmitted_at', direction: 'desc' } } },
               headers: authorization_headers
             )
@@ -205,7 +205,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
         context 'missing' do
           before do
             get(
-              api_v1_device_transmissions_path(device),
+              api_v1_transmissions_path,
               params: { filter: { sort: { field: 'transmitted_at' } } },
               headers: authorization_headers
             )
@@ -225,7 +225,7 @@ RSpec.describe 'Api::V1::Transmissions', type: :request do
       context 'with all records' do
         before do
           get(
-            api_v1_device_transmissions_path(device),
+            api_v1_transmissions_path,
             params: { page: { size: -1 } },
             headers: authorization_headers
           )

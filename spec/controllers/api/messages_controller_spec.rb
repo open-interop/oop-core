@@ -8,7 +8,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
   describe 'GET #index' do
     context 'returns a success response' do
       before do
-        get(:index, params: { device_id: message.device.to_param })
+        get(:index, params: { filter: { device_id: message.device.to_param } })
       end
 
       it { expect(response).to be_successful }
@@ -18,7 +18,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
   describe 'GET #show' do
     context 'returns a success response' do
       before do
-        get(:show, params: { device_id: message.device.to_param, id: message.to_param })
+        get(:show, params: { filter: { device_id: message.device.to_param }, id: message.to_param })
       end
 
       it { expect(response).to be_successful }

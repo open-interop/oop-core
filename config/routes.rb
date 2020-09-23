@@ -72,12 +72,6 @@ Rails.application.routes.draw do
           post 'assign_tempr', to: 'devices#assign_tempr'
           get 'history', to: 'devices#history'
         end
-
-        get 'transmissions', to: 'transmissions#index'
-        get 'transmissions/:id', to: 'transmissions#show'
-
-        get 'messages', to: 'messages#index'
-        get 'messages/:id', to: 'messages#show'
       end
 
       resources :schedules do
@@ -86,6 +80,12 @@ Rails.application.routes.draw do
           get 'history', to: 'schedules#history'
         end
       end
+
+      get 'transmissions', to: 'transmissions#index'
+      get 'transmissions/:id', to: 'transmissions#show'
+
+      get 'messages', to: 'messages#index'
+      get 'messages/:id', to: 'messages#show'
 
       post 'passwords', to: 'passwords#create'
       post 'passwords/reset', to: 'passwords#reset'
