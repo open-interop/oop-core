@@ -129,6 +129,7 @@ end
 #  latitude               :decimal(10, 6)
 #  longitude              :decimal(10, 6)
 #  name                   :string
+#  queue_messages         :boolean          default(FALSE)
 #  time_zone              :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null

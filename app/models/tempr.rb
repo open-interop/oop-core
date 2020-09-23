@@ -14,6 +14,9 @@ class Tempr < ApplicationRecord
 
   validates_with AccountValidator, fields: %i[device_group]
 
+  validates :templateable, presence: true
+  validates_associated :templateable
+
   #
   # Relationships
   #
@@ -46,7 +49,7 @@ class Tempr < ApplicationRecord
   attr_readonly :endpoint_type
 
   def template
-    templateable.render
+    templateable&.render
   end
 
   def template=(template_hash)

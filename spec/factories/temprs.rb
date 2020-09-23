@@ -11,23 +11,10 @@ FactoryBot.define do
     example_transmission do
       '{ "key1" : "some-value", "key2": "some-other-value" }'
     end
-    template do
-      {
-        host: { language: 'text', script: 'example.com' } ,
-        port: { language: 'text', script: '80' },
-        path: { language: 'text', script: '/test/{{message.body.key1}}/{{message.body.key2}}' },
-        request_method: { language: 'text', script: 'POST' },
-        protocol: { language: 'text', script: 'http' },
-        headers: {
-          language: 'js',
-          script: 'module.exports = { "Content-Type" : "application/json" }'
-        },
-        body: {
-          language: 'mustache',
-          body:
-            'asd of this thing {{message.body.key1}} and also {{message.body.key2}}'
-        }
-      }
+    templateable { HttpTemplate.first || create(:http_template) }
+
+    factory :tempr_tempr do
+      templateable { TemprTemplate.first || create(:tempr_template) }
     end
   end
 end

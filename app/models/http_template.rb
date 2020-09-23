@@ -10,6 +10,9 @@ class HttpTemplate < ApplicationRecord
   validates :protocol, presence: true
   validates :request_method, presence: true
 
+  validates_with TemplateValidator, fields:
+    %i[host port path protocol request_method headers body]
+
   #
   # Relationships
   #

@@ -3,7 +3,7 @@
 class DevicePresenter < BasePresenter
   attributes :id, :name, :device_group_id, :site_id,
              :latitude, :longitude, :time_zone, :created_at,
-             :updated_at, :active
+             :updated_at, :active, :queue_messages
 
   def self.record_for_microservices(device)
     {

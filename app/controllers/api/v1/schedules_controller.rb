@@ -79,7 +79,8 @@ module Api
           :day_of_week,
           :day_of_month,
           :month_of_year,
-          :year
+          :year,
+          :queue_messages
         )
       end
     end

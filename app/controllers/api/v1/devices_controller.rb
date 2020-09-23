@@ -82,6 +82,7 @@ module Api
           :latitude,
           :time_zone,
           :active,
+          :queue_messages,
           authentication_headers: [[]],
           authentication_query: [[]]
         ).tap do |whitelist|
