@@ -15,13 +15,13 @@ class BasePresenter
   end
 
   def all_records?
-    @page_params[:size].to_i == -1 && @records.count.positive?
+    @page_params[:size].to_i == -1 && @records.size.positive?
   end
 
   def page_size
     return @page_params[:size] unless all_records?
 
-    @records.count
+    @records.size
   end
 
   def collection_for_json

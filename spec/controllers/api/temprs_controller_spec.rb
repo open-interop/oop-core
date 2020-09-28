@@ -8,7 +8,19 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
     FactoryBot.attributes_for(
       :tempr,
       device_group_id: device_group.id,
+      templateable: nil,
+      endpoint_type: 'http',
       template: FactoryBot.attributes_for(:http_template)
+    )
+  end
+
+  let(:valid_attributes_for_tempr_tempr) do
+    FactoryBot.attributes_for(
+      :tempr,
+      device_group_id: device_group.id,
+      templateable: nil,
+      endpoint_type: 'tempr',
+      template: FactoryBot.attributes_for(:tempr_template)
     )
   end
 
@@ -37,9 +49,15 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid params' do
-      it 'creates a new Tempr' do
+      it 'creates a new http Tempr' do
         expect do
           post :create, params: { tempr: valid_attributes }
+        end.to change(Tempr, :count).by(1)
+      end
+
+      it 'creates a new tempr Tempr' do
+        expect do
+          post :create, params: { tempr: valid_attributes_for_tempr_tempr }
         end.to change(Tempr, :count).by(1)
       end
 

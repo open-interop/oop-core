@@ -6,6 +6,9 @@ class TemprTemplate < ApplicationRecord
   #
   validates :temprs, presence: true
 
+  validates_with TemplateValidator, fields:
+    %i[temprs]
+
   #
   # Relationships
   #
