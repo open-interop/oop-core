@@ -21,6 +21,7 @@ class Device < ApplicationRecord
   has_many :device_temprs
   has_many :temprs, through: :device_temprs
   has_many :transmissions, dependent: :restrict_with_error
+  has_many :messages, as: :origin
 
   #
   # Serialisations

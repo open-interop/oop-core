@@ -16,9 +16,10 @@ class Schedule < ApplicationRecord
   #
   belongs_to :account
 
-  has_many :transmissions
   has_many :schedule_temprs
   has_many :temprs, through: :schedule_temprs
+  has_many :transmissions, dependent: :restrict_with_error
+  has_many :messages, as: :origin
 
   #
   # Scopes

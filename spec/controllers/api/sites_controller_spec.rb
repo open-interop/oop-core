@@ -125,4 +125,20 @@ RSpec.describe Api::V1::SitesController, type: :controller do
       it { expect(response.status).to eq(204) }
     end
   end
+
+  describe 'GET #sidebar' do
+    context 'returns a success response' do
+      before do
+        get :sidebar, params: { side_id: site.to_param }
+      end
+
+      let(:json_response) { JSON.parse(response.body) }
+
+      it { expect(json_response['sites'].size).to eq(1) }
+      it { expect(json_response['sites'].first['id']).to eq(site.id) }
+      it { expect(json_response['sites'].first['name']).to eq(site.name) }
+
+      it { expect(response).to be_successful }
+    end
+  end
 end

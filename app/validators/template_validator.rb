@@ -10,6 +10,8 @@ class TemplateValidator < ActiveModel::Validator
 
   def validate(record)
     options[:fields].each do |field|
+      next if record[field].blank?
+
       language = record[field][:language]
 
       !VALID_LANGUAGES.include?(language.to_sym) &&

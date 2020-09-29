@@ -81,6 +81,7 @@ class Transmission < ApplicationRecord
     end
 
     message.transmissions.create!(data)
+    message.increment!(:transmission_count)
   end
 end
 

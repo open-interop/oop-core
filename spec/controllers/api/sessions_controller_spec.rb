@@ -33,6 +33,20 @@ RSpec.describe Api::V1::SessionsController, type: :controller do
 
       it { expect(response).to have_http_status(:unauthorized) }
     end
+
+    describe 'to invalid account' do
+      before do
+        controller.request.headers['Host'] = 'testsomeone.host'
+      end
+
+      context 'with a good password' do
+        before do
+          post(:create, params: { email: user.email, password: 'password' })
+        end
+
+        it { expect(response).to have_http_status(:not_found) }
+      end
+    end
   end
 
   describe 'GET #me' do

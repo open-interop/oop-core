@@ -2,8 +2,14 @@ require 'rails_helper'
 
 RSpec.describe Message, type: :model do
   let(:device) { FactoryBot.create(:device) }
-  let(:tempr) { FactoryBot.create(:tempr, queue_request: true, queue_response: true ) }
-  let(:device_tempr) { FactoryBot.create(:device_tempr, device: device, tempr: tempr) }
+
+  let(:tempr) do
+    FactoryBot.create(:tempr, queue_request: true, queue_response: true)
+  end
+
+  let(:device_tempr) do
+    FactoryBot.create(:device_tempr, device: device, tempr: tempr)
+  end
 
   let(:message_body) do
     {
@@ -139,6 +145,74 @@ RSpec.describe Message, type: :model do
     }
   end
 
+  let(:message_body_with_object_response) do
+    {
+      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+      message: {
+        path: '/',
+        query: {},
+        method: 'GET',
+        ip: '::ffff:127.0.0.1',
+        body: { 'test-body' => 'something' },
+        headers: {
+          accept: 'application/json',
+          'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
+          'accept-encoding': 'gzip,deflate',
+          connection: 'close',
+          host: 'test.host'
+        },
+        hostname: 'test.host',
+        protocol: 'http'
+      },
+      device: {
+        id: device.id,
+        authentication: { hostname: 'test.host', path: '/' }
+      },
+      tempr: {
+        id: tempr.id,
+        deviceId: device.id,
+        name: tempr.name,
+        endpointType: tempr.endpoint_type,
+        queueRequest: tempr.queue_request,
+        queueResponse: tempr.queue_response,
+        template: {
+          headers: {},
+          host: 'test.host',
+          path: '/',
+          port: 3000,
+          protocol: 'http',
+          requestMethod: 'GET',
+          body: {}
+        },
+        createdAt: '2019-11-22T16:23:05.422Z',
+        updatedAt: '2019-11-26T12:33:10.836Z',
+        rendered: {
+          headers: {},
+          host: 'test.host',
+          path: '/',
+          port: '3000',
+          protocol: 'http',
+          requestMethod: 'GET',
+          body: {
+            some: 'message'
+          }
+        },
+        response: {
+          datetime: '2019-11-27T14:54:01.610Z',
+          success: true,
+          body: {
+            messageUuid: '61932680-9d20-4c66-871b-3c7a70c292ad',
+            status: 'success'
+          },
+          status: 202,
+          headers: {}
+        }
+      },
+      transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
+    }.with_indifferent_access
+  end
+
+
   describe '::create_from_queue' do
     context 'response is a string' do
       before do
@@ -158,38 +232,59 @@ RSpec.describe Message, type: :model do
       end
 
       it do
+        expect(message.origin.id).to eq(device.id)
+      end
+
+      it do
         expect(message.body).to(
           eq({})
         )
       end
     end
 
-    let(:message_body_with_object_response) do
+    context 'response is an object' do
+      before do
+        device.update_attribute(:queue_messages, true)
+        described_class.create_from_queue(message_body_with_object_response)
+      end
+
+      let(:message) { Message.last }
+
+      it do
+        expect(message.uuid).to(
+          eq('de7931c7-1151-46a6-bfe7-a1c779791bb6')
+        )
+      end
+
+      it do
+        expect(message.device_id).to eq(device.id)
+      end
+
+      it do
+        expect(message.origin_id).to eq(device.id)
+      end
+
+      it do
+        expect(message.body).to(
+          eq(message_body_with_object_response['message'])
+        )
+      end
+    end
+  end
+
+  context 'from schedule' do
+    let(:schedule) { FactoryBot.create(:schedule) }
+    let(:schedule_tempr) { FactoryBot.create(:schedule_tempr) }
+
+    let(:message_body_from_schedule) do
       {
         uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
-        message: {
-          path: '/',
-          query: {},
-          method: 'GET',
-          ip: '::ffff:127.0.0.1',
-          body: { 'test-body' => 'something' },
-          headers: {
-            accept: 'application/json',
-            'user-agent': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
-            'accept-encoding': 'gzip,deflate',
-            connection: 'close',
-            host: 'test.host'
-          },
-          hostname: 'test.host',
-          protocol: 'http'
-        },
-        device: {
-          id: device.id,
-          authentication: { hostname: 'test.host', path: '/' }
+        schedule: {
+          id: schedule.id,
         },
         tempr: {
           id: tempr.id,
-          deviceId: device.id,
+          scheduleId: schedule.id,
           name: tempr.name,
           endpointType: tempr.endpoint_type,
           queueRequest: tempr.queue_request,
@@ -231,29 +326,67 @@ RSpec.describe Message, type: :model do
       }.with_indifferent_access
     end
 
-    context 'response is an object' do
-      before do
-        device.update_attribute(:queue_messages, true)
-        described_class.create_from_queue(message_body_with_object_response)
-      end
+    before do
+      described_class.create_from_queue(message_body_from_schedule)
+    end
 
-      let(:message) { Message.last }
+    let(:message) { Message.last }
 
-      it do
-        expect(message.uuid).to(
-          eq('de7931c7-1151-46a6-bfe7-a1c779791bb6')
-        )
-      end
+    it { expect(message.origin.id).to eq(schedule.id) }
+  end
 
-      it do
-        expect(message.device_id).to eq(device.id)
-      end
+  context 'with no origin' do
+    let(:message_body_no_origin) do
+      {
+        uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+        tempr: {
+          id: tempr.id,
+          scheduleId: nil,
+          name: tempr.name,
+          endpointType: tempr.endpoint_type,
+          queueRequest: tempr.queue_request,
+          queueResponse: tempr.queue_response,
+          template: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: 3000,
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {}
+          },
+          createdAt: '2019-11-22T16:23:05.422Z',
+          updatedAt: '2019-11-26T12:33:10.836Z',
+          rendered: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: '3000',
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {
+              some: 'message'
+            }
+          },
+          response: {
+            datetime: '2019-11-27T14:54:01.610Z',
+            success: true,
+            body: {
+              messageUuid: '61932680-9d20-4c66-871b-3c7a70c292ad',
+              status: 'success'
+            },
+            status: 202,
+            headers: {}
+          }
+        },
+        transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
+      }.with_indifferent_access
+    end
 
-      it do
-        expect(message.body).to(
-          eq(message_body_with_object_response['message'])
-        )
-      end
+    it do
+      expect do
+        described_class.create_from_queue(message_body_no_origin)
+      end.to raise_error(OpenInterop::Errors::OriginNotFound)
     end
   end
 end
@@ -262,14 +395,17 @@ end
 #
 # Table name: messages
 #
-#  id          :bigint           not null, primary key
-#  body        :text
-#  uuid        :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  account_id  :bigint
-#  device_id   :integer
-#  schedule_id :integer
+#  id                 :bigint           not null, primary key
+#  body               :text
+#  origin_type        :string
+#  transmission_count :integer          default(0)
+#  uuid               :string
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  account_id         :bigint
+#  device_id          :integer
+#  origin_id          :integer
+#  schedule_id        :integer
 #
 # Indexes
 #

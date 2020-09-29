@@ -4,6 +4,7 @@ FactoryBot.define do
     uuid { Faker::Internet.uuid }
     account { Account.first || create(:account) }
     device { Device.first || create(:device, account: account) }
+    origin { device }
   end
 end
 
@@ -11,14 +12,17 @@ end
 #
 # Table name: messages
 #
-#  id          :bigint           not null, primary key
-#  body        :text
-#  uuid        :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  account_id  :bigint
-#  device_id   :integer
-#  schedule_id :integer
+#  id                 :bigint           not null, primary key
+#  body               :text
+#  origin_type        :string
+#  transmission_count :integer          default(0)
+#  uuid               :string
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  account_id         :bigint
+#  device_id          :integer
+#  origin_id          :integer
+#  schedule_id        :integer
 #
 # Indexes
 #
