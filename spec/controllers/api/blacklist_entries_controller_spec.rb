@@ -12,13 +12,14 @@ RSpec.describe Api::V1::BlacklistEntriesController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    FactoryBot.attributes_for(:blacklist_entry, {
-        ip_literal: nil,
-        ip_range: nil,
-        path_literal: nil,
-        path_regex: nil,
-        headers: nil
-    })
+    FactoryBot.attributes_for(
+      :blacklist_entry,
+      ip_literal: nil,
+      ip_range: nil,
+      path_literal: nil,
+      path_regex: nil,
+      headers: nil
+    )
   end
 
   describe 'GET #index' do

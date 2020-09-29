@@ -12,6 +12,17 @@ class Device < ApplicationRecord
   validates_with AccountValidator, fields: %i[site device_group]
 
   #
+  # Callbacks
+  #
+  before_destroy :remove_associated_transmissions
+  after_create :queue_from_create
+  after_update :queue_from_update, if: :authentication_details_changed?
+  after_destroy :queue_from_destroy
+  after_save do
+    Rails.cache.delete([id, 'services/devices'])
+  end
+
+  #
   # Relationships
   #
   belongs_to :account
@@ -36,14 +47,9 @@ class Device < ApplicationRecord
   scope :by_name, -> { order('devices.name asc') }
 
   #
-  # Callbacks
+  # Get/Setters
   #
-  after_create :queue_from_create
-  after_update :queue_from_update, if: :authentication_details_changed?
-  after_destroy :queue_from_destroy
-  after_save do
-    Rails.cache.delete([id, 'services/devices'])
-  end
+  attr_writer :force_delete
 
   audited
 
@@ -107,7 +113,8 @@ class Device < ApplicationRecord
       a << Rails.configuration.oop[:scheme]
       a << account.hostname
 
-      if Rails.configuration.oop[:port].present? && ![80, 443].include?(Rails.configuration.oop[:port].to_i)
+      if Rails.configuration.oop[:port].present? &&
+         ![80, 443].include?(Rails.configuration.oop[:port].to_i)
         a << ':'
         a << Rails.configuration.oop[:port]
       end
@@ -115,6 +122,11 @@ class Device < ApplicationRecord
       a << Rails.configuration.oop[:path] || '/'
       a << "services/v1/devices/#{id}/temprs"
     end.join
+  end
+
+  def remove_associated_transmissions
+    @force_delete == true &&
+      transmissions.delete_all
   end
 end
 
