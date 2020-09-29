@@ -334,6 +334,61 @@ RSpec.describe Message, type: :model do
 
     it { expect(message.origin.id).to eq(schedule.id) }
   end
+
+  context 'with no origin' do
+    let(:message_body_no_origin) do
+      {
+        uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+        tempr: {
+          id: tempr.id,
+          scheduleId: nil,
+          name: tempr.name,
+          endpointType: tempr.endpoint_type,
+          queueRequest: tempr.queue_request,
+          queueResponse: tempr.queue_response,
+          template: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: 3000,
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {}
+          },
+          createdAt: '2019-11-22T16:23:05.422Z',
+          updatedAt: '2019-11-26T12:33:10.836Z',
+          rendered: {
+            headers: {},
+            host: 'test.host',
+            path: '/',
+            port: '3000',
+            protocol: 'http',
+            requestMethod: 'GET',
+            body: {
+              some: 'message'
+            }
+          },
+          response: {
+            datetime: '2019-11-27T14:54:01.610Z',
+            success: true,
+            body: {
+              messageUuid: '61932680-9d20-4c66-871b-3c7a70c292ad',
+              status: 'success'
+            },
+            status: 202,
+            headers: {}
+          }
+        },
+        transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
+      }.with_indifferent_access
+    end
+
+    it do
+      expect do
+        described_class.create_from_queue(message_body_no_origin)
+      end.to raise_error(OpenInterop::Errors::OriginNotFound)
+    end
+  end
 end
 
 # == Schema Information
