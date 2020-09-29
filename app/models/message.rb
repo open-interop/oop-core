@@ -29,9 +29,12 @@ class Message < ApplicationRecord
           message.schedule_id = body['schedule']['id']
       end
 
+      message.origin.blank? &&
+        raise(OpenInterop::Errors::OriginNotFound)
+
       message.account = message.origin.account
 
-      message.origin&.queue_messages &&
+      message.origin.queue_messages &&
         message.body = body['message']
 
       message.save!

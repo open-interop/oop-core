@@ -271,6 +271,29 @@ RSpec.describe Transmission, type: :model do
   end
 
   describe '::create_from_queue' do
+    context 'transmission_count is incremented' do
+      before do
+        described_class.create_from_queue(message, message_body)
+      end
+
+      let(:transmission) { message.transmissions.last }
+
+      it do
+        expect(message.transmission_count).to eq(1)
+      end
+
+      context 'by 2' do
+
+        before do
+          described_class.create_from_queue(message, message_body)
+        end
+
+        it do
+          expect(message.transmission_count).to eq(2)
+        end
+      end
+    end
+
     context 'response is a string' do
       before do
         described_class.create_from_queue(message, message_body)
