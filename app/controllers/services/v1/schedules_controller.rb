@@ -17,7 +17,7 @@ module Services
       def temprs
         render json:
           Rails.cache.fetch(
-            [@schedule, 'services/temprs'],
+            [@schedule.id, 'services/temprs/device'],
             expires_in: 1.hour,
             race_condition_ttl: 5.seconds
           ) {

@@ -111,10 +111,28 @@ RSpec.describe Device, type: :model do
 
       it { expect(device.destroy).to_not eq(false) }
     end
+
+    context 'force deletion' do
+      before do
+        device.force_delete = true
+      end
+
+      it do
+        expect do
+          device.destroy
+        end.to change(Device, :count).by(-1)
+      end
+
+      it { expect(device.destroy).to_not eq(false) }
+    end
   end
 
   describe '#tempr_url' do
-    it { expect(device.tempr_url).to eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs") }
+    it do
+      expect(device.tempr_url).to(
+        eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs")
+      )
+    end
   end
 end
 

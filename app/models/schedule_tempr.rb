@@ -18,11 +18,11 @@ class ScheduleTempr < ApplicationRecord
   # Callbacks
   #
   after_save do
-    Rails.cache.delete([schedule, 'services/temprs'])
+    Rails.cache.delete([schedule.id, 'services/temprs/schedule'])
   end
 
   after_destroy do
-    Rails.cache.delete([schedule, 'services/temprs'])
+    Rails.cache.delete([schedule.id, 'services/temprs/schedule'])
   end
 end
 

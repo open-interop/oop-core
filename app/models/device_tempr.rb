@@ -23,11 +23,11 @@ class DeviceTempr < ApplicationRecord
   # Callbacks
   #
   after_save do
-    Rails.cache.delete([device, 'services/temprs'])
+    Rails.cache.delete([device.id, 'services/temprs/device'])
   end
 
   after_destroy do
-    Rails.cache.delete([device, 'services/temprs'])
+    Rails.cache.delete([device.id, 'services/temprs/device'])
   end
 
   def template

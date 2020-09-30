@@ -17,7 +17,7 @@ module Services
       def temprs
         render json:
           Rails.cache.fetch(
-            [@device, 'services/temprs'],
+            [@device.id, 'services/temprs/device'],
             expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
           ) { # Used due to a bug with do/end block
