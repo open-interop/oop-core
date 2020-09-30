@@ -156,5 +156,35 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
       it { expect(response.status).to eq(204) }
     end
+
+    context 'destroy a device with children' do
+      let!(:transmissions) do
+        Array.new(2) do
+          FactoryBot.create(:transmission, device: device)
+        end
+      end
+
+      it do
+        expect do
+          delete :destroy, params: { id: device.to_param }
+        end.to change(Device, :count).by(0)
+      end
+
+      context 'set force_delete' do
+        it do
+          expect do
+            delete :destroy, params: { id: device.to_param, force_delete: true }
+          end.to change(Device, :count).by(-1)
+        end
+
+        context 'responds' do
+          before do
+            delete :destroy, params: { id: device.to_param, force_delete: true }
+          end
+
+          it { expect(response.status).to eq(204) }
+        end
+      end
+    end
   end
 end
