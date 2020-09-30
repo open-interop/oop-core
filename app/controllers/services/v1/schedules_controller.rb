@@ -20,7 +20,7 @@ module Services
             [@schedule.id, 'services/temprs/device'],
             expires_in: 1.hour,
             race_condition_ttl: 5.seconds
-          ) {
+          ) { # Used due to a bug with do/end block
             TemprPresenter.collection_for_microservices(
               @schedule.id,
               @schedule.temprs,
@@ -39,7 +39,7 @@ module Services
             [params[:id], 'services/schedules'],
             expires_in: 1.hour,
             race_condition_ttl: 5.seconds
-          ) {
+          ) { # Used due to a bug with do/end block
             Schedule.active.find(params[:id])
           }
       end

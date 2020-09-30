@@ -40,6 +40,9 @@ module Api
 
       # DELETE /api/v1/devices/:id
       def destroy
+        params[:force_delete] == 'true' &&
+          @device.force_delete = true
+
         if @device.destroy
           render nothing: true, status: :no_content
         else
