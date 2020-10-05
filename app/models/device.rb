@@ -86,8 +86,7 @@ class Device < ApplicationRecord
   def queue_from_create
     update_queue.publish(
       'add',
-      id: id,
-      authentication: authentication
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
@@ -96,15 +95,14 @@ class Device < ApplicationRecord
 
     update_queue.publish(
       'update',
-      id: id,
-      authentication: authentication
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
   def queue_from_destroy
     update_queue.publish(
       'delete',
-      id: id
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
