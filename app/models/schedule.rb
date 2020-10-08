@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Methods relating to a schedule
 class Schedule < ApplicationRecord
   #
   # Validations
@@ -11,6 +12,18 @@ class Schedule < ApplicationRecord
   validates :day_of_month, presence: true
   validates :month_of_year, presence: true
   validates :year, presence: true
+
+  #
+  # Callbacks
+  #
+  before_destroy :remove_associated_transmissions
+  after_create :queue_from_create
+  after_update :queue_from_update, if: :schedule_changed?
+  after_destroy :queue_from_destroy
+  after_save do
+    Rails.cache.delete([id, 'services/schedules'])
+  end
+
   #
   # Relationships
   #
@@ -19,7 +32,7 @@ class Schedule < ApplicationRecord
   has_many :schedule_temprs
   has_many :temprs, through: :schedule_temprs
   has_many :transmissions, dependent: :restrict_with_error
-  has_many :messages, as: :origin
+  has_many :messages, as: :origin, dependent: :restrict_with_error
 
   #
   # Scopes
@@ -27,14 +40,9 @@ class Schedule < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   #
-  # Callbacks
+  # Get/Setters
   #
-  after_create :queue_from_create
-  after_update :queue_from_update, if: :schedule_changed?
-  after_destroy :queue_from_destroy
-  after_save do
-    Rails.cache.delete([id, 'services/schedules'])
-  end
+  attr_writer :force_delete
 
   audited
 
@@ -90,6 +98,13 @@ class Schedule < ApplicationRecord
       saved_change_to_day_of_month? ||
       saved_change_to_month_of_year? ||
       saved_change_to_year?
+  end
+
+  def remove_associated_transmissions
+    return unless @force_delete == true
+
+    transmissions.destroy_all
+    messages.destroy_all
   end
 end
 

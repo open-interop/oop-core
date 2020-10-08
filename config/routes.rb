@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'dashboards/transmissions', to: 'dashboards#transmissions'
+      get 'dashboards/messages', to: 'dashboards#messages'
 
       resources :users do
         member do

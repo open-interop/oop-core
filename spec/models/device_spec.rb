@@ -80,9 +80,9 @@ RSpec.describe Device, type: :model do
   end
 
   context 'with children' do
-    let!(:transmissions) do
+    let!(:messages) do
       Array.new(2) do
-        FactoryBot.create(:transmission, device: device)
+        FactoryBot.create(:message, origin: device)
       end
     end
 
@@ -97,11 +97,11 @@ RSpec.describe Device, type: :model do
     it do
       expect do
         device.destroy
-      end.to change(Transmission, :count).by(0)
+      end.to change(Message, :count).by(0)
     end
 
     context 'once children are removed' do
-      before { transmissions.each(&:destroy) }
+      before { messages.each(&:destroy) }
 
       it do
         expect do
