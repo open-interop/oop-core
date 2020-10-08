@@ -16,6 +16,8 @@ class TransmissionQueue
         durable: true
       )
 
+    puts "info:[#{Time.now.iso8601}] oop-core queue connected"
+
     queue.subscribe(
       block: true,
       manual_ack: true,

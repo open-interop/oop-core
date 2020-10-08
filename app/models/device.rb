@@ -32,7 +32,7 @@ class Device < ApplicationRecord
   has_many :device_temprs
   has_many :temprs, through: :device_temprs
   has_many :transmissions, dependent: :restrict_with_error
-  has_many :messages, as: :origin
+  has_many :messages, as: :origin, dependent: :restrict_with_error
 
   #
   # Serialisations
@@ -123,8 +123,10 @@ class Device < ApplicationRecord
   end
 
   def remove_associated_transmissions
-    @force_delete == true &&
-      transmissions.delete_all
+    return unless @force_delete == true
+
+    transmissions.destroy_all
+    messages.destroy_all
   end
 end
 

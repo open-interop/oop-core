@@ -1,8 +1,13 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :device do
     account { Account.first || create(:account) }
-    device_group { DeviceGroup.first || create(:device_group, account: account) }
-    site { Site.first || create(:site, account: account) }
+    device_group do
+      account.device_groups.first ||
+        create(:device_group, account: account)
+    end
+    site { account.sites.first || create(:site, account: account) }
     name { 'Device test' }
     authentication_path { '/' }
   end
