@@ -37,9 +37,8 @@ class Message < ApplicationRecord
       message.origin.queue_messages &&
         message.body = body['message']
 
-      if body['message'].present? and body['message']['ip'].present?
+      body['message'] &&
         message.ip_address = body['message']['ip']
-      end
 
       message.save!
     end
