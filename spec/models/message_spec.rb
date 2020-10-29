@@ -236,6 +236,10 @@ RSpec.describe Message, type: :model do
       end
 
       it do
+        expect(message.ip_address).to eq('::ffff:127.0.0.1')
+      end
+
+      it do
         expect(message.body).to(
           eq({})
         )
@@ -262,6 +266,10 @@ RSpec.describe Message, type: :model do
 
       it do
         expect(message.origin_id).to eq(device.id)
+      end
+
+      it do
+        expect(message.ip_address).to eq('::ffff:127.0.0.1')
       end
 
       it do
@@ -397,6 +405,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  ip_address         :string
 #  origin_type        :string
 #  transmission_count :integer          default(0)
 #  uuid               :string

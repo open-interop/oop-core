@@ -37,6 +37,9 @@ class Message < ApplicationRecord
       message.origin.queue_messages &&
         message.body = body['message']
 
+      body['message'] &&
+        message.ip_address = body['message']['ip']
+
       message.save!
     end
 
@@ -52,6 +55,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  ip_address         :string
 #  origin_type        :string
 #  transmission_count :integer          default(0)
 #  uuid               :string

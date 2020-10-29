@@ -14,6 +14,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  ip_address         :string
 #  origin_type        :string
 #  transmission_count :integer          default(0)
 #  uuid               :string
