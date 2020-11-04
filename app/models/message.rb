@@ -13,24 +13,31 @@ class Message < ApplicationRecord
 
   serialize :body, Hash
 
+  audited associated_with: :account
+
+  def create_from_queue(body)
+    self.uuid = body['uuid']
+
+    if body['device'].present?
+      self.origin_type = 'Device'
+      self.origin_id =
+        self.device_id = body['device']['id']
+    elsif body['schedule'].present?
+      self.origin_type = 'Schedule'
+      self.origin_id =
+        self.schedule_id = body['schedule']['id']
+    end
+
+    self
+  end
+
   def self.create_from_queue(body, import = false)
     return if body.blank?
 
     if (message = Message.find_by(uuid: body['uuid'])).blank?
-      message = Message.new(uuid: body['uuid'])
+      message = Message.new.create_from_queue(body)
 
-      if body['device'].present?
-        message.origin_type = 'Device'
-        message.origin_id =
-          message.device_id = body['device']['id']
-      elsif body['schedule'].present?
-        message.origin_type = 'Schedule'
-        message.origin_id =
-          message.schedule_id = body['schedule']['id']
-      end
-
-      message.origin.blank? &&
-        raise(OpenInterop::Errors::OriginNotFound)
+      return if message.origin.blank?
 
       message.account = message.origin.account
 

@@ -49,8 +49,11 @@ module Api
 
       # GET /api/v1/sites/:id/history
       def history
+        @audits =
+          AuditableFilter.records(params, scope: current_account)
+
         render json:
-          AuditablePresenter.collection(@site.audits, params[:page]), status: :ok
+          AuditablePresenter.collection(@audits, params[:page]), status: :ok
       end
 
       # GET /api/v1/sites/sidebar

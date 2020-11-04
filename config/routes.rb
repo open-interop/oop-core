@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       get 'dashboards/transmissions', to: 'dashboards#transmissions'
       get 'dashboards/messages', to: 'dashboards#messages'
 
+      resources :audits, only: %i[index show]
+
       resources :users do
         member do
           get 'history', to: 'users#history'

@@ -391,11 +391,9 @@ RSpec.describe Message, type: :model do
       }.with_indifferent_access
     end
 
-    it do
-      expect do
-        described_class.create_from_queue(message_body_no_origin)
-      end.to raise_error(OpenInterop::Errors::OriginNotFound)
-    end
+    let(:queue) { described_class.create_from_queue(message_body_no_origin) }
+
+    it { expect(queue).to be_nil }
   end
 end
 
