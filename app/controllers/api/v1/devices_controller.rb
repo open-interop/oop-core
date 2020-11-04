@@ -59,13 +59,13 @@ module Api
         render json: @device_tempr, status: :created
       end
 
-      # GET /api/v1/devices/:id/history
-      def history
-        @audits =
+      # GET /api/v1/devices/:id/audit_logs
+      def audit_logs
+        @audit_logs =
           AuditableFilter.records(params, scope: current_account)
 
         render json:
-          AuditablePresenter.collection(@audits, params[:page]), status: :ok
+          AuditablePresenter.collection(@audit_logs, params[:page]), status: :ok
       end
 
       private

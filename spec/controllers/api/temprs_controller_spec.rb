@@ -40,9 +40,9 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
     end
   end
 
-  describe 'GET #history' do
+  describe 'GET #audit_logs' do
     it 'returns a success response' do
-      get :history, params: { id: tempr.to_param }
+      get :audit_logs, params: { id: tempr.to_param }
       expect(response).to be_successful
     end
   end

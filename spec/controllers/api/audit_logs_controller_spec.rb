@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::AuditsController, type: :controller do
+RSpec.describe Api::V1::AuditLogsController, type: :controller do
   describe 'GET #index' do
     context 'returns a success response' do
       before do

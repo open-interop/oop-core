@@ -32,10 +32,10 @@ RSpec.describe Api::V1::LayersController, type: :controller do
     end
   end
 
-  describe 'GET #history' do
+  describe 'GET #audit_logs' do
     context 'returns a success response' do
       before do
-        get :history, params: { id: layer.to_param }
+        get :audit_logs, params: { id: layer.to_param }
       end
 
       it { expect(response).to be_successful }
