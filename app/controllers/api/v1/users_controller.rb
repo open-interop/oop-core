@@ -52,8 +52,11 @@ module Api
 
       # GET /api/v1/users/:id/history
       def history
+        @audits =
+          AuditableFilter.records(params, scope: current_account)
+
         render json:
-          AuditablePresenter.collection(@user.audits, params[:page]), status: :ok
+          AuditablePresenter.collection(@audits, params[:page]), status: :ok
       end
 
       private

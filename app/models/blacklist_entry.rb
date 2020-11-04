@@ -24,7 +24,7 @@ class BlacklistEntry < ApplicationRecord
     Rails.cache.delete([id, 'services/blacklist_entries'])
   end
 
-  audited
+  audited associated_with: :account
 
   def update_queue
     UpdateQueue.new(

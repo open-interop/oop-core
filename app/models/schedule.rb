@@ -44,7 +44,7 @@ class Schedule < ApplicationRecord
   #
   attr_writer :force_delete
 
-  audited
+  audited associated_with: :account
 
   def update_queue
     UpdateQueue.new(

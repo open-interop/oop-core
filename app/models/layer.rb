@@ -18,7 +18,7 @@ class Layer < ApplicationRecord
   # Scopes
   scope :archived, -> { where(archived: true) }
 
-  audited
+  audited associated_with: :account
 end
 
 # == Schema Information

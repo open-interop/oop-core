@@ -25,7 +25,7 @@ class User < ApplicationRecord
   #
   belongs_to :account
 
-  audited except: :password_digest
+  audited except: :password_digest, associated_with: :account
 
   #
   # Callbacks

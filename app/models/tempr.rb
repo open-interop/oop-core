@@ -48,6 +48,8 @@ class Tempr < ApplicationRecord
   #
   attr_readonly :endpoint_type
 
+  audited associated_with: :account
+
   def template
     templateable&.render
   end
@@ -71,8 +73,6 @@ class Tempr < ApplicationRecord
         TemprTemplate.new(template_hash)
       end
   end
-
-  audited
 end
 
 # == Schema Information

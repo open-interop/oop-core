@@ -20,7 +20,7 @@ class DeviceGroup < ApplicationRecord
   #
   scope :by_name, -> { order('device_groups.name asc') }
 
-  audited
+  audited associated_with: :account
 end
 
 # == Schema Information

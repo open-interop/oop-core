@@ -32,7 +32,7 @@ class Site < ApplicationRecord
   #
   scope :by_name, -> { order('sites.name asc') }
 
-  audited
+  audited associated_with: :account
 
   def update_full_name?
     full_name.blank? || saved_change_to_name? || saved_change_to_site_id?

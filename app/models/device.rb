@@ -51,7 +51,7 @@ class Device < ApplicationRecord
   #
   attr_writer :force_delete
 
-  audited
+  audited associated_with: :account
 
   def authentication
     @authentication ||= {
