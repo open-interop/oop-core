@@ -30,10 +30,10 @@ RSpec.describe Api::V1::DeviceGroupsController, type: :controller do
     end
   end
 
-  describe 'GET #history' do
+  describe 'GET #audit_logs' do
     context 'returns a success response' do
       before do
-        get :history, params: { id: device_group.to_param }
+        get :audit_logs, params: { id: device_group.to_param }
       end
 
       it { expect(response).to be_successful }

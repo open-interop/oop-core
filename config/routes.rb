@@ -18,11 +18,11 @@ Rails.application.routes.draw do
       get 'dashboards/transmissions', to: 'dashboards#transmissions'
       get 'dashboards/messages', to: 'dashboards#messages'
 
-      resources :audits, only: %i[index show]
+      resources :audit_logs, only: %i[index show]
 
       resources :users do
         member do
-          get 'history', to: 'users#history'
+          get 'history', to: 'users#audit_logs'
         end
       end
 
@@ -33,13 +33,13 @@ Rails.application.routes.draw do
 
       resources :device_groups do
         member do
-          get 'history', to: 'device_groups#history'
+          get 'history', to: 'device_groups#audit_logs'
         end
       end
 
       resources :temprs do
         member do
-          get 'history', to: 'temprs#history'
+          get 'history', to: 'temprs#audit_logs'
         end
 
         collection do
@@ -53,34 +53,34 @@ Rails.application.routes.draw do
         end
 
         member do
-          get 'history', to: 'sites#history'
+          get 'history', to: 'sites#audit_logs'
         end
       end
 
       resources :layers do
         member do
           post 'assign_tempr', to: 'layers#assign_tempr'
-          get 'history', to: 'layers#history'
+          get 'history', to: 'layers#audit_logs'
         end
       end
 
       resources :blacklist_entries do
         member do
-          get 'history', to: 'blacklist_entries#history'
+          get 'history', to: 'blacklist_entries#audit_logs'
         end
       end
 
       resources :devices do
         member do
           post 'assign_tempr', to: 'devices#assign_tempr'
-          get 'history', to: 'devices#history'
+          get 'history', to: 'devices#audit_logs'
         end
       end
 
       resources :schedules do
         member do
           post 'assign_tempr', to: 'schedules#assign_tempr'
-          get 'history', to: 'schedules#history'
+          get 'history', to: 'schedules#audit_logs'
         end
       end
 
