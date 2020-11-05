@@ -2,9 +2,9 @@
 
 module Api
   module V1
-    class LayersController < ApplicationController
-      before_action :find_layer
-
+    # Layers controller
+    # REST actions inherited from API::V1::BaseController
+    class LayersController < Api::V1::BaseController
       # GET /api/v1/layers
       def index
         @layers = LayerFilter.records(params, scope: current_account)
@@ -13,67 +13,28 @@ module Api
           LayerPresenter.collection(@layers, params[:page]), status: :ok
       end
 
-      # GET /api/v1/layers/:id
-      def show
-        render json: @layer
-      end
-
-      # POST /api/v1/layers
-      def create
-        @layer = current_account.layers.build(layer_params)
-
-        if @layer.save
-          render json: @layer, status: :created
-        else
-          render json: @layer.errors, status: :unprocessable_entity
-        end
-      end
-
-      # PATCH/PUT /api/v1/layers/:id
-      def update
-        if @layer.update(layer_params)
-          render json: @layer
-        else
-          render json: @layer.errors, status: :unprocessable_entity
-        end
-      end
-
-      # DELETE /api/v1/layers/:id
-      def destroy
-        if @layer.destroy
-          render nothing: true, status: :no_content
-        else
-          render nothing: true, status: :unprocessable_entity
-        end
-      end
-
       # POST /api/v1/layers/:id/assign_tempr
       def assign_tempr
         @tempr = current_account.temprs.find(params[:tempr_id])
 
-        @tempr_layer = @layer.tempr_layers.create(tempr: @tempr)
+        @tempr_layer = @record.tempr_layers.create(tempr: @tempr)
 
         render json: @tempr_layer, status: :created
       end
 
-      # GET /api/v1/layers/:id/audit_logs
-      def audit_logs
-        @audit_logs =
-          AuditableFilter.records(params, scope: current_account)
-
-        render json:
-          AuditablePresenter.collection(@audit_logs, params[:page]), status: :ok
-      end
-
       private
 
-      def find_layer
-        return if params[:id].blank?
-
-        @layer = current_account.layers.find(params[:id])
+      def record_association
+        :layers
       end
 
-      def layer_params
+      def set_audit_logs_filter
+        params[:filter] ||= {}
+        params[:filter][:auditable_id] = params[:id]
+        params[:filter][:auditable_type] = 'Layer'
+      end
+
+      def record_params
         params.require(:layer).permit(
           :name,
           :reference,

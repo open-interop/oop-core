@@ -2,9 +2,9 @@
 
 module Api
   module V1
-    class DeviceGroupsController < ApplicationController
-      before_action :find_device_group
-
+    # DeviceGroups controller
+    # REST actions inherited from API::V1::BaseController
+    class DeviceGroupsController < Api::V1::BaseController
       # GET /api/v1/device_groups
       def index
         @device_groups =
@@ -19,58 +19,19 @@ module Api
         )
       end
 
-      # GET /api/v1/device_groups/:id
-      def show
-        render json: @device_group
-      end
-
-      # POST /api/v1/device_groups
-      def create
-        @device_group = current_account.device_groups.build(device_group_params)
-
-        if @device_group.save
-          render json: @device_group, status: :created
-        else
-          render json: @device_group.errors, status: :unprocessable_entity
-        end
-      end
-
-      # PATCH/PUT /api/v1/device_groups/:id
-      def update
-        if @device_group.update(device_group_params)
-          render json: @device_group
-        else
-          render json: @device_group.errors, status: :unprocessable_entity
-        end
-      end
-
-      # DELETE /api/v1/device_groups/:id
-      def destroy
-        if @device_group.destroy
-          render nothing: true, status: :no_content
-        else
-          render nothing: true, status: :unprocessable_entity
-        end
-      end
-
-      # GET /api/v1/device_groups/:id/audit_logs
-      def audit_logs
-        @audit_logs =
-          AuditableFilter.records(params, scope: current_account)
-
-        render json:
-          AuditablePresenter.collection(@audit_logs, params[:page]), status: :ok
-      end
-
       private
 
-      def find_device_group
-        return if params[:id].blank?
-
-        @device_group = current_account.device_groups.find(params[:id])
+      def record_association
+        :device_groups
       end
 
-      def device_group_params
+      def set_audit_logs_filter
+        params[:filter] ||= {}
+        params[:filter][:auditable_id] = params[:id]
+        params[:filter][:auditable_type] = 'DeviceGroup'
+      end
+
+      def record_params
         params.require(:device_group).permit(:name, :description)
       end
     end

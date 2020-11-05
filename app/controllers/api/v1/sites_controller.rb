@@ -2,58 +2,15 @@
 
 module Api
   module V1
-    class SitesController < ApplicationController
-      before_action :find_site
-
+    # Sites controller
+    # REST actions inherited from API::V1::BaseController
+    class SitesController < Api::V1::BaseController
       # GET /api/v1/sites
       def index
         @sites = SiteFilter.records(params, scope: current_account)
 
         render json:
           SitePresenter.collection(@sites, params[:page]), status: :ok
-      end
-
-      # GET /api/v1/sites/:id
-      def show
-        render json: @site
-      end
-
-      # POST /api/v1/sites
-      def create
-        @site = current_account.sites.build(site_params)
-
-        if @site.save
-          render json: @site, status: :created
-        else
-          render json: @site.errors, status: :unprocessable_entity
-        end
-      end
-
-      # PATCH/PUT /api/v1/sites/:id
-      def update
-        if @site.update(site_params)
-          render json: @site
-        else
-          render json: @site.errors, status: :unprocessable_entity
-        end
-      end
-
-      # DELETE /api/v1/sites/:id
-      def destroy
-        if @site.destroy
-          render nothing: true, status: :no_content
-        else
-          render nothing: true, status: :unprocessable_entity
-        end
-      end
-
-      # GET /api/v1/sites/:id/audit_logs
-      def audit_logs
-        @audit_logs =
-          AuditableFilter.records(params, scope: current_account)
-
-        render json:
-          AuditablePresenter.collection(@audit_logs, params[:page]), status: :ok
       end
 
       # GET /api/v1/sites/sidebar
@@ -66,13 +23,17 @@ module Api
 
       private
 
-      def find_site
-        return if params[:id].blank?
-
-        @site = current_account.sites.find(params[:id])
+      def record_association
+        :sites
       end
 
-      def site_params
+      def set_audit_logs_filter
+        params[:filter] ||= {}
+        params[:filter][:auditable_id] = params[:id]
+        params[:filter][:auditable_type] = 'Site'
+      end
+
+      def record_params
         params.require(:site).permit(
           :site_id,
           :name,
