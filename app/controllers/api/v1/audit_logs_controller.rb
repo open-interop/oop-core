@@ -27,7 +27,10 @@ module Api
       def find_audit
         return if params[:id].blank?
 
-        @audit = current_account.audits.find(params[:id])
+        @audit = Audited::Audit.where(
+          associated_type: 'Account',
+          associated_id: current_account
+        ).find(params[:id])
       end
     end
   end
