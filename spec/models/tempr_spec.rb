@@ -50,7 +50,7 @@ RSpec.describe Tempr, type: :model do
     context 'with a tempr template' do
       let!(:tempr) do
         FactoryBot.create(
-          :tempr,
+          :tempr_tempr,
           endpoint_type: 'tempr',
           template: {
             temprs: {
@@ -89,3 +89,30 @@ RSpec.describe Tempr, type: :model do
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: temprs
+#
+#  id                   :bigint           not null, primary key
+#  body                 :text
+#  description          :text
+#  endpoint_type        :string
+#  example_transmission :text
+#  name                 :string
+#  notes                :text
+#  queue_request        :boolean          default(FALSE)
+#  queue_response       :boolean          default(FALSE)
+#  template             :text
+#  templateable_type    :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  account_id           :integer
+#  device_group_id      :integer
+#  templateable_id      :bigint
+#  tempr_id             :integer
+#
+# Indexes
+#
+#  index_temprs_on_templateable_type_and_templateable_id  (templateable_type,templateable_id)
+#

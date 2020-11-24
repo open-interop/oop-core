@@ -12,6 +12,17 @@ class Device < ApplicationRecord
   validates_with AccountValidator, fields: %i[site device_group]
 
   #
+  # Callbacks
+  #
+  before_destroy :remove_associated_transmissions
+  after_create :queue_from_create
+  after_update :queue_from_update, if: :authentication_details_changed?
+  after_destroy :queue_from_destroy
+  after_save do
+    Rails.cache.delete([id, 'services/devices'])
+  end
+
+  #
   # Relationships
   #
   belongs_to :account
@@ -21,6 +32,7 @@ class Device < ApplicationRecord
   has_many :device_temprs
   has_many :temprs, through: :device_temprs
   has_many :transmissions, dependent: :restrict_with_error
+  has_many :messages, as: :origin, dependent: :restrict_with_error
 
   #
   # Serialisations
@@ -35,16 +47,11 @@ class Device < ApplicationRecord
   scope :by_name, -> { order('devices.name asc') }
 
   #
-  # Callbacks
+  # Get/Setters
   #
-  after_create :queue_from_create
-  after_update :queue_from_update, if: :authentication_details_changed?
-  after_destroy :queue_from_destroy
-  after_save do
-    Rails.cache.delete([id, 'services/devices'])
-  end
+  attr_writer :force_delete
 
-  audited
+  audited associated_with: :account
 
   def authentication
     @authentication ||= {
@@ -79,8 +86,7 @@ class Device < ApplicationRecord
   def queue_from_create
     update_queue.publish(
       'add',
-      id: id,
-      authentication: authentication
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
@@ -89,15 +95,14 @@ class Device < ApplicationRecord
 
     update_queue.publish(
       'update',
-      id: id,
-      authentication: authentication
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
   def queue_from_destroy
     update_queue.publish(
       'delete',
-      id: id
+      DevicePresenter.record_for_microservices(self)
     )
   end
 
@@ -106,7 +111,8 @@ class Device < ApplicationRecord
       a << Rails.configuration.oop[:scheme]
       a << account.hostname
 
-      if Rails.configuration.oop[:port].present? && ![80, 443].include?(Rails.configuration.oop[:port].to_i)
+      if Rails.configuration.oop[:port].present? &&
+         ![80, 443].include?(Rails.configuration.oop[:port].to_i)
         a << ':'
         a << Rails.configuration.oop[:port]
       end
@@ -115,4 +121,32 @@ class Device < ApplicationRecord
       a << "services/v1/devices/#{id}/temprs"
     end.join
   end
+
+  def remove_associated_transmissions
+    return unless @force_delete == true
+
+    transmissions.destroy_all
+    messages.destroy_all
+  end
 end
+
+# == Schema Information
+#
+# Table name: devices
+#
+#  id                     :bigint           not null, primary key
+#  active                 :boolean          default(TRUE)
+#  authentication_headers :text
+#  authentication_path    :string
+#  authentication_query   :text
+#  latitude               :decimal(10, 6)
+#  longitude              :decimal(10, 6)
+#  name                   :string
+#  queue_messages         :boolean          default(FALSE)
+#  time_zone              :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  account_id             :integer
+#  device_group_id        :integer
+#  site_id                :integer
+#

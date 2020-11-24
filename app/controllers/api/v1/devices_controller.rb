@@ -2,45 +2,23 @@
 
 module Api
   module V1
-    class DevicesController < ApplicationController
-      before_action :find_device
-
+    # Devices controller
+    # REST actions inherited from API::V1::BaseController
+    class DevicesController < Api::V1::BaseController
       # GET /api/v1/devices
       def index
-        @devices = DeviceFilter.records(params, scope: current_account)
+        @records = DeviceFilter.records(params, scope: current_account)
 
         render json:
-          DevicePresenter.collection(@devices, params[:page]), status: :ok
-      end
-
-      # GET /api/v1/devices/:id
-      def show
-        render json: @device
-      end
-
-      # POST /api/v1/devices
-      def create
-        @device = current_account.devices.build(device_params)
-
-        if @device.save
-          render json: @device, status: :created
-        else
-          render json: @device.errors, status: :unprocessable_entity
-        end
-      end
-
-      # PATCH/PUT /api/v1/devices/:id
-      def update
-        if @device.update(device_params)
-          render json: @device
-        else
-          render json: @device.errors, status: :unprocessable_entity
-        end
+          DevicePresenter.collection(@records, params[:page]), status: :ok
       end
 
       # DELETE /api/v1/devices/:id
       def destroy
-        if @device.destroy
+        params[:force_delete] == 'true' &&
+          @record.force_delete = true
+
+        if @record.destroy
           render nothing: true, status: :no_content
         else
           render nothing: true, status: :unprocessable_entity
@@ -49,28 +27,26 @@ module Api
 
       # POST /api/v1/devices/:id/assign_tempr
       def assign_tempr
-        @tempr = @device.device_group.temprs.find(params[:tempr_id])
+        @tempr = @record.device_group.temprs.find(params[:tempr_id])
 
-        @device_tempr = @device.device_temprs.create(tempr: @tempr)
+        @record_tempr = @record.device_temprs.create(tempr: @tempr)
 
-        render json: @device_tempr, status: :created
-      end
-
-      # GET /api/v1/devices/:id/history
-      def history
-        render json:
-          AuditablePresenter.collection(@device.audits, params[:page]), status: :ok
+        render json: @record_tempr, status: :created
       end
 
       private
 
-      def find_device
-        return if params[:id].blank?
-
-        @device = current_account.devices.find(params[:id])
+      def record_association
+        :devices
       end
 
-      def device_params
+      def set_audit_logs_filter
+        params[:filter] ||= {}
+        params[:filter][:auditable_id] = params[:id]
+        params[:filter][:auditable_type] = 'Device'
+      end
+
+      def record_params
         params.require(:device).permit(
           :device_group_id,
           :site_id,
@@ -82,6 +58,7 @@ module Api
           :latitude,
           :time_zone,
           :active,
+          :queue_messages,
           authentication_headers: [[]],
           authentication_query: [[]]
         ).tap do |whitelist|

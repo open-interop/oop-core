@@ -122,8 +122,8 @@ RSpec.describe Services::V1::DevicesController, type: :controller do
       it do
         expect(json_response['data'][0]['template']['headers']).to(
           eq(
-            "language" => 'js',
-            "script" => 'module.exports = { "Content-Type" : "application/json" }'
+            "language" => 'json',
+            "script" => '{ "Content-Type" : "application/json" }'
           )
         )
       end

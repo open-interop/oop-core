@@ -20,5 +20,17 @@ class DeviceGroup < ApplicationRecord
   #
   scope :by_name, -> { order('device_groups.name asc') }
 
-  audited
+  audited associated_with: :account
 end
+
+# == Schema Information
+#
+# Table name: device_groups
+#
+#  id          :bigint           not null, primary key
+#  description :text
+#  name        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  account_id  :integer
+#

@@ -32,7 +32,7 @@ class Site < ApplicationRecord
   #
   scope :by_name, -> { order('sites.name asc') }
 
-  audited
+  audited associated_with: :account
 
   def update_full_name?
     full_name.blank? || saved_change_to_name? || saved_change_to_site_id?
@@ -62,3 +62,27 @@ class Site < ApplicationRecord
     sites.each(&:set_full_name)
   end
 end
+
+# == Schema Information
+#
+# Table name: sites
+#
+#  id             :bigint           not null, primary key
+#  address        :string
+#  city           :string
+#  country        :string
+#  description    :text
+#  external_uuids :text
+#  full_name      :string
+#  latitude       :decimal(10, 6)
+#  longitude      :decimal(10, 6)
+#  name           :string
+#  region         :string
+#  state          :string
+#  time_zone      :string
+#  zip_code       :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  account_id     :integer
+#  site_id        :integer
+#

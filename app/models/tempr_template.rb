@@ -6,6 +6,9 @@ class TemprTemplate < ApplicationRecord
   #
   validates :temprs, presence: true
 
+  validates_with TemplateValidator, fields:
+    %i[temprs]
+
   #
   # Relationships
   #
@@ -22,3 +25,13 @@ class TemprTemplate < ApplicationRecord
     }
   end
 end
+
+# == Schema Information
+#
+# Table name: tempr_templates
+#
+#  id         :bigint           not null, primary key
+#  temprs     :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#

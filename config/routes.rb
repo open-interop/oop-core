@@ -8,16 +8,21 @@ Rails.application.routes.draw do
       get 'schedules/:id/temprs', to: 'schedules#temprs'
 
       get 'blacklist_entries', to: 'blacklist_entries#index'
+
+      get 'accounts', to: 'accounts#index'
     end
   end
 
   namespace :api do
     namespace :v1 do
       get 'dashboards/transmissions', to: 'dashboards#transmissions'
+      get 'dashboards/messages', to: 'dashboards#messages'
+
+      resources :audit_logs, only: %i[index show]
 
       resources :users do
         member do
-          get 'history', to: 'users#history'
+          get 'audit_logs', to: 'users#audit_logs'
         end
       end
 
@@ -28,13 +33,13 @@ Rails.application.routes.draw do
 
       resources :device_groups do
         member do
-          get 'history', to: 'device_groups#history'
+          get 'audit_logs', to: 'device_groups#audit_logs'
         end
       end
 
       resources :temprs do
         member do
-          get 'history', to: 'temprs#history'
+          get 'audit_logs', to: 'temprs#audit_logs'
         end
 
         collection do
@@ -48,48 +53,48 @@ Rails.application.routes.draw do
         end
 
         member do
-          get 'history', to: 'sites#history'
+          get 'audit_logs', to: 'sites#audit_logs'
         end
       end
 
       resources :layers do
         member do
           post 'assign_tempr', to: 'layers#assign_tempr'
-          get 'history', to: 'layers#history'
+          get 'audit_logs', to: 'layers#audit_logs'
         end
       end
 
       resources :blacklist_entries do
         member do
-          get 'history', to: 'blacklist_entries#history'
+          get 'audit_logs', to: 'blacklist_entries#audit_logs'
         end
       end
 
       resources :devices do
         member do
           post 'assign_tempr', to: 'devices#assign_tempr'
-          get 'history', to: 'devices#history'
+          get 'audit_logs', to: 'devices#audit_logs'
         end
-
-        get 'transmissions', to: 'transmissions#index'
-        get 'transmissions/:id', to: 'transmissions#show'
       end
 
       resources :schedules do
         member do
           post 'assign_tempr', to: 'schedules#assign_tempr'
-          get 'history', to: 'schedules#history'
+          get 'audit_logs', to: 'schedules#audit_logs'
         end
       end
 
       get 'transmissions', to: 'transmissions#index'
       get 'transmissions/:id', to: 'transmissions#show'
 
-      post '/passwords', to: 'passwords#create'
-      post '/passwords/reset', to: 'passwords#reset'
+      get 'messages', to: 'messages#index'
+      get 'messages/:id', to: 'messages#show'
 
-      post '/auth/login', to: 'sessions#create'
-      get '/me', to: 'sessions#me'
+      post 'passwords', to: 'passwords#create'
+      post 'passwords/reset', to: 'passwords#reset'
+
+      post 'auth/login', to: 'sessions#create'
+      get 'me', to: 'sessions#me'
     end
   end
 

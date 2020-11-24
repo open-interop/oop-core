@@ -19,15 +19,42 @@ module Api
           group_param = group
         elsif TransmissionFilter.filterable_fields[:datetime]
                                 .include?(params[:group])
-          group = "DATE(#{params[:group]})"
+          group = "DATE(transmissions.#{params[:group]})"
         else
-          group = params[:group]
+          group = "transmissions.#{params[:group]}"
         end
 
         @transmissions =
           @transmissions.group(group).count
 
         render json: { transmissions: @transmissions, group: group_param }
+      end
+
+      # GET /api/v1/dashboards/messages
+      def messages
+        @messages =
+          MessageFilter.records(
+            params,
+            scope: current_account
+          )
+
+        group_param = params[:group]
+
+        if !MessageFilter.sortable_fields
+                         .include?(params[:group])
+          group = 'transmission_count'
+          group_param = group
+        elsif MessageFilter.filterable_fields[:datetime]
+                           .include?(params[:group])
+          group = "DATE(messages.#{params[:group]})"
+        else
+          group = "messages.#{params[:group]}"
+        end
+
+        @messages =
+          @messages.group(group).count
+
+        render json: { messages: @messages, group: group_param }
       end
     end
   end

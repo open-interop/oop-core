@@ -8,3 +8,19 @@ FactoryBot.define do
     headers {}
   end
 end
+
+# == Schema Information
+#
+# Table name: blacklist_entries
+#
+#  id           :bigint           not null, primary key
+#  archived     :boolean          default(FALSE)
+#  headers      :string
+#  ip_literal   :string
+#  ip_range     :string
+#  path_literal :string
+#  path_regex   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  account_id   :integer
+#

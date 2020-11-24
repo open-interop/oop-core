@@ -14,6 +14,9 @@ class Tempr < ApplicationRecord
 
   validates_with AccountValidator, fields: %i[device_group]
 
+  validates :templateable, presence: true
+  validates_associated :templateable
+
   #
   # Relationships
   #
@@ -45,8 +48,10 @@ class Tempr < ApplicationRecord
   #
   attr_readonly :endpoint_type
 
+  audited associated_with: :account
+
   def template
-    templateable.render
+    templateable&.render
   end
 
   def template=(template_hash)
@@ -68,6 +73,31 @@ class Tempr < ApplicationRecord
         TemprTemplate.new(template_hash)
       end
   end
-
-  audited
 end
+
+# == Schema Information
+#
+# Table name: temprs
+#
+#  id                   :bigint           not null, primary key
+#  body                 :text
+#  description          :text
+#  endpoint_type        :string
+#  example_transmission :text
+#  name                 :string
+#  notes                :text
+#  queue_request        :boolean          default(FALSE)
+#  queue_response       :boolean          default(FALSE)
+#  template             :text
+#  templateable_type    :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  account_id           :integer
+#  device_group_id      :integer
+#  templateable_id      :bigint
+#  tempr_id             :integer
+#
+# Indexes
+#
+#  index_temprs_on_templateable_type_and_templateable_id  (templateable_type,templateable_id)
+#

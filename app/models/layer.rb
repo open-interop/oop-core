@@ -18,5 +18,19 @@ class Layer < ApplicationRecord
   # Scopes
   scope :archived, -> { where(archived: true) }
 
-  audited
+  audited associated_with: :account
 end
+
+# == Schema Information
+#
+# Table name: layers
+#
+#  id         :bigint           not null, primary key
+#  archived   :boolean          default(FALSE)
+#  name       :string
+#  reference  :string
+#  script     :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  account_id :integer
+#

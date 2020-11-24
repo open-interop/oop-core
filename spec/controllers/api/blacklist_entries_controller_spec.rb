@@ -12,13 +12,14 @@ RSpec.describe Api::V1::BlacklistEntriesController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    FactoryBot.attributes_for(:blacklist_entry, {
-        ip_literal: nil,
-        ip_range: nil,
-        path_literal: nil,
-        path_regex: nil,
-        headers: nil
-    })
+    FactoryBot.attributes_for(
+      :blacklist_entry,
+      ip_literal: nil,
+      ip_range: nil,
+      path_literal: nil,
+      path_regex: nil,
+      headers: nil
+    )
   end
 
   describe 'GET #index' do
@@ -38,10 +39,10 @@ RSpec.describe Api::V1::BlacklistEntriesController, type: :controller do
     end
   end
 
-  describe 'GET #history' do
+  describe 'GET #audit_logs' do
     context 'returns a success response' do
       before do
-        get :history, params: { id: blacklist_entry.to_param }
+        get :audit_logs, params: { id: blacklist_entry.to_param }
       end
 
       it { expect(response).to be_successful }

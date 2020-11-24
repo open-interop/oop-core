@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Methods relating to a schedule
 class Schedule < ApplicationRecord
   #
   # Validations
@@ -11,23 +12,11 @@ class Schedule < ApplicationRecord
   validates :day_of_month, presence: true
   validates :month_of_year, presence: true
   validates :year, presence: true
-  #
-  # Relationships
-  #
-  belongs_to :account
-
-  has_many :transmissions
-  has_many :schedule_temprs
-  has_many :temprs, through: :schedule_temprs
-
-  #
-  # Scopes
-  #
-  scope :active, -> { where(active: true) }
 
   #
   # Callbacks
   #
+  before_destroy :remove_associated_transmissions
   after_create :queue_from_create
   after_update :queue_from_update, if: :schedule_changed?
   after_destroy :queue_from_destroy
@@ -35,7 +24,27 @@ class Schedule < ApplicationRecord
     Rails.cache.delete([id, 'services/schedules'])
   end
 
-  audited
+  #
+  # Relationships
+  #
+  belongs_to :account
+
+  has_many :schedule_temprs
+  has_many :temprs, through: :schedule_temprs
+  has_many :transmissions, dependent: :restrict_with_error
+  has_many :messages, as: :origin, dependent: :restrict_with_error
+
+  #
+  # Scopes
+  #
+  scope :active, -> { where(active: true) }
+
+  #
+  # Get/Setters
+  #
+  attr_writer :force_delete
+
+  audited associated_with: :account
 
   def update_queue
     UpdateQueue.new(
@@ -90,4 +99,30 @@ class Schedule < ApplicationRecord
       saved_change_to_month_of_year? ||
       saved_change_to_year?
   end
+
+  def remove_associated_transmissions
+    return unless @force_delete == true
+
+    transmissions.destroy_all
+    messages.destroy_all
+  end
 end
+
+# == Schema Information
+#
+# Table name: schedules
+#
+#  id             :bigint           not null, primary key
+#  active         :boolean          default(TRUE)
+#  day_of_month   :string           default("*")
+#  day_of_week    :string           default("*")
+#  hour           :string           default("*")
+#  minute         :string           default("*")
+#  month_of_year  :string           default("*")
+#  name           :string
+#  queue_messages :boolean          default(FALSE)
+#  year           :string           default("*")
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  account_id     :integer
+#

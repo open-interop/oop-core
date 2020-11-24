@@ -5,7 +5,23 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
   let!(:tempr) { FactoryBot.create(:tempr, device_group: device_group) }
 
   let(:valid_attributes) do
-    FactoryBot.attributes_for(:tempr, device_group_id: device_group.id)
+    FactoryBot.attributes_for(
+      :tempr,
+      device_group_id: device_group.id,
+      templateable: nil,
+      endpoint_type: 'http',
+      template: FactoryBot.attributes_for(:http_template)
+    )
+  end
+
+  let(:valid_attributes_for_tempr_tempr) do
+    FactoryBot.attributes_for(
+      :tempr,
+      device_group_id: device_group.id,
+      templateable: nil,
+      endpoint_type: 'tempr',
+      template: FactoryBot.attributes_for(:tempr_template)
+    )
   end
 
   let(:invalid_attributes) { { name: nil } }
@@ -24,18 +40,24 @@ RSpec.describe Api::V1::TemprsController, type: :controller do
     end
   end
 
-  describe 'GET #history' do
+  describe 'GET #audit_logs' do
     it 'returns a success response' do
-      get :history, params: { id: tempr.to_param }
+      get :audit_logs, params: { id: tempr.to_param }
       expect(response).to be_successful
     end
   end
 
   describe 'POST #create' do
     context 'with valid params' do
-      it 'creates a new Tempr' do
+      it 'creates a new http Tempr' do
         expect do
           post :create, params: { tempr: valid_attributes }
+        end.to change(Tempr, :count).by(1)
+      end
+
+      it 'creates a new tempr Tempr' do
+        expect do
+          post :create, params: { tempr: valid_attributes_for_tempr_tempr }
         end.to change(Tempr, :count).by(1)
       end
 

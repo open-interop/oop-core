@@ -11,7 +11,7 @@ gem 'jwt'
 gem 'kaminari'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.12'
-gem 'rails', '~> 6.0', '>= 6.0.3.1'
+gem 'rails', '~> 6.0', '>= 6.0.3.3'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS)
 # making cross-origin AJAX possible
@@ -31,6 +31,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'annotate'
   gem 'letter_opener'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rubocop-rails'

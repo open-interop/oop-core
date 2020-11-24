@@ -23,11 +23,11 @@ class DeviceTempr < ApplicationRecord
   # Callbacks
   #
   after_save do
-    Rails.cache.delete([device, 'services/temprs'])
+    Rails.cache.delete([device.id, 'services/temprs/device'])
   end
 
   after_destroy do
-    Rails.cache.delete([device, 'services/temprs'])
+    Rails.cache.delete([device.id, 'services/temprs/device'])
   end
 
   def template
@@ -43,3 +43,18 @@ class DeviceTempr < ApplicationRecord
       }
   end
 end
+
+# == Schema Information
+#
+# Table name: device_temprs
+#
+#  id             :bigint           not null, primary key
+#  endpoint_type  :string
+#  name           :string
+#  options        :text
+#  queue_response :boolean
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  device_id      :integer
+#  tempr_id       :integer
+#

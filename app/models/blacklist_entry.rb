@@ -24,7 +24,7 @@ class BlacklistEntry < ApplicationRecord
     Rails.cache.delete([id, 'services/blacklist_entries'])
   end
 
-  audited
+  audited associated_with: :account
 
   def update_queue
     UpdateQueue.new(
@@ -63,3 +63,19 @@ class BlacklistEntry < ApplicationRecord
       saved_change_to_path_regex?
   end
 end
+
+# == Schema Information
+#
+# Table name: blacklist_entries
+#
+#  id           :bigint           not null, primary key
+#  archived     :boolean          default(FALSE)
+#  headers      :string
+#  ip_literal   :string
+#  ip_range     :string
+#  path_literal :string
+#  path_regex   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  account_id   :integer
+#

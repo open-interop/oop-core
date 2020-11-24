@@ -80,9 +80,9 @@ RSpec.describe Device, type: :model do
   end
 
   context 'with children' do
-    let!(:transmissions) do
+    let!(:messages) do
       Array.new(2) do
-        FactoryBot.create(:transmission, device: device)
+        FactoryBot.create(:message, origin: device)
       end
     end
 
@@ -97,11 +97,25 @@ RSpec.describe Device, type: :model do
     it do
       expect do
         device.destroy
-      end.to change(Transmission, :count).by(0)
+      end.to change(Message, :count).by(0)
     end
 
     context 'once children are removed' do
-      before { transmissions.each(&:destroy) }
+      before { messages.each(&:destroy) }
+
+      it do
+        expect do
+          device.destroy
+        end.to change(Device, :count).by(-1)
+      end
+
+      it { expect(device.destroy).to_not eq(false) }
+    end
+
+    context 'force deletion' do
+      before do
+        device.force_delete = true
+      end
 
       it do
         expect do
@@ -114,6 +128,31 @@ RSpec.describe Device, type: :model do
   end
 
   describe '#tempr_url' do
-    it { expect(device.tempr_url).to eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs") }
+    it do
+      expect(device.tempr_url).to(
+        eq("http://test.host:8888/services/v1/devices/#{device.id}/temprs")
+      )
+    end
   end
 end
+
+# == Schema Information
+#
+# Table name: devices
+#
+#  id                     :bigint           not null, primary key
+#  active                 :boolean          default(TRUE)
+#  authentication_headers :text
+#  authentication_path    :string
+#  authentication_query   :text
+#  latitude               :decimal(10, 6)
+#  longitude              :decimal(10, 6)
+#  name                   :string
+#  queue_messages         :boolean          default(FALSE)
+#  time_zone              :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  account_id             :integer
+#  device_group_id        :integer
+#  site_id                :integer
+#
