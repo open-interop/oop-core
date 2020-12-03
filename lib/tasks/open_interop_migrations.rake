@@ -14,11 +14,13 @@ namespace :open_interop do
 
         message.uuid = message_uuid
 
-        transmission.device_id.present? &&
-          message.device_id = transmission.device_id
-
-        transmission.schedule_id.present? &&
-          message.schedule_id = transmission.schedule_id
+        if transmission.device_id.present?
+          message.origin_id = transmission.device_id
+          message.origin_type = 'Device'
+        elsif transmission.schedule_id.present?
+          message.origin_id = transmission.schedule_id
+          message.origin_type = 'Schedule'
+        end
 
         message.save!
 
@@ -41,29 +43,6 @@ namespace :open_interop do
       Message.where(id: transmissions.map(&:message_id).uniq)
              .update_all(
                transmission_count: count.to_i
-             )
-    end
-  end
-
-  desc 'Migrate transmisssion_counts'
-  task migrate_message_origin: :environment do
-    Message.where.not(device_id: nil)
-           .group_by(&:device_id)
-           .each do |device_id, messages|
-      Message.where(id: messages.map(&:id))
-             .update_all(
-               origin_id: device_id,
-               origin_type: 'Device'
-             )
-    end
-
-    Message.where.not(schedule_id: nil)
-           .group_by(&:schedule_id)
-           .each do |schedule_id, messages|
-      Message.where(id: messages.map(&:id))
-             .update_all(
-               origin_id: schedule_id,
-               origin_type: 'Schedule'
              )
     end
   end
