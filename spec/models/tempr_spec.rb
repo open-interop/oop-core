@@ -88,6 +88,23 @@ RSpec.describe Tempr, type: :model do
       it { expect(tempr.endpoint_type).to eq('http') }
     end
   end
+
+  describe '#destroying' do
+
+    let!(:destroy_tempr) { FactoryBot.create(:tempr) }
+    it do
+      expect do
+        destroy_tempr.destroy
+      end.to change(Tempr, :count).by(-1)
+    end
+
+    it { expect(destroy_tempr.destroy).to_not eq(false) }
+
+    let!(:child_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
+    context 'with child' do
+      it { expect(tempr.destroy).to be(false) }
+    end
+  end
 end
 
 # == Schema Information
