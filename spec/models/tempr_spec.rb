@@ -89,7 +89,7 @@ RSpec.describe Tempr, type: :model do
     end
   end
 
-  describe '#destroying' do
+  describe '#destroy' do
 
     let!(:destroy_tempr) { FactoryBot.create(:tempr) }
     it do
@@ -100,8 +100,8 @@ RSpec.describe Tempr, type: :model do
 
     it { expect(destroy_tempr.destroy).to_not eq(false) }
 
-    let!(:child_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
     context 'with child' do
+      let!(:child_tempr) { FactoryBot.create(:tempr, tempr: tempr) }
       it { expect(tempr.destroy).to be(false) }
     end
   end
