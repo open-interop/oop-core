@@ -29,7 +29,7 @@ class Schedule < ApplicationRecord
   #
   belongs_to :account
 
-  has_many :schedule_temprs
+  has_many :schedule_temprs, dependent: :restrict_with_error
   has_many :temprs, through: :schedule_temprs
   has_many :transmissions, dependent: :restrict_with_error
   has_many :messages, as: :origin, dependent: :restrict_with_error

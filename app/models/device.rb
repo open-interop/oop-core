@@ -29,7 +29,7 @@ class Device < ApplicationRecord
   belongs_to :device_group
   belongs_to :site
 
-  has_many :device_temprs
+  has_many :device_temprs, dependent: :restrict_with_error
   has_many :temprs, through: :device_temprs
   has_many :transmissions, dependent: :restrict_with_error
   has_many :messages, as: :origin, dependent: :restrict_with_error
