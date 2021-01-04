@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_28_153246) do
+ActiveRecord::Schema.define(version: 2020_12_18_142828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,6 +237,11 @@ ActiveRecord::Schema.define(version: 2020_10_28_153246) do
     t.string "time_zone", default: "London"
     t.string "password_reset_token"
     t.datetime "password_reset_requested_at"
+    t.string "first_name"
+    t.string "last_name"
+    t.text "description"
+    t.string "job_title"
+    t.date "dob"
   end
 
   add_foreign_key "messages", "accounts"

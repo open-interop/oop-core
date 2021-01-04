@@ -34,6 +34,19 @@ RSpec.describe User, type: :model do
     it { expect(user.username).to eq(user.email) }
   end
 
+  describe '#create' do
+    let(:user) { FactoryBot.create(:user, first_name: 'Test Name', last_name: 'Test-Name') }
+
+    it { expect(user.first_name).to eq('Test Name') }
+    it { expect(user.last_name).to eq('Test-Name') }
+
+    context 'updating job_title' do
+
+      it { expect( user.update_attribute(:job_title, 'Electrician') ).to eq(true) }
+
+    end
+  end
+
   describe '#reset_password' do
     let(:user) { FactoryBot.create(:user) }
 
@@ -53,7 +66,12 @@ end
 # Table name: users
 #
 #  id                          :bigint           not null, primary key
+#  description                 :text
+#  dob                         :date
 #  email                       :string
+#  first_name                  :string
+#  job_title                   :string
+#  last_name                   :string
 #  password_digest             :string
 #  password_reset_requested_at :datetime
 #  password_reset_token        :string

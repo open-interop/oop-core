@@ -20,7 +20,7 @@ module Api
       end
 
       def record_json_attributes
-        { only: %i[id email time_zone created_at updated_at] }
+        { only: %i[id email time_zone first_name last_name job_title description dob created_at updated_at] }
       end
 
       def set_audit_logs_filter
@@ -34,7 +34,12 @@ module Api
           :email,
           :password,
           :password_confirmation,
-          :time_zone
+          :time_zone,
+          :first_name,
+          :last_name,
+          :job_title,
+          :description,
+          :dob
         )
       end
     end
