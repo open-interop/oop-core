@@ -12,8 +12,8 @@ end
 # Table name: users
 #
 #  id                          :bigint           not null, primary key
+#  date_of_birth               :date
 #  description                 :text
-#  dob                         :date
 #  email                       :string
 #  first_name                  :string
 #  job_title                   :string

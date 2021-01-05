@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 2020_12_18_142828) do
     t.string "last_name"
     t.text "description"
     t.string "job_title"
-    t.date "dob"
+    t.date "date_of_birth"
   end
 
   add_foreign_key "messages", "accounts"
