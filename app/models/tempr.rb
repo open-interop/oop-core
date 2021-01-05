@@ -24,15 +24,15 @@ class Tempr < ApplicationRecord
   belongs_to :device_group
   belongs_to :tempr, optional: true
 
-  has_many :device_temprs
+  has_many :device_temprs, dependent: :restrict_with_error
   has_many :devices, through: :device_temprs
 
-  has_many :schedule_temprs
+  has_many :schedule_temprs, dependent: :restrict_with_error
   has_many :schedules, through: :schedule_temprs
 
-  has_many :temprs
+  has_many :temprs, dependent: :restrict_with_error
 
-  has_many :tempr_layers
+  has_many :tempr_layers, dependent: :restrict_with_error
   has_many :layers, through: :tempr_layers
 
   belongs_to :templateable, polymorphic: true, optional: true

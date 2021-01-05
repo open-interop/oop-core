@@ -125,6 +125,15 @@ RSpec.describe Device, type: :model do
 
       it { expect(device.destroy).to_not eq(false) }
     end
+
+    context 'with device tempr' do
+      let(:device_tempr) do
+        FactoryBot.create(:device_tempr, device: device)
+      end
+
+      it { expect(device.destroy).to be(false) }
+
+    end
   end
 
   describe '#tempr_url' do
