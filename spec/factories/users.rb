@@ -12,7 +12,12 @@ end
 # Table name: users
 #
 #  id                          :bigint           not null, primary key
+#  date_of_birth               :date
+#  description                 :text
 #  email                       :string
+#  first_name                  :string
+#  job_title                   :string
+#  last_name                   :string
 #  password_digest             :string
 #  password_reset_requested_at :datetime
 #  password_reset_token        :string
