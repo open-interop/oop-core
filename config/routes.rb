@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
       resources :audit_logs, only: %i[index show]
 
+      get 'account', to: 'account#show', as: 'account'
+      put 'account', to: 'account#update'
+
       resources :users do
         member do
           get 'audit_logs', to: 'users#audit_logs'
