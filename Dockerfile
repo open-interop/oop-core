@@ -11,7 +11,7 @@ RUN apt-get install -y nodejs
 
 WORKDIR /app/oop-renderer
 
-COPY --from=openinterop/oop-renderer:version-1.0.1 /app /app/oop-renderer
+COPY --from=openinterop/oop-renderer:version-1.0.6 /app /app/oop-renderer
 
 RUN npm install -g yarn --force
 
