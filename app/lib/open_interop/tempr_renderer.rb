@@ -9,11 +9,11 @@ module OpenInterop
     def initialize(example_transmission, template)
       @example_transmission = example_transmission
       @template = template
-      @command = "node #{Rails.root.join('scripts', 'tempr-renderer.js')}"
+      @command = "node #{File.join(Rails.configuration.oop[:renderer_path], "bin/render")} -"
     end
 
     def render
-      @response, @err, @status =
+      @err, @response, @status =
         Open3.capture3(@command, stdin_data: renderer_input)
     end
 
@@ -37,18 +37,20 @@ module OpenInterop
 
     def renderer_input
       {
-        template: {
-          message: {
-            path: '/dummy-path',
-            body: json_transmission
-          },
+        message: {
           uuid: SecureRandom.uuid,
-          tempr: {
-            template: template || {}
-          },
-          device: {}
+          path: '/dummy-path',
+          body: json_transmission,
+          query: '',
+          method: 'post',
+          ip: '127.0.0.1',
+          headers: {},
+          hostname: 'dummy-host.com',
+          port: 80,
+          protocol: 'http'
         },
-        renderer: Rails.configuration.oop[:renderer_path]
+        template: template || {},
+        layers: []
       }.to_json
     end
   end
