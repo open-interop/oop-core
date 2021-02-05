@@ -290,7 +290,7 @@ RSpec.describe Message, type: :model do
 
       let(:message) { Message.last }
 
-      it { expect(message.status).to eq('failed') }
+      it { expect(message.state).to eq('failed') }
     end
   end
 

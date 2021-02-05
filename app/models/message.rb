@@ -5,6 +5,7 @@ class Message < ApplicationRecord
     successful
     failed
     pending
+    unknown
   ].freeze
 
   #
