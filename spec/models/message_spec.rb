@@ -240,7 +240,7 @@ RSpec.describe Message, type: :model do
       end
 
       it do
-        expect(message.status).to eq('successful')
+        expect(message.state).to eq('successful')
       end
 
       it do
@@ -410,7 +410,7 @@ RSpec.describe Message, type: :model do
     it { expect(queue).to be_nil }
   end
 
-  describe '::set_status!' do
+  describe '::set_state!' do
     context 'with multiple succes transmissions' do
       let(:message) { FactoryBot.create(:message) }
       let(:successful_transmission) { FactoryBot.create(:transmission) }
@@ -419,10 +419,10 @@ RSpec.describe Message, type: :model do
       before do
         successful_transmission.update_attribute(:message_uuid, message.uuid)
         another_successful_transmission.update_attribute(:message_uuid, message.uuid)
-        message.set_status!
+        message.set_state!
       end
 
-      it { expect(message.status).to eq 'successful' }
+      it { expect(message.state).to eq 'successful' }
     end
 
     context 'with one successful, one failure' do
@@ -433,10 +433,10 @@ RSpec.describe Message, type: :model do
       before do
         successful_transmission.update_attribute(:message_uuid, pending_message.uuid)
         failed_transmission.update_attribute(:message_uuid, pending_message.uuid)
-        pending_message.set_status!
+        pending_message.set_state!
       end
 
-      it { expect(pending_message.status).to eq 'pending' }
+      it { expect(pending_message.state).to eq 'pending' }
     end
 
     context 'with only failures' do
@@ -447,10 +447,10 @@ RSpec.describe Message, type: :model do
       before do
         failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
         another_failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
-        failing_message.set_status!
+        failing_message.set_state!
       end
 
-      it { expect(failing_message.status).to eq 'failed' }
+      it { expect(failing_message.state).to eq 'failed' }
     end 
   end
 end
@@ -463,7 +463,7 @@ end
 #  body               :text
 #  ip_address         :string
 #  origin_type        :string
-#  status             :string
+#  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null

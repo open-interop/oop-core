@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Message < ApplicationRecord
+  STATES = %w[
+    successful
+    failed
+    pending
+  ].freeze
+
   #
   # Relationships
   #
@@ -8,6 +14,11 @@ class Message < ApplicationRecord
   belongs_to :device, optional: true
   belongs_to :schedule, optional: true
   belongs_to :origin, polymorphic: true
+
+  #
+  # Validations
+  #
+  validates :state, inclusion: { in: STATES }
 
   has_many :transmissions
 
@@ -31,20 +42,20 @@ class Message < ApplicationRecord
     self
   end
 
-  def set_status!
+  def set_state!
     successes = 0
 
     transmissions = Transmission.where(:message_uuid => self.uuid)
-    transmissions.each do |t|
-      successes += 1 if not t['state'].eql?('failed')
+    failures = transmissions.select do |transmission|
+      transmission.state == 'failed'
     end
 
-    if successes.eql?(transmissions.length)
-      self.status = 'successful'
-    elsif successes.eql?(0)
-      self.status = 'failed'
+    if failures.length == transmissions.length
+      self.state = 'failed'
+    elsif failures.empty?
+      self.state = 'successful'
     else
-      self.status = 'pending'
+      self.state = 'pending'
     end
 
     self.save!
@@ -73,7 +84,7 @@ class Message < ApplicationRecord
 
     Transmission.create_from_queue(message, body)
 
-    message.set_status!
+    message.set_state!
   end
 end
 
@@ -85,7 +96,7 @@ end
 #  body               :text
 #  ip_address         :string
 #  origin_type        :string
-#  status             :string
+#  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null

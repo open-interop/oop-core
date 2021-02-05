@@ -16,7 +16,7 @@ end
 #  body               :text
 #  ip_address         :string
 #  origin_type        :string
-#  status             :string
+#  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null

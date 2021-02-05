@@ -131,7 +131,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_134057) do
     t.string "origin_type"
     t.integer "transmission_count", default: 0
     t.string "ip_address"
-    t.string "status"
+    t.string "state", default: "unknown"
     t.index ["account_id"], name: "index_messages_on_account_id"
   end
 
