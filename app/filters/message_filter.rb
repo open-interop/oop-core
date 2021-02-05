@@ -3,13 +3,13 @@
 # Filter the messages table using the provided fields
 class MessageFilter < BaseFilter
   filterable_attributes integer: %w[id device_id schedule_id origin_id transmission_count],
-                        string: %w[uuid origin_type ip_address],
+                        string: %w[uuid origin_type ip_address status],
                         boolean: %w[],
                         datetime: %w[created_at updated_at]
 
   sortable_attributes %w[
     id device_id schedule_id origin_id origin_type
-    transmission_count uuid created_at updated_at ip_address
+    transmission_count uuid created_at updated_at ip_address status
   ]
 
   def base_scope

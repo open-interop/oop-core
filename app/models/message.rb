@@ -31,6 +31,25 @@ class Message < ApplicationRecord
     self
   end
 
+  def set_status!
+    successes = 0
+
+    transmissions = Transmission.where(:message_uuid => self.uuid)
+    transmissions.each do |t|
+      successes += 1 if not t['state'].eql?('failed')
+    end
+
+    if successes.eql?(transmissions.length)
+      self.status = 'successful'
+    elsif successes.eql?(0)
+      self.status = 'failed'
+    else
+      self.status = 'pending'
+    end
+
+    self.save!
+  end
+
   def self.create_from_queue(body, import = false)
     return if body.blank?
 
@@ -53,6 +72,8 @@ class Message < ApplicationRecord
     return message if import
 
     Transmission.create_from_queue(message, body)
+
+    message.set_status!
   end
 end
 
@@ -64,6 +85,7 @@ end
 #  body               :text
 #  ip_address         :string
 #  origin_type        :string
+#  status             :string
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null
