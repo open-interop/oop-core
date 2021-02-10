@@ -13,6 +13,13 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :management_api do
+    namespace :v1 do
+      resources :packages
+      resources :accounts
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       get 'dashboards/transmissions', to: 'dashboards#transmissions'

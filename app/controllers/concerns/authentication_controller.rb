@@ -9,6 +9,10 @@ module AuthenticationController
     current_user.is_a?(User)
   end
 
+  def super_user?
+    current_user.super_admin
+  end
+
   def current_user
     @current_user ||= (authorize_request || :false)
   end
@@ -19,6 +23,10 @@ module AuthenticationController
 
   def login_required
     logged_in? || access_denied
+  end
+
+  def super_user_required
+    super_user? || access_denied
   end
 
   def authorize_request

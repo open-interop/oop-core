@@ -23,6 +23,11 @@ module Api
         { only: %i[id email time_zone first_name last_name job_title description date_of_birth created_at updated_at] }
       end
 
+      def check_limit?
+        current_account.users_limit == 0 || 
+          current_account.users_limit > current_account.users.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]

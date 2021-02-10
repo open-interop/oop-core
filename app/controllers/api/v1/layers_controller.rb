@@ -28,6 +28,10 @@ module Api
         :layers
       end
 
+      def check_limit?
+        current_account.layers_limit == 0 || current_account.layers_limit > current_account.layers.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]

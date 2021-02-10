@@ -28,6 +28,11 @@ module Api
         :schedules
       end
 
+      def check_limit?
+        current_account.schedules_limit == 0 || 
+          current_account.schedules_limit > current_account.schedules.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]

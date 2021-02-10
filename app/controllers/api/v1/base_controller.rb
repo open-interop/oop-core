@@ -13,12 +13,16 @@ module Api
 
       # POST /api/v1/resources
       def create
-        @record = current_account.send(record_association).build(record_params)
+        if check_limit?
+          @record = current_account.send(record_association).build(record_params)
 
-        if @record.save
-          render json: @record.to_json(record_json_attributes), status: :created
+          if @record.save
+            render json: @record.to_json(record_json_attributes), status: :created
+          else
+            render json: @record.errors, status: :unprocessable_entity
+          end
         else
-          render json: @record.errors, status: :unprocessable_entity
+          render json: {'error': 'limit exceeded'}, status: :unprocessable_entity
         end
       end
 
@@ -59,6 +63,10 @@ module Api
 
       def set_audit_logs_filter
         raise 'Not implemented'
+      end
+
+      def check_limit?
+        true
       end
 
       def record_association

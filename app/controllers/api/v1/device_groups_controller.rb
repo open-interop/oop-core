@@ -25,6 +25,11 @@ module Api
         :device_groups
       end
 
+      def check_limit?
+        current_account.device_groups_limit == 0 || 
+          current_account.device_groups_limit > current_account.device_groups.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]

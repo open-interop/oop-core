@@ -27,6 +27,11 @@ module Api
         :sites
       end
 
+      def check_limit?
+        current_account.sites_limit == 0 || 
+          current_account.sites_limit > current_account.sites.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]

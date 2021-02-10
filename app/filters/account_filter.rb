@@ -10,9 +10,7 @@ class AccountFilter < BaseFilter
   sortable_attributes %w[id hostname]
 
   def base_scope
-    Account
-      .includes(:account)
-      .where(accounts: { id: scope })
+    Account.all
   end
 
   def table_name

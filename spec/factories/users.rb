@@ -21,6 +21,7 @@ end
 #  password_digest             :string
 #  password_reset_requested_at :datetime
 #  password_reset_token        :string
+#  super_admin                 :boolean          default(FALSE)
 #  time_zone                   :string           default("London")
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null

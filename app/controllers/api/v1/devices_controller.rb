@@ -40,6 +40,10 @@ module Api
         :devices
       end
 
+      def check_limit?
+        current_account.devices_limit == 0 || current_account.devices_limit > current_account.devices.length
+      end
+
       def set_audit_logs_filter
         params[:filter] ||= {}
         params[:filter][:auditable_id] = params[:id]
