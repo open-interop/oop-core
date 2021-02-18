@@ -44,8 +44,6 @@ class Message < ApplicationRecord
   end
 
   def set_state!
-    successes = 0
-
     transmissions = Transmission.where(:message_uuid => self.uuid)
     failures = transmissions.select do |transmission|
       transmission.state == 'failed'
