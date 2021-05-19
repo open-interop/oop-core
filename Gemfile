@@ -10,7 +10,7 @@ gem 'bunny', '>= 2.14.1'
 gem 'jwt'
 gem 'kaminari'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3'
 gem 'rails', '~> 6.0', '>= 6.0.3.3'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS)
