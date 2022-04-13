@@ -24,7 +24,7 @@ group :development, :test do
   gem 'dotenv-rails', groups: %i[development test]
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec-rails', '~> 4.0.1'
+  gem 'rspec-rails', '~> 4.0.0'
   gem 'rspec_junit_formatter'
   gem 'simplecov'
   gem 'timecop'

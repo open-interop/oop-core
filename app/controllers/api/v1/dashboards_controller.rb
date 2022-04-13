@@ -8,7 +8,7 @@ module Api
         @transmissions =
           TransmissionFilter.records(
             params,
-            scope: current_account
+            { scope: current_account, unsorted: true }
           )
 
         group_param = params[:group]
@@ -35,7 +35,7 @@ module Api
         @messages =
           MessageFilter.records(
             params,
-            scope: current_account
+            { scope: current_account, unsorted: true }
           )
 
         group_param = params[:group]
