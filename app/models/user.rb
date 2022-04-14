@@ -19,6 +19,10 @@ class User < ApplicationRecord
             confirmation: true
   validates :password_confirmation, presence: true, if: -> { !password.nil? }
   validates :time_zone, presence: true
+  validates :first_name, format: { with: /\A[a-zA-Z\s-]+\z/,
+    message: "only allows letters", allow_blank: true }
+  validates :last_name, format: { with: /\A[a-zA-Z\s-]+\z/,
+    message: "only allows letters", allow_blank: true }
 
   #
   # Relationships
@@ -97,7 +101,12 @@ end
 # Table name: users
 #
 #  id                          :bigint           not null, primary key
+#  date_of_birth               :date
+#  description                 :text
 #  email                       :string
+#  first_name                  :string
+#  job_title                   :string
+#  last_name                   :string
 #  password_digest             :string
 #  password_reset_requested_at :datetime
 #  password_reset_token        :string

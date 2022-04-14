@@ -49,6 +49,16 @@ RSpec.describe Schedule, type: :model do
 
       it { expect(schedule.destroy).to_not eq(false) }
     end
+
+    context 'with schedule tempr' do
+
+      let (:schedule_tempr) do
+        FactoryBot.create(:schedule_tempr, schedule: schedule)
+      end
+
+      it { expect(schedule.destroy).to be(false) }
+
+    end
   end
 
   describe '#tempr_url' do
