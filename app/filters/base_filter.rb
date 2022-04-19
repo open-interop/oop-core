@@ -5,6 +5,7 @@ class BaseFilter
   def initialize(params, options = {})
     @params = params || {}
     @scope = options[:scope]
+    @unsorted = options[:unsorted]
 
     @sort_field ||= 'created_at'
     @sort_direction ||= 'desc'
@@ -79,10 +80,12 @@ class BaseFilter
           params[:filter][:sort][:direction]
     end
 
-    @filtered_records =
-      @filtered_records.order(
-        "#{table_name}.#{sort_field} #{sort_direction}"
-      )
+    if !@unsorted
+      @filtered_records =
+        @filtered_records.order(
+          "#{table_name}.#{sort_field} #{sort_direction}"
+        )
+    end
   end
 
   def filter_integer_fields
