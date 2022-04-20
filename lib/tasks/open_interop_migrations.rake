@@ -46,4 +46,36 @@ namespace :open_interop do
              )
     end
   end
+
+  desc 'Migrate message states'
+  task migrate_message_states: :environment do
+    failed_transmissions_by_message_id =
+      Transmission.select('message_id, count(message_id) as fail_count')
+                  .where(state: 'failed')
+                  .group(:message_id)
+
+    failed_transmissions_by_message_id.group_by(&:fail_count)
+                                      .each do |fails, transmissions|
+      Message.where(id: transmissions.map(&:message_id).uniq, transmission_count: fails.to_i)
+             .update_all(
+               state: 'failed'
+             )
+    end
+
+    successful_transmissions_by_message_id =
+      Transmission.select('message_id, count(message_id) as success_count')
+                  .where(state: 'successful')
+                  .group(:message_id)
+
+    successful_transmissions_by_message_id.group_by(&:success_count)
+                                      .each do |successes, transmissions|
+      Message.where(id: transmissions.map(&:message_id).uniq, transmission_count: successes.to_i)
+             .update_all(
+               state: 'successful'
+             )
+    end
+
+    Message.where(state: 'unknown').update_all(state: 'pending')
+
+  end
 end

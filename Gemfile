@@ -10,7 +10,7 @@ gem 'bunny', '>= 2.14.1'
 gem 'jwt'
 gem 'kaminari'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3'
 gem 'rails', '~> 6.0', '>= 6.0.3.3'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS)
@@ -24,7 +24,7 @@ group :development, :test do
   gem 'dotenv-rails', groups: %i[development test]
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec-rails', '~> 3.6'
+  gem 'rspec-rails', '~> 4.0.0'
   gem 'rspec_junit_formatter'
   gem 'simplecov'
   gem 'timecop'

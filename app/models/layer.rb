@@ -12,7 +12,7 @@ class Layer < ApplicationRecord
   #
   belongs_to :account
 
-  has_many :tempr_layers
+  has_many :tempr_layers, dependent: :restrict_with_error
   has_many :temprs, through: :tempr_layers
 
   # Scopes
