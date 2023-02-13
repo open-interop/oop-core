@@ -90,6 +90,8 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  custom_field_a    :string
+#  custom_field_b    :string
 #  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text

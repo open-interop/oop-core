@@ -93,6 +93,8 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  custom_field_a     :string
+#  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
 #  state              :string           default("unknown")
