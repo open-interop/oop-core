@@ -19,7 +19,7 @@ end
 
 # == Schema Information
 #
-# 
+# Table name: transmissions
 #
 #  id                :bigint           not null, primary key
 #  custom_field_a    :string
