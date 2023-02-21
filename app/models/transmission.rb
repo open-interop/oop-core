@@ -22,6 +22,7 @@ class Transmission < ApplicationRecord
   validates :state, inclusion: { in: STATES }
 
   def self.create_from_queue(message, body)
+
     data = {
       message_uuid: message.uuid,
       transmission_uuid: body['transmissionId']
@@ -78,6 +79,15 @@ class Transmission < ApplicationRecord
 
       body['tempr']['response']['error'] &&
         data[:response_body] = body['tempr']['response']['error']
+    end
+
+    if body['customFields'].present?
+      if body['customFields']['transmissionFieldA'].present?
+        data[:custom_field_a] = body['customFields']['transmissionFieldA']
+      end
+      if body['customFields']['transmissionFieldB'].present?
+        data[:custom_field_b] = body['customFields']['transmissionFieldB']
+      end
     end
 
     message.transmissions.create!(data)
