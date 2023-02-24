@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2023_02_23_154711) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.integer "account_id"
+    t.bigint "account_id"
     t.integer "device_id"
     t.integer "schedule_id"
     t.string "uuid"
