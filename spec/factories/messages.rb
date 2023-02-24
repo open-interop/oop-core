@@ -18,6 +18,7 @@ end
 #  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string

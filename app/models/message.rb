@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'date'
 
 class Message < ApplicationRecord
   STATES = %w[
@@ -26,6 +27,13 @@ class Message < ApplicationRecord
   serialize :body, Hash
 
   audited associated_with: :account
+
+  def update_queue
+    UpdateQueue.new(
+      :message,
+      "oop"
+    )
+  end
 
   def create_from_queue(body)
     self.uuid = body['uuid']
@@ -85,6 +93,18 @@ class Message < ApplicationRecord
 
     message.set_state!
   end
+
+  def retry(message)
+    if message.retried_at.blank?
+      update_queue.publish_to_queue(
+        MessagePresenter.record_for_microservices(message),
+        Rails.configuration.oop[:rabbit][:tempr_queue],
+      )
+      message.retried_at = DateTime.now()
+      message.save!
+    end
+  end
+
 end
 
 # == Schema Information
@@ -97,6 +117,7 @@ end
 #  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string

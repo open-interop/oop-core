@@ -92,6 +92,7 @@ Rails.application.routes.draw do
 
       get 'messages', to: 'messages#index'
       get 'messages/:id', to: 'messages#show'
+      post 'messages/:id/retry', to: 'messages#retry'
 
       post 'passwords', to: 'passwords#create'
       post 'passwords/reset', to: 'passwords#reset'

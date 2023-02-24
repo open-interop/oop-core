@@ -17,13 +17,26 @@ class UpdateQueue
 
     begin
       bunny_exchange.publish(payload.to_json)
-
       bunny_connection.close
+
       @bunny_connection = nil
       @bunny_exchange = nil
     rescue => e
       Rails.logger.warn "The update could not be published to RabbitMQ"
     end
+  end
+  
+  def publish_to_queue(payload, queueName)
+    channel = bunny_connection.create_channel
+
+    queue =
+    channel.queue(
+        queueName,
+        auto_delete: false,
+        durable: true
+      )
+
+    queue.publish(payload.to_json, consumer_tag: queueName)
   end
 
   def bunny_connection
