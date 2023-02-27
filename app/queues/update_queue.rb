@@ -26,7 +26,7 @@ class UpdateQueue
     end
   end
   
-  def publish_to_queue(payload, queueName)
+  def self.publish_to_queue(payload, queueName)
     channel = bunny_connection.create_channel
 
     queue =

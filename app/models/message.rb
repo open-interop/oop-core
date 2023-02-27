@@ -28,13 +28,6 @@ class Message < ApplicationRecord
 
   audited associated_with: :account
 
-  def update_queue
-    UpdateQueue.new(
-      :message,
-      "oop"
-    )
-  end
-
   def create_from_queue(body)
     self.uuid = body['uuid']
 
@@ -96,7 +89,7 @@ class Message < ApplicationRecord
 
   def retry(message)
     if message.retried_at.blank?
-      update_queue.publish_to_queue(
+      UpdateQueue.publish_to_queue(
         MessagePresenter.record_for_microservices(message),
         Rails.configuration.oop[:rabbit][:tempr_queue],
       )
