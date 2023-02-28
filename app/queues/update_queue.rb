@@ -27,7 +27,9 @@ class UpdateQueue
   end
   
   def self.publish_to_queue(payload, queueName)
-    channel = bunny_connection.create_channel
+    conn = Bunny.new(Rails.configuration.oop[:rabbit][:address])
+    conn.start
+    channel = conn.create_channel
 
     queue =
     channel.queue(

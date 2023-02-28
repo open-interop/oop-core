@@ -89,6 +89,7 @@ Rails.application.routes.draw do
 
       get 'transmissions', to: 'transmissions#index'
       get 'transmissions/:id', to: 'transmissions#show'
+      post 'transmissions/:id/retry', to: 'transmissions#retry'
 
       get 'messages', to: 'messages#index'
       get 'messages/:id', to: 'messages#show'

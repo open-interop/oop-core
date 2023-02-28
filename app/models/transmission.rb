@@ -83,6 +83,20 @@ class Transmission < ApplicationRecord
     message.transmissions.create!(data)
     message.increment!(:transmission_count)
   end
+
+  def retry(transmission) 
+    if transmission.retried_at.blank?
+      if message = Message.find_by(id: transmission.message_id)
+        UpdateQueue.publish_to_queue(
+          MessagePresenter.record_for_microservices(message, false),
+          Rails.configuration.oop[:rabbit][:tempr_queue],
+        )
+        transmission.retried_at = DateTime.now()
+        transmission.save!
+      end
+    end
+  end
+
 end
 
 # == Schema Information
