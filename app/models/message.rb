@@ -71,6 +71,8 @@ class Message < ApplicationRecord
 
       message.account = message.origin.account
 
+      message.retried = false
+
       message.origin.queue_messages &&
         message.body = body['message']
 
@@ -94,7 +96,9 @@ class Message < ApplicationRecord
         Rails.configuration.oop[:rabbit][:tempr_queue],
       )
       message.retried_at = DateTime.now()
+      message.retried = true
       message.save!
+      Transmission.where(message_id: message.id).update_all(retried_at: DateTime.now(), retried: true)
     end
   end
 
@@ -110,6 +114,7 @@ end
 #  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried            :boolean
 #  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)

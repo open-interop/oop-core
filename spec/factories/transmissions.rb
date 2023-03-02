@@ -28,6 +28,7 @@ end
 #  message_uuid      :string
 #  request_body      :text
 #  response_body     :text
+#  retried           :boolean
 #  retried_at        :datetime
 #  state             :string
 #  status            :integer
