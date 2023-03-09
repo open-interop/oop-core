@@ -40,6 +40,15 @@ class Message < ApplicationRecord
         self.schedule_id = body['schedule']['id']
     end
 
+    if body['customFields'].present?
+      if body['customFields']['messageFieldA'].present?
+        self.custom_field_a = body['customFields']['messageFieldA']
+      end
+      if body['customFields']['messageFieldB'].present?
+        self.custom_field_b = body['customFields']['messageFieldB']
+      end
+    end
+
     self
   end
 
