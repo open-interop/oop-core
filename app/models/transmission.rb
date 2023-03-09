@@ -41,8 +41,6 @@ class Transmission < ApplicationRecord
     body['schedule'].present? &&
       data[:schedule_id] = body['schedule']['id']
 
-    data[:retried] = false
-
     if body['tempr']['queueRequest'] && body['tempr']['rendered']
       data[:request_body] =
         if body['tempr']['rendered']['body'].is_a?(Hash)
@@ -86,17 +84,16 @@ class Transmission < ApplicationRecord
     message.increment!(:transmission_count)
   end
 
-  def retry(transmission) 
-    if not transmission.retried
-      if message = Message.find_by(id: transmission.message_id)
-        UpdateQueue.publish_to_queue(
-          MessagePresenter.record_for_microservices(message, false),
-          Rails.configuration.oop[:rabbit][:tempr_queue],
-        )
-        transmission.retried_at = DateTime.now()
-        transmission.retried = true
-        transmission.save!
-      end
+  def retry(transmission)
+    return if transmission.retried
+    if message = Message.find_by(id: transmission.message_id)
+      UpdateQueue.publish_to_queue(
+        MessagePresenter.record_for_microservices(message, false),
+        Rails.configuration.oop[:rabbit][:tempr_queue],
+      )
+      transmission.retried_at = DateTime.now()
+      transmission.retried = true
+      transmission.save!
     end
   end
 
@@ -113,7 +110,7 @@ end
 #  message_uuid      :string
 #  request_body      :text
 #  response_body     :text
-#  retried           :boolean
+#  retried           :boolean         default(FALSE)
 #  retried_at        :datetime
 #  state             :string
 #  status            :integer

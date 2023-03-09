@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 2023_02_28_172552) do
     t.string "custom_field_a"
     t.string "custom_field_b"
     t.datetime "retried_at"
-    t.boolean "retried"
+    t.boolean "retried", default: false
     t.index ["account_id"], name: "index_messages_on_account_id"
   end
 
@@ -234,7 +234,7 @@ ActiveRecord::Schema.define(version: 2023_02_28_172552) do
     t.string "custom_field_a"
     t.string "custom_field_b"
     t.datetime "retried_at"
-    t.boolean "retried"
+    t.boolean "retried", default: false
   end
 
   create_table "users", force: :cascade do |t|
