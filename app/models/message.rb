@@ -54,20 +54,18 @@ class Message < ApplicationRecord
   end
 
   def set_state!
-    transmissions = Transmission.where(:message_uuid => self.uuid)
-    failures = transmissions.select do |transmission|
-      transmission.state == 'failed'
-    end
+    failures = transmissions.where(state: 'failed')
 
-    if failures.length == transmissions.length
-      self.state = 'failed'
-    elsif failures.empty?
-      self.state = 'successful'
-    else
-      self.state = 'pending'
-    end
+    self.state =
+      if failures.length == transmissions.length
+        'failed'
+      elsif failures.empty?
+        'successful'
+      else
+        'pending'
+      end
 
-    self.save!
+    save!
   end
 
   def self.create_from_queue(body, import = false)
@@ -127,7 +125,7 @@ end
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer

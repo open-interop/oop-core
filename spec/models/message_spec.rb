@@ -446,7 +446,10 @@ RSpec.describe Message, type: :model do
 
       before do
         failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
+        failed_transmission.reload
         another_failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
+        another_failed_transmission.reload
+
         failing_message.set_state!
       end
 
@@ -472,7 +475,7 @@ end
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer
