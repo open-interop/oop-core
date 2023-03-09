@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'date'
 
 class Message < ApplicationRecord
   STATES = %w[
@@ -94,6 +95,19 @@ class Message < ApplicationRecord
 
     message.set_state!
   end
+
+  def retry(message)
+    return if message.retried_at.present?
+    UpdateQueue.publish_to_queue(
+      MessagePresenter.record_for_microservices(message),
+      Rails.configuration.oop[:rabbit][:tempr_queue],
+    )
+    message.retried_at = DateTime.now()
+    message.retried = true
+    message.save!
+    Transmission.where(message_id: message.id).update_all(retried_at: DateTime.now(), retried: true)
+  end
+
 end
 
 # == Schema Information
@@ -106,6 +120,8 @@ end
 #  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried            :boolean          default(FALSE)
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string

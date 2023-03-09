@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_10_143425) do
+ActiveRecord::Schema.define(version: 2023_02_28_172552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,8 @@ ActiveRecord::Schema.define(version: 2023_02_10_143425) do
     t.string "state", default: "unknown"
     t.string "custom_field_a"
     t.string "custom_field_b"
+    t.datetime "retried_at"
+    t.boolean "retried", default: false
     t.index ["account_id"], name: "index_messages_on_account_id"
   end
 
@@ -231,6 +233,8 @@ ActiveRecord::Schema.define(version: 2023_02_10_143425) do
     t.boolean "discarded", default: false
     t.string "custom_field_a"
     t.string "custom_field_b"
+    t.datetime "retried_at"
+    t.boolean "retried", default: false
   end
 
   create_table "users", force: :cascade do |t|

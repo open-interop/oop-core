@@ -93,6 +93,20 @@ class Transmission < ApplicationRecord
     message.transmissions.create!(data)
     message.increment!(:transmission_count)
   end
+
+  def retry(transmission)
+    return if transmission.retried
+    if message = Message.find_by(id: transmission.message_id)
+      UpdateQueue.publish_to_queue(
+        MessagePresenter.record_for_microservices(message, false),
+        Rails.configuration.oop[:rabbit][:tempr_queue],
+      )
+      transmission.retried_at = DateTime.now()
+      transmission.retried = true
+      transmission.save!
+    end
+  end
+
 end
 
 # == Schema Information
@@ -106,6 +120,8 @@ end
 #  message_uuid      :string
 #  request_body      :text
 #  response_body     :text
+#  retried           :boolean         default(FALSE)
+#  retried_at        :datetime
 #  state             :string
 #  status            :integer
 #  success           :boolean

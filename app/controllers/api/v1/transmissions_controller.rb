@@ -22,6 +22,12 @@ module Api
         render json: @transmission
       end
 
+      # POST /api/v1/transmissions/:id/retry
+      def retry
+        @transmission.retry(@transmission)
+        render json: @transmission
+      end
+
       private
 
       def find_transmission
