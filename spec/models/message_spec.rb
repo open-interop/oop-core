@@ -413,12 +413,10 @@ RSpec.describe Message, type: :model do
   describe '::set_state!' do
     context 'with multiple succes transmissions' do
       let(:message) { FactoryBot.create(:message) }
-      let(:successful_transmission) { FactoryBot.create(:transmission) }
-      let(:another_successful_transmission) { FactoryBot.create(:transmission) }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: message) }
+      let!(:another_successful_transmission) { FactoryBot.create(:transmission, message: message) }
 
       before do
-        successful_transmission.update_attribute(:message_uuid, message.uuid)
-        another_successful_transmission.update_attribute(:message_uuid, message.uuid)
         message.set_state!
       end
 
@@ -427,12 +425,10 @@ RSpec.describe Message, type: :model do
 
     context 'with one successful, one failure' do
       let(:pending_message) { FactoryBot.create(:message) }
-      let(:successful_transmission) { FactoryBot.create(:transmission) }
-      let(:failed_transmission) { FactoryBot.create(:transmission, state: 'failed') }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: pending_message) }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: pending_message, state: 'failed') }
 
       before do
-        successful_transmission.update_attribute(:message_uuid, pending_message.uuid)
-        failed_transmission.update_attribute(:message_uuid, pending_message.uuid)
         pending_message.set_state!
       end
 
@@ -441,12 +437,10 @@ RSpec.describe Message, type: :model do
 
     context 'with only failures' do
       let(:failing_message) { FactoryBot.create(:message) }
-      let(:failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
-      let(:another_failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
+      let!(:another_failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
 
       before do
-        failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
-        another_failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
         failing_message.set_state!
       end
 
@@ -472,7 +466,7 @@ end
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer
