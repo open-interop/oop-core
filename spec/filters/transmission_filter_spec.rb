@@ -44,6 +44,7 @@ RSpec.describe TransmissionFilter do
               { 'transmitted_at' => %w[gt gteq lt lteq] },
               { 'created_at' => %w[gt gteq lt lteq] },
               { 'updated_at' => %w[gt gteq lt lteq] },
+              { 'retried_at' => %w[gt gteq lt lteq] },
               { 'sort' => %w[field direction] }
             ]
           )
