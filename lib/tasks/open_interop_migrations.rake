@@ -75,7 +75,7 @@ namespace :open_interop do
              )
     end
 
-    Message.where(state: 'unknown').update_all(state: 'pending')
+    Message.where(state: 'unknown').update_all(state: 'action_required')
 
   end
 end
