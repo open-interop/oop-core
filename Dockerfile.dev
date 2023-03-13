@@ -5,7 +5,7 @@ LABEL maintainer="jack.regnart@bluefrontier.co.uk"
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   apt-transport-https build-essential
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
 RUN apt-get install -y nodejs
 
