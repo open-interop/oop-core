@@ -1,4 +1,4 @@
-FROM ruby:2.7.1 AS oop-core
+FROM ruby:2.7.7 AS oop-core
 
 LABEL maintainer="jack.regnart@bluefrontier.co.uk"
 
@@ -11,7 +11,7 @@ RUN apt-get install -y nodejs
 
 WORKDIR /app/oop-renderer
 
-COPY --from=openinterop/oop-renderer:version-1.0.6 /app /app/oop-renderer
+COPY --from=openinterop/oop-renderer:version-1.0.7 /app /app/oop-renderer
 
 RUN npm install -g yarn --force
 
