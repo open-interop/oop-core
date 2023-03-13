@@ -413,12 +413,24 @@ RSpec.describe Message, type: :model do
   describe '::set_state!' do
     context 'with multiple succes transmissions' do
       let(:message) { FactoryBot.create(:message) }
-      let(:successful_transmission) { FactoryBot.create(:transmission) }
-      let(:another_successful_transmission) { FactoryBot.create(:transmission) }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: message) }
+      let!(:another_successful_transmission) { FactoryBot.create(:transmission, message: message) }
 
       before do
-        successful_transmission.update_attribute(:message_uuid, message.uuid)
-        another_successful_transmission.update_attribute(:message_uuid, message.uuid)
+        message.set_state!
+      end
+
+      it { expect(message.state).to eq 'successful' }
+    end
+
+    context 'with multiple success transmissions and failed retries' do
+      let(:message) { FactoryBot.create(:message) }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: message) }
+      let!(:successful_transmission2) { FactoryBot.create(:transmission, message: message) }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: message, state: 'failed', retried: true, retried_at: Time.zone.now) }
+      let!(:failed_transmission2) { FactoryBot.create(:transmission, message: message, state: 'failed', retried: true, retried_at: Time.zone.now) }
+
+      before do
         message.set_state!
       end
 
@@ -427,26 +439,22 @@ RSpec.describe Message, type: :model do
 
     context 'with one successful, one failure' do
       let(:pending_message) { FactoryBot.create(:message) }
-      let(:successful_transmission) { FactoryBot.create(:transmission) }
-      let(:failed_transmission) { FactoryBot.create(:transmission, state: 'failed') }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: pending_message) }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: pending_message, state: 'failed') }
 
       before do
-        successful_transmission.update_attribute(:message_uuid, pending_message.uuid)
-        failed_transmission.update_attribute(:message_uuid, pending_message.uuid)
         pending_message.set_state!
       end
 
-      it { expect(pending_message.state).to eq 'pending' }
+      it { expect(pending_message.state).to eq 'action_required' }
     end
 
     context 'with only failures' do
       let(:failing_message) { FactoryBot.create(:message) }
-      let(:failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
-      let(:another_failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
+      let!(:another_failed_transmission) { FactoryBot.create(:transmission, message: failing_message, state: 'failed') }
 
       before do
-        failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
-        another_failed_transmission.update_attribute(:message_uuid, failing_message.uuid)
         failing_message.set_state!
       end
 
@@ -461,14 +469,18 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  custom_field_a     :string
+#  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried            :boolean          default(FALSE)
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer

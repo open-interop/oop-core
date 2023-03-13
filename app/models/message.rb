@@ -4,7 +4,7 @@ class Message < ApplicationRecord
   STATES = %w[
     successful
     failed
-    pending
+    action_required
     unknown
   ].freeze
 
@@ -27,6 +27,8 @@ class Message < ApplicationRecord
 
   audited associated_with: :account
 
+  after_touch :set_state!
+
   def create_from_queue(body)
     self.uuid = body['uuid']
 
@@ -40,24 +42,31 @@ class Message < ApplicationRecord
         self.schedule_id = body['schedule']['id']
     end
 
+    if body['customFields'].present?
+      if body['customFields']['messageFieldA'].present?
+        self.custom_field_a = body['customFields']['messageFieldA']
+      end
+      if body['customFields']['messageFieldB'].present?
+        self.custom_field_b = body['customFields']['messageFieldB']
+      end
+    end
+
     self
   end
 
   def set_state!
-    transmissions = Transmission.where(:message_uuid => self.uuid)
-    failures = transmissions.select do |transmission|
-      transmission.state == 'failed'
-    end
+    failures = transmissions.where(retried: false, state: 'failed')
 
-    if failures.length == transmissions.length
-      self.state = 'failed'
-    elsif failures.empty?
-      self.state = 'successful'
-    else
-      self.state = 'pending'
-    end
+    self.state =
+      if failures.size.zero?
+        'successful'
+      elsif failures.count == transmissions.where(retried: false).count
+        'failed'
+      else
+        'action_required'
+      end
 
-    self.save!
+    save
   end
 
   def self.create_from_queue(body, import = false)
@@ -85,6 +94,36 @@ class Message < ApplicationRecord
 
     message.set_state!
   end
+
+  def retry!
+    return if retried?
+
+    begin
+      UpdateQueue.publish_to_queue(
+        MessagePresenter.record_for_microservices(self),
+        Rails.configuration.oop[:rabbit][:message_retry_queue],
+      )
+    rescue => e
+      Rails.logger.error "Could not retry message #{uuid}"
+      Rails.logger.error e.inspect
+
+      return false
+    end
+
+    self.retried_at = Time.zone.now
+    self.retried = true
+
+    return unless save
+
+    transmissions.update_all(
+                    retried_at: Time.zone.now,
+                    retried: true
+                  )
+
+    set_state!
+
+    true
+  end
 end
 
 # == Schema Information
@@ -93,14 +132,18 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  custom_field_a     :string
+#  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried            :boolean          default(FALSE)
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer

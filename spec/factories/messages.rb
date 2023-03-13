@@ -14,14 +14,18 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  body               :text
+#  custom_field_a     :string
+#  custom_field_b     :string
 #  ip_address         :string
 #  origin_type        :string
+#  retried            :boolean          default(FALSE)
+#  retried_at         :datetime
 #  state              :string           default("unknown")
 #  transmission_count :integer          default(0)
 #  uuid               :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  account_id         :bigint
+#  account_id         :integer
 #  device_id          :integer
 #  origin_id          :integer
 #  schedule_id        :integer

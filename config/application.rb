@@ -53,6 +53,8 @@ module OopCore
         schedules_exchange: ENV['OOP_CORE_SCHEDULE_UPDATE_EXCHANGE'],
         blacklist_entries_exchange: ENV['OOP_CORE_BLACKLIST_ENTRY_UPDATE_EXCHANGE'],
         response_queue: ENV['OOP_CORE_RESPONSE_Q'],
+        transmission_retry_queue: ENV['OOP_ENDPOINT_Q'],
+        message_retry_queue: ENV['OOP_TEMPR_INPUT_Q'],
         prefetch_limit: ENV['OOP_CORE_QUEUE_PREFETCH_LIMIT']
       },
       from_email: ENV['OOP_CORE_FROM_ADDRESS'] || 'noreply@openinterop.org',

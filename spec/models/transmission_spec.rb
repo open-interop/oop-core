@@ -438,6 +438,16 @@ RSpec.describe Transmission, type: :model do
       end
     end
   end
+
+  describe '#retryable?' do
+    before do
+      described_class.create_from_queue(message, message_body_with_object_response)
+    end
+
+    let(:transmission) { message.transmissions.last }
+
+    it { expect(transmission.retryable?).to be(true) }
+  end
 end
 
 # == Schema Information
@@ -445,10 +455,20 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  custom_field_a    :string
+#  custom_field_b    :string
 #  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text
+#  request_headers   :text
+#  request_host      :string
+#  request_method    :string
+#  request_path      :string
+#  request_port      :integer
+#  request_protocol  :string
 #  response_body     :text
+#  retried           :boolean          default(FALSE)
+#  retried_at        :datetime
 #  state             :string
 #  status            :integer
 #  success           :boolean

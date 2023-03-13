@@ -22,6 +22,15 @@ module Api
         render json: @transmission
       end
 
+      # POST /api/v1/transmissions/:id/retry
+      def retry
+        if @transmission.retry!
+          render json: @transmission
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def find_transmission

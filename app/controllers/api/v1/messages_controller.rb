@@ -22,6 +22,15 @@ module Api
         render json: @message
       end
 
+      # POST /api/v1/messages/:id/retry
+      def retry
+        if @message.retry!
+          render json: @message
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def find_message
@@ -29,6 +38,7 @@ module Api
 
         @message = current_account.messages.find(params[:id])
       end
+
     end
   end
 end
