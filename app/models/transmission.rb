@@ -11,7 +11,7 @@ class Transmission < ApplicationRecord
   # Relationships
   #
   belongs_to :account
-  belongs_to :message
+  belongs_to :message, touch: true
   belongs_to :device, optional: true
   belongs_to :tempr, optional: true
   belongs_to :schedule, optional: true
@@ -20,6 +20,8 @@ class Transmission < ApplicationRecord
   # Validations
   #
   validates :state, inclusion: { in: STATES }
+
+  serialize :headers
 
   def self.create_from_queue(message, body)
 
@@ -42,13 +44,22 @@ class Transmission < ApplicationRecord
     body['schedule'].present? &&
       data[:schedule_id] = body['schedule']['id']
 
-    if body['tempr']['queueRequest'] && body['tempr']['rendered']
-      data[:request_body] =
-        if body['tempr']['rendered']['body'].is_a?(Hash)
-          body['tempr']['rendered']['body'].to_json
-        else
-          body['tempr']['rendered']['body']
-        end
+    if body['tempr']['rendered']
+      data[:request_host] = body['tempr']['rendered']['host']
+      data[:request_port] = body['tempr']['rendered']['port']
+      data[:request_path] = body['tempr']['rendered']['path']
+      data[:request_protocol] = body['tempr']['rendered']['protocol']
+      data[:request_method] = body['tempr']['rendered']['requestMethod']
+      data[:request_headers] = body['tempr']['rendered']['headers']
+
+      if body['tempr']['queueRequest']
+        data[:request_body] =
+          if body['tempr']['rendered']['body'].is_a?(Hash)
+            body['tempr']['rendered']['body'].to_json
+          else
+            body['tempr']['rendered']['body']
+          end
+      end
     end
 
     if body['tempr']['response'].present?
@@ -94,19 +105,39 @@ class Transmission < ApplicationRecord
     message.increment!(:transmission_count)
   end
 
-  def retry(transmission)
-    return if transmission.retried
-    if message = Message.find_by(id: transmission.message_id)
-      UpdateQueue.publish_to_queue(
-        MessagePresenter.record_for_microservices(message, false),
-        Rails.configuration.oop[:rabbit][:tempr_queue],
-      )
-      transmission.retried_at = DateTime.now()
-      transmission.retried = true
-      transmission.save!
-    end
+  def retryable?
+    [
+      request_body,
+      request_headers,
+      request_host,
+      request_method,
+      request_path,
+      request_port,
+      request_protocol
+    ].all?
   end
 
+  def retry!
+    return if retried?
+    return unless retryable?
+
+    begin
+      UpdateQueue.publish_to_queue(
+        TransmissionPresenter.record_for_microservices(self),
+        "#{Rails.configuration.oop[:rabbit][:transmission_retry_queue]}.#{tempr.endpoint_type}",
+      )
+    rescue => e
+      Rails.logger.error "Could not retry transmission #{transmission_uuid}"
+      Rails.logger.error e.inspect
+
+      return false
+    end
+
+    self.retried_at = Time.zone.now
+    self.retried = true
+
+    save
+  end
 end
 
 # == Schema Information
@@ -119,8 +150,14 @@ end
 #  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text
+#  request_headers   :text
+#  request_host      :string
+#  request_method    :string
+#  request_path      :string
+#  request_port      :integer
+#  request_protocol  :string
 #  response_body     :text
-#  retried           :boolean         default(FALSE)
+#  retried           :boolean          default(FALSE)
 #  retried_at        :datetime
 #  state             :string
 #  status            :integer

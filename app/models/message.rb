@@ -1,11 +1,10 @@
 # frozen_string_literal: true
-require 'date'
 
 class Message < ApplicationRecord
   STATES = %w[
     successful
     failed
-    pending
+    action_required
     unknown
   ].freeze
 
@@ -27,6 +26,8 @@ class Message < ApplicationRecord
   serialize :body, Hash
 
   audited associated_with: :account
+
+  after_touch :set_state!
 
   def create_from_queue(body)
     self.uuid = body['uuid']
@@ -54,18 +55,18 @@ class Message < ApplicationRecord
   end
 
   def set_state!
-    failures = transmissions.where(state: 'failed')
+    failures = transmissions.where(retried: false, state: 'failed')
 
     self.state =
-      if failures.length == transmissions.length
-        'failed'
-      elsif failures.empty?
+      if failures.size.zero?
         'successful'
+      elsif failures.count == transmissions.where(retried: false).count
+        'failed'
       else
-        'pending'
+        'action_required'
       end
 
-    save!
+    save
   end
 
   def self.create_from_queue(body, import = false)
@@ -94,18 +95,35 @@ class Message < ApplicationRecord
     message.set_state!
   end
 
-  def retry(message)
-    return if message.retried_at.present?
-    UpdateQueue.publish_to_queue(
-      MessagePresenter.record_for_microservices(message),
-      Rails.configuration.oop[:rabbit][:tempr_queue],
-    )
-    message.retried_at = DateTime.now()
-    message.retried = true
-    message.save!
-    Transmission.where(message_id: message.id).update_all(retried_at: DateTime.now(), retried: true)
-  end
+  def retry!
+    return if retried?
 
+    begin
+      UpdateQueue.publish_to_queue(
+        MessagePresenter.record_for_microservices(self),
+        Rails.configuration.oop[:rabbit][:message_retry_queue],
+      )
+    rescue => e
+      Rails.logger.error "Could not retry message #{uuid}"
+      Rails.logger.error e.inspect
+
+      return false
+    end
+
+    self.retried_at = Time.zone.now
+    self.retried = true
+
+    return unless save
+
+    transmissions.update_all(
+                    retried_at: Time.zone.now,
+                    retried: true
+                  )
+
+    set_state!
+
+    true
+  end
 end
 
 # == Schema Information

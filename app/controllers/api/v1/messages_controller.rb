@@ -24,8 +24,11 @@ module Api
 
       # POST /api/v1/messages/:id/retry
       def retry
-        @message.retry(@message)
-        render json: @message
+        if @message.retry!
+          render json: @message
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
       end
 
       private

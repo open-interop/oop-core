@@ -423,6 +423,20 @@ RSpec.describe Message, type: :model do
       it { expect(message.state).to eq 'successful' }
     end
 
+    context 'with multiple success transmissions and failed retries' do
+      let(:message) { FactoryBot.create(:message) }
+      let!(:successful_transmission) { FactoryBot.create(:transmission, message: message) }
+      let!(:successful_transmission2) { FactoryBot.create(:transmission, message: message) }
+      let!(:failed_transmission) { FactoryBot.create(:transmission, message: message, state: 'failed', retried: true, retried_at: Time.zone.now) }
+      let!(:failed_transmission2) { FactoryBot.create(:transmission, message: message, state: 'failed', retried: true, retried_at: Time.zone.now) }
+
+      before do
+        message.set_state!
+      end
+
+      it { expect(message.state).to eq 'successful' }
+    end
+
     context 'with one successful, one failure' do
       let(:pending_message) { FactoryBot.create(:message) }
       let!(:successful_transmission) { FactoryBot.create(:transmission, message: pending_message) }
@@ -432,7 +446,7 @@ RSpec.describe Message, type: :model do
         pending_message.set_state!
       end
 
-      it { expect(pending_message.state).to eq 'pending' }
+      it { expect(pending_message.state).to eq 'action_required' }
     end
 
     context 'with only failures' do

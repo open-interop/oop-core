@@ -27,8 +27,14 @@ end
 #  discarded         :boolean          default(FALSE)
 #  message_uuid      :string
 #  request_body      :text
+#  request_headers   :text
+#  request_host      :string
+#  request_method    :string
+#  request_path      :string
+#  request_port      :integer
+#  request_protocol  :string
 #  response_body     :text
-#  retried           :boolean         default(FALSE)
+#  retried           :boolean          default(FALSE)
 #  retried_at        :datetime
 #  state             :string
 #  status            :integer
