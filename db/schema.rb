@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_10_112206) do
+ActiveRecord::Schema.define(version: 2023_06_21_075635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,11 @@ ActiveRecord::Schema.define(version: 2023_03_10_112206) do
     t.datetime "retried_at"
     t.boolean "retried", default: false
     t.index ["account_id"], name: "index_messages_on_account_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["device_id"], name: "index_messages_on_device_id"
+    t.index ["origin_id", "origin_type"], name: "index_messages_on_origin_id_and_origin_type"
+    t.index ["retried_at"], name: "index_messages_on_retried_at"
+    t.index ["schedule_id"], name: "index_messages_on_schedule_id"
   end
 
   create_table "schedule_temprs", force: :cascade do |t|
@@ -211,7 +216,11 @@ ActiveRecord::Schema.define(version: 2023_03_10_112206) do
     t.text "notes"
     t.string "templateable_type"
     t.bigint "templateable_id"
+    t.index ["account_id"], name: "index_temprs_on_account_id"
+    t.index ["created_at"], name: "index_temprs_on_created_at"
+    t.index ["device_group_id"], name: "index_temprs_on_device_group_id"
     t.index ["templateable_type", "templateable_id"], name: "index_temprs_on_templateable_type_and_templateable_id"
+    t.index ["tempr_id"], name: "index_temprs_on_tempr_id"
   end
 
   create_table "transmissions", force: :cascade do |t|
@@ -241,6 +250,11 @@ ActiveRecord::Schema.define(version: 2023_03_10_112206) do
     t.string "request_protocol"
     t.string "request_method"
     t.text "request_headers"
+    t.index ["account_id"], name: "index_transmissions_on_account_id"
+    t.index ["created_at"], name: "index_transmissions_on_created_at"
+    t.index ["device_id"], name: "index_transmissions_on_device_id"
+    t.index ["message_id"], name: "index_transmissions_on_message_id"
+    t.index ["retried_at"], name: "index_transmissions_on_retried_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -257,7 +271,18 @@ ActiveRecord::Schema.define(version: 2023_03_10_112206) do
     t.text "description"
     t.string "job_title"
     t.date "date_of_birth"
+    t.index ["account_id"], name: "index_users_on_account_id"
+    t.index ["created_at"], name: "index_users_on_created_at"
   end
 
   add_foreign_key "messages", "accounts"
+  add_foreign_key "messages", "devices"
+  add_foreign_key "messages", "schedules"
+  add_foreign_key "temprs", "accounts"
+  add_foreign_key "temprs", "device_groups"
+  add_foreign_key "temprs", "temprs"
+  add_foreign_key "transmissions", "accounts"
+  add_foreign_key "transmissions", "devices"
+  add_foreign_key "transmissions", "messages"
+  add_foreign_key "users", "accounts"
 end
