@@ -26,3 +26,12 @@ end
 #  updated_at                  :datetime         not null
 #  account_id                  :integer
 #
+# Indexes
+#
+#  index_users_on_account_id  (account_id)
+#  index_users_on_created_at  (created_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#

@@ -172,3 +172,17 @@ end
 #  schedule_id       :integer
 #  tempr_id          :integer
 #
+# Indexes
+#
+#  index_transmissions_on_account_id  (account_id)
+#  index_transmissions_on_created_at  (created_at)
+#  index_transmissions_on_device_id   (device_id)
+#  index_transmissions_on_message_id  (message_id)
+#  index_transmissions_on_retried_at  (retried_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#  fk_rails_...  (device_id => devices.id)
+#  fk_rails_...  (message_id => messages.id)
+#
