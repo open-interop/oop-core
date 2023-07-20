@@ -182,7 +182,7 @@ RSpec.describe Transmission, type: :model do
         createdAt: '2019-11-22T16:23:05.422Z',
         updatedAt: '2019-11-26T12:33:10.836Z',
         rendered: {
-          headers: {},
+          headers: { 'Content-Type' => 'application/json' },
           host: 'localhost',
           path: '/',
           port: '3000',
@@ -392,6 +392,10 @@ RSpec.describe Transmission, type: :model do
       end
 
       it do
+        expect(transmission.request_headers).to eq('{"Content-Type":"application/json"}')
+      end
+
+      it do
         expect(transmission.transmitted_at).to(
           eq(Time.zone.parse('2019-11-27T14:54:01.610Z'))
         )
@@ -447,6 +451,16 @@ RSpec.describe Transmission, type: :model do
     let(:transmission) { message.transmissions.last }
 
     it { expect(transmission.retryable?).to be(true) }
+  end
+
+  describe '#retry!' do
+    before do
+      described_class.create_from_queue(message, message_body_with_object_response)
+    end
+
+    let(:transmission) { message.transmissions.last }
+
+    it { expect(transmission.retry!).to be(true) }
   end
 end
 
