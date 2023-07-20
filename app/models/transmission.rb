@@ -50,7 +50,12 @@ class Transmission < ApplicationRecord
       data[:request_path] = body['tempr']['rendered']['path']
       data[:request_protocol] = body['tempr']['rendered']['protocol']
       data[:request_method] = body['tempr']['rendered']['requestMethod']
-      data[:request_headers] = body['tempr']['rendered']['headers']
+      data[:request_headers] =
+        if body['tempr']['rendered']['headers'].is_a?(Hash)
+          body['tempr']['rendered']['headers'].to_json
+        else
+          body['tempr']['rendered']['headers']
+        end
 
       if body['tempr']['queueRequest']
         data[:request_body] =
