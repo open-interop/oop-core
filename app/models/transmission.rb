@@ -20,8 +20,7 @@ class Transmission < ApplicationRecord
   # Validations
   #
   validates :state, inclusion: { in: STATES }
-
-  serialize :headers
+  validates :transmission_uuid, uniqueness: true
 
   def self.create_from_queue(message, body)
 

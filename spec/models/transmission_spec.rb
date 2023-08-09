@@ -8,7 +8,7 @@ RSpec.describe Transmission, type: :model do
 
   let(:message_body) do
     {
-      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791cb6',
       message: {
         path: '/',
         query: {},
@@ -203,13 +203,13 @@ RSpec.describe Transmission, type: :model do
           headers: {}
         }
       },
-      transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8a89'
+      transmissionId: 'f12ae1c6-5ae0-4c5e-a02b-5257928c8b89'
     }.with_indifferent_access
   end
 
   let(:discarded_message_body) do
     {
-      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bb6',
+      uuid: 'de7931c7-1151-46a6-bfe7-a1c779791bc6',
       message: {
         path: '/',
         query: {},
@@ -285,7 +285,7 @@ RSpec.describe Transmission, type: :model do
       context 'by 2' do
 
         before do
-          described_class.create_from_queue(message, message_body)
+          described_class.create_from_queue(message, message_body_with_object_response)
         end
 
         it do
@@ -361,7 +361,7 @@ RSpec.describe Transmission, type: :model do
 
       it do
         expect(transmission.transmission_uuid).to(
-          eq('f12ae1c6-5ae0-4c5e-a02b-5257928c8a89')
+          eq('f12ae1c6-5ae0-4c5e-a02b-5257928c8b89')
         )
       end
 
