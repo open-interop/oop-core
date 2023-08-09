@@ -19,19 +19,27 @@ class TransmissionQueue
     puts "info:[#{Time.now.iso8601}] oop-core queue connected"
 
     queue.subscribe(
-      block: true,
       manual_ack: true,
       consumer_tag: 'oop_core_transmissions'
     ) do |delivery_info, _properties, body|
       transmission_body = JSON.parse(body)
 
-      puts "info:[#{Time.now.iso8601}] oop-core consumed #{transmission_body['uuid']}"
+      ActiveRecord::Base.transaction do
+        begin
+          Timeout::timeout(60) do
+            Message.create_from_queue(transmission_body)
+          end
 
-      Message.create_from_queue(transmission_body)
-
-      channel.ack(delivery_info.delivery_tag)
+          channel.ack(delivery_info.delivery_tag)
+          puts "info:[#{Time.now.iso8601}] oop-core consumed #{transmission_body['uuid']}"
+        rescue ActiveRecord::RecordInvalid => e
+          puts e.inspect
+          channel.ack(delivery_info.delivery_tag)
+          puts "info:[#{Time.now.iso8601}] oop-core discarded #{transmission_body['uuid']}"
+        end
+      end
     end
 
-    conn.close
+    loop { sleep 1 }
   end
 end
