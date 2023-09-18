@@ -36,6 +36,14 @@ class TransmissionQueue
           puts e.inspect
           channel.ack(delivery_info.delivery_tag)
           puts "info:[#{Time.now.iso8601}] oop-core discarded #{transmission_body['uuid']}"
+        rescue Timeout::Error => e
+          puts e.inspect
+          channel.nack(delivery_info.delivery_tag)
+          puts "error:[#{Time.now.iso8601}] oop-core timeout #{transmission_body['uuid']}"
+        rescue => e
+          puts e.inspect
+          channel.nack(delivery_info.delivery_tag)
+          puts "error:[#{Time.now.iso8601}] oop-core unknown error #{transmission_body['uuid']}"
         end
       end
     end
