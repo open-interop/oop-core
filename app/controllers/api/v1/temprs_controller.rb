@@ -47,6 +47,7 @@ module Api
           :endpoint_type,
           :queue_response,
           :queue_request,
+          :save_console,
           :example_transmission,
           :notes,
           { template: {} }

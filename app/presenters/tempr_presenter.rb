@@ -26,6 +26,7 @@ class TemprPresenter < BasePresenter
       endpointType: record.endpoint_type,
       queueRequest: record.queue_request,
       queueResponse: record.queue_response,
+      saveConsole: record.save_console,
       layers: LayerPresenter.record_for_microservices(record.layers),
       template: record.template,
       createdAt: record.created_at,
