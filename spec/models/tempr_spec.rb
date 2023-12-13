@@ -53,29 +53,31 @@ RSpec.describe Tempr, type: :model do
           :tempr_tempr,
           endpoint_type: 'tempr',
           template: {
-            temprs: {
-              language: 'js',
-              script:
-                'const http = require("http");
-                const ret = [];
-                for (const res of message.body) {
-                    ret.push(http(
-                        "POST",
-                        "https",
-                        "test.co.uk",
-                        "/post/path"
-                        { id: result.id, value: result.val }
-                    ));
-                }
-                module.exports = ret;'
-            }
+            temprs: [
+              {
+                language: 'js',
+                script:
+                  'const http = require("http");
+                  const ret = [];
+                  for (const res of message.body) {
+                      ret.push(http(
+                          "POST",
+                          "https",
+                          "test.co.uk",
+                          "/post/path"
+                          { id: result.id, value: result.val }
+                      ));
+                  }
+                  module.exports = ret;'
+              }
+            ]
           }
         )
       end
 
       let!(:tempr_template) { tempr.templateable }
 
-      it { expect(tempr_template.temprs[:language]).to eq('js') }
+      it { expect(tempr_template.temprs[0][:language]).to eq('js') }
     end
 
     context 'with no template' do
