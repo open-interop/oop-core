@@ -22,6 +22,7 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  console_output    :text
 #  custom_field_a    :string
 #  custom_field_b    :string
 #  discarded         :boolean          default(FALSE)

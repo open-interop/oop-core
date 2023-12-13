@@ -66,6 +66,10 @@ class Transmission < ApplicationRecord
       end
     end
 
+    if body['tempr']['saveConsole'] && body['tempr']['console'].present?
+      data[:console_output] = body['tempr']['console']
+    end
+
     if body['tempr']['response'].present?
       if body['tempr']['response']['success'] &&
          body['tempr']['response']['discarded']
@@ -149,6 +153,7 @@ end
 # Table name: transmissions
 #
 #  id                :bigint           not null, primary key
+#  console_output    :text
 #  custom_field_a    :string
 #  custom_field_b    :string
 #  discarded         :boolean          default(FALSE)

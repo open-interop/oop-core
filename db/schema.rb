@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_21_075635) do
+ActiveRecord::Schema.define(version: 2023_12_12_173646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(version: 2023_06_21_075635) do
     t.text "notes"
     t.string "templateable_type"
     t.bigint "templateable_id"
+    t.boolean "save_console", default: false
     t.index ["account_id"], name: "index_temprs_on_account_id"
     t.index ["created_at"], name: "index_temprs_on_created_at"
     t.index ["device_group_id"], name: "index_temprs_on_device_group_id"
@@ -250,6 +251,7 @@ ActiveRecord::Schema.define(version: 2023_06_21_075635) do
     t.string "request_protocol"
     t.string "request_method"
     t.text "request_headers"
+    t.text "console_output"
     t.index ["account_id"], name: "index_transmissions_on_account_id"
     t.index ["created_at"], name: "index_transmissions_on_created_at"
     t.index ["device_id"], name: "index_transmissions_on_device_id"
