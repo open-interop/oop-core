@@ -6,9 +6,6 @@ class TemprTemplate < ApplicationRecord
   #
   validates :temprs, presence: true
 
-  validates_with TemplateValidator, fields:
-    %i[temprs]
-
   #
   # Relationships
   #
@@ -17,7 +14,7 @@ class TemprTemplate < ApplicationRecord
   #
   # Serializations
   #
-  serialize :temprs, Hash
+  serialize :temprs, Array
 
   def render
     {

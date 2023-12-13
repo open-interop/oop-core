@@ -32,6 +32,7 @@ end
 #  notes                :text
 #  queue_request        :boolean          default(FALSE)
 #  queue_response       :boolean          default(FALSE)
+#  save_console         :boolean          default(FALSE)
 #  template             :text
 #  templateable_type    :string
 #  created_at           :datetime         not null

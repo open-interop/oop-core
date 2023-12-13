@@ -30,24 +30,29 @@ class TransmissionQueue
             Message.create_from_queue(transmission_body)
           end
 
-          channel.ack(delivery_info.delivery_tag)
+          channel.ack(delivery_info.delivery_tag, false)
           puts "info:[#{Time.now.iso8601}] oop-core consumed #{transmission_body['uuid']}"
         rescue ActiveRecord::RecordInvalid => e
           puts e.inspect
-          channel.ack(delivery_info.delivery_tag)
+          channel.ack(delivery_info.delivery_tag, false)
           puts "info:[#{Time.now.iso8601}] oop-core discarded #{transmission_body['uuid']}"
         rescue Timeout::Error => e
           puts e.inspect
-          channel.nack(delivery_info.delivery_tag)
+          channel.nack(delivery_info.delivery_tag, false, true)
           puts "error:[#{Time.now.iso8601}] oop-core timeout #{transmission_body['uuid']}"
         rescue => e
           puts e.inspect
-          channel.nack(delivery_info.delivery_tag)
+          channel.nack(delivery_info.delivery_tag, false, true)
           puts "error:[#{Time.now.iso8601}] oop-core unknown error #{transmission_body['uuid']}"
         end
       end
     end
 
     loop { sleep 1 }
+
+  rescue Bunny::ChannelAlreadyClosed => e
+    puts e.inspect
+    puts "error:[#{Time.now.iso8601}] oop-core unknown error channel closed"
+    raise(e)
   end
 end

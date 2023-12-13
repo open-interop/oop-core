@@ -5,7 +5,7 @@ class TransmissionPresenter < BasePresenter
              :message_uuid, :transmission_uuid, :success,
              :status, :state, :discarded, :transmitted_at, :response_body,
              :request_body, :created_at, :updated_at, :custom_field_a,
-             :custom_field_b, :retried_at, :retried
+             :custom_field_b, :console_output, :retried_at, :retried
 
   def self.record_for_microservices(record)
     hash_for_microservice = {
