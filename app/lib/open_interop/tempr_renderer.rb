@@ -50,7 +50,9 @@ module OpenInterop
           protocol: 'http'
         },
         template: template || {},
-        layers: []
+        tempr: {
+          layers: []
+        }
       }.to_json
     end
   end
