@@ -3,8 +3,8 @@
 class TemprPresenter < BasePresenter
   attributes :id, :device_group_id, :tempr_id, :name,
              :description, :endpoint_type,
-             :queue_request, :queue_response, :template,
-             :example_transmission, :notes,
+             :queue_request, :queue_response, :save_console,
+             :template, :example_transmission, :notes,
              :created_at, :updated_at
 
   def self.record_for_microservices(parent_id, record, parent_type)

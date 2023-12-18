@@ -18,7 +18,7 @@ module Services
         render json:
           Rails.cache.fetch(
             [@schedule.id, 'services/temprs/device'],
-            expires_in: 1.hour,
+            expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
           ) { # Used due to a bug with do/end block
             TemprPresenter.collection_for_microservices(
@@ -37,7 +37,7 @@ module Services
         @schedule =
           Rails.cache.fetch(
             [params[:id], 'services/schedules'],
-            expires_in: 1.hour,
+            expires_in: Rails.configuration.oop[:tempr_cache_ttl],
             race_condition_ttl: 5.seconds
           ) { # Used due to a bug with do/end block
             Schedule.active.find(params[:id])
